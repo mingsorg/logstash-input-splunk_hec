@@ -1,0 +1,33 @@
+{
+  "summary_type": "recorded verification outcomes",
+  "artifact": "logstash-input-splunk_hec-0.1.0-java.gem",
+  "artifact_sha256": "594cf71fdfa0b10678b872a81169b0ececdc80aaa6eed464b7b9950cbbd74e88",
+  "overall": "http-preview-built; final-live-sender-qualification-blocked",
+  "java_tests": {"status": "pass", "tests": 45, "command": "./gradlew test"},
+  "helper_tests": {"status": "pass", "tests": 7, "command": "python3 -m unittest discover -s tests/build -v"},
+  "reproducibility": {"status": "pass", "clean_builds": 2, "byte_identical": true, "evidence": "reproducibility.json"},
+  "runtime_matrix": {
+    "status": "pass",
+    "versions": ["9.5.0", "9.5.5"],
+    "queues": ["memory", "persisted"],
+    "latest_pq": "passed on targeted rerun after initial startup failure",
+    "evidence": "runtime.json"
+  },
+  "live_sender_baseline": {
+    "status": "earlier candidate passed",
+    "version": "10.6.1.1",
+    "requests": 18,
+    "source_events": 36,
+    "evidence": "senders.json",
+    "scope": "not fresh qualification of all final review patches; captured bodies replay successfully"
+  },
+  "final_live_sender_rerun": {
+    "status": "blocked",
+    "reason": "UF official Ansible provisioning had not reached data transmission by the 600-second deadline",
+    "requests_observed": 0,
+    "evidence": "sender-traffic-last-run.json",
+    "plugin_rejection_observed": false
+  },
+  "tcp": {"status": "not implemented", "enabled": false, "gate_exit_code": 2},
+  "owned_test_containers_remaining": 0
+}

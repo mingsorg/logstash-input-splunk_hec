@@ -1,0 +1,40 @@
+{
+  "approved_lock_sha256": "aa151b60551ce7a0803e1b69ed0a4b0a2878b2b3aceda32602ffe5751d9b5567",
+  "refresh_requested": false,
+  "images": {
+    "logstash.minimum.image": {
+      "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "digest": "sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "platforms": [
+        "linux/amd64",
+        "linux/arm64"
+      ],
+      "registry_observation": "Name:      docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3\nMediaType: application/vnd.docker.distribution.manifest.list.v2+json\nDigest:    sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3\n           \nManifests: \n  Name:      docker.elastic.co/logstash/logstash@sha256:a3a6cc377539d2f1d37a1bf3f595e2398cccda2948c976e7cbc047c609594327\n  MediaType: application/vnd.docker.distribution.manifest.v2+json\n  Platform:  linux/amd64\n             \n  Name:      docker.elastic.co/logstash/logstash@sha256:780cf8cec6cf8412ece6bd67682ecd86aa3ef0bf8441cdfee97c2ffb8f53e163\n  MediaType: application/vnd.docker.distribution.manifest.v2+json\n  Platform:  linux/arm64\n"
+    },
+    "logstash.latest.image": {
+      "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "digest": "sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "platforms": [
+        "linux/amd64",
+        "linux/arm64"
+      ],
+      "registry_observation": "Name:      docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5\nMediaType: application/vnd.docker.distribution.manifest.list.v2+json\nDigest:    sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5\n           \nManifests: \n  Name:      docker.elastic.co/logstash/logstash@sha256:19c5b4cc9e56e7263912595217a10bb53fab9f45d163a9cd7815e0c3c56d9847\n  MediaType: application/vnd.docker.distribution.manifest.v2+json\n  Platform:  linux/amd64\n             \n  Name:      docker.elastic.co/logstash/logstash@sha256:bb67d1978671c9d46d9416c6d9d423c4912bff015dd3e0e357a69d5c679514ee\n  MediaType: application/vnd.docker.distribution.manifest.v2+json\n  Platform:  linux/arm64\n"
+    },
+    "splunk.image": {
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "digest": "sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "platforms": [
+        "linux/amd64"
+      ],
+      "registry_observation": "Name:      docker.io/splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d\nMediaType: application/vnd.docker.distribution.manifest.list.v2+json\nDigest:    sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d\n           \nManifests: \n  Name:      docker.io/splunk/splunk@sha256:6d5227ed82bceaa277d79b1b3e97d8bd460ac6cf0f5df6c1cec95559284a796e\n  MediaType: application/vnd.docker.distribution.manifest.v2+json\n  Platform:  linux/amd64\n"
+    },
+    "uf.image": {
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "digest": "sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "platforms": [
+        "linux/amd64"
+      ],
+      "registry_observation": "Name:      docker.io/splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67\nMediaType: application/vnd.docker.distribution.manifest.list.v2+json\nDigest:    sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67\n           \nManifests: \n  Name:      docker.io/splunk/universalforwarder@sha256:40ea5f5d52fb9b3e30fba0e8a7eb7eacd47905794e11c313832335b18e240dd3\n  MediaType: application/vnd.docker.distribution.manifest.v2+json\n  Platform:  linux/amd64\n"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+services:
+  interop:
+    build:
+      context: ..
+      dockerfile: docker/interop.Dockerfile
+    # Match absolute host paths for bind mounts requested through the host Docker socket.
+    working_dir: ${PWD}
+    volumes:
+      - ${PWD}:${PWD}
+      - /var/run/docker.sock:/var/run/docker.sock
+    # The driver and its disposable sibling containers share the Docker host's loopback.
+    # Docker Desktop requires its host-networking feature enabled for this entry point.
+    network_mode: host
+    environment:
+      # Desktop needs its host gateway; native Linux uses the host namespace so
+      # the loopback-published receiver is reachable without Desktop DNS aliases.
+      HEC_SENDER_NETWORK: ${HEC_SENDER_NETWORK:-auto}

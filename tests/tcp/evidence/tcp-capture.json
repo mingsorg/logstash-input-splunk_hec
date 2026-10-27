@@ -1,0 +1,24 @@
+{
+  "status": "capture-failed",
+  "tcp_input_qualified": false,
+  "receiver": "172.17.0.2:9997",
+  "configuration": {
+    "useACK": true,
+    "compressed": false,
+    "tls": false
+  },
+  "senders": [
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "hostname": "64de8ade81fc",
+      "sent_bytes": 0,
+      "received_bytes": 0
+    }
+  ],
+  "limitations": [
+    "TCP decoder, receiver-side ACK generation, TLS, compression and induced retries are not implemented or qualified."
+  ],
+  "error": "sender startup deadline exceeded: Updating /opt/splunk/etc\nsender setup: etc initialized\nsender setup: app configured\nsender setup: handing off to official entrypoint",
+  "traffic": []
+}

@@ -1,0 +1,7 @@
+.cache/
+.gradle/
+/build/
+vendor/
+*.gem
+__pycache__/
+.DS_Store

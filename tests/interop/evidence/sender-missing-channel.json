@@ -1,0 +1,70 @@
+[
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "body_bytes": 15700,
+    "body_sha256": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41",
+    "channel": null,
+    "fixture": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 400,
+      "body": "{\"text\":\"Data channel is missing\",\"code\":10}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "body_bytes": 15700,
+    "body_sha256": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41",
+    "channel": null,
+    "fixture": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 400,
+      "body": "{\"text\":\"Data channel is missing\",\"code\":10}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "body_bytes": 15700,
+    "body_sha256": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41",
+    "channel": null,
+    "fixture": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 400,
+      "body": "{\"text\":\"Data channel is missing\",\"code\":10}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "body_bytes": 15700,
+    "body_sha256": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41",
+    "channel": null,
+    "fixture": "787b5c939d7cb11133f70a65792d3366baf591f58f5abae5a61b6776a70cce41.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 400,
+      "body": "{\"text\":\"Data channel is missing\",\"code\":10}"
+    }
+  }
+]

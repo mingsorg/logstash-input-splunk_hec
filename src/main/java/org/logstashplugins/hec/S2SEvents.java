@@ -1,0 +1,72 @@
+package org.logstashplugins.hec;
+
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+final class S2SEvents {
+    private final Limits limits;
+    private final HecProtocol protocol;
+    S2SEvents(Limits limits,HecProtocol protocol){this.limits=limits;this.protocol=protocol;}
+    List<Map<String,Object>> map(List<S2SDecoder.Event> records,TokenStore.Token token,
+                                  Map<String,String> request,byte[] batch,MemoryBudget.Lease memory){
+        List<Map<String,Object>> out=new ArrayList<>();
+        String batchIdentity=TokenStore.fingerprint(batch);
+        memory.charge(4L*limits.event());
+        int recordNumber=0;
+        for(S2SDecoder.Event record:records){
+            memory.charge(8L*record.raw().length+1024L*Math.min(limits.events(),(long)record.raw().length+1));
+            String text=HecProtocol.utf8(record.raw());
+            List<String> lines=record.structured()?List.of(text):HecProtocol.lines(text,limits.events());
+            int rawCursor=0, lineNumber=0;
+            boolean positioned=record.sequence()>=0 && (record.offset()>0 || record.offset()==0 && record.stream()!=0);
+            for(String line:lines){
+                if(!record.structured()){
+                    while(rawCursor<record.raw().length && (record.raw()[rawCursor]=='\n' ||
+                        record.raw()[rawCursor]=='\r' && rawCursor+1<record.raw().length && record.raw()[rawCursor+1]=='\n')) rawCursor++;
+                }
+                long byteOffset=record.offset()+rawCursor;
+                if(out.size()>=limits.events())throw HecException.busy();
+                memory.charge(2048L+8L*line.length());
+                Map<String,Object> envelope=new LinkedHashMap<>();envelope.put("event",line);
+                if(record.host()!=null)envelope.put("host",record.host());
+                if(record.source()!=null)envelope.put("source",record.source());
+                if(record.sourcetype()!=null)envelope.put("sourcetype",record.sourcetype());
+                if(record.index()!=null)envelope.put("index",record.index());
+                if(record.time()!=null)envelope.put("time",record.time());
+                if(!record.fields().isEmpty())envelope.put("fields",record.fields());
+                Map<String,Object> event=protocol.finalizeEnvelope(envelope,token,request,memory,
+                    record.time()==null?null:HecProtocol.epochSeconds(record.time()));
+                Map<String,Object> provenance=new LinkedHashMap<>();
+                provenance.put("flags",record.flags());provenance.put("stream",record.stream()<0?Long.toUnsignedString(record.stream()):record.stream());
+                provenance.put("offset",record.offset());provenance.put("sequence",record.sequence());
+                provenance.put("logical_offset",byteOffset);provenance.put("logical_line",lineNumber);
+                if(record.channel()!=null)provenance.put("channel",record.channel());
+                provenance.put("date_parts",record.dateParts().stream().map(p->Map.of("part",p.part(),"tag",p.tag(),"value",p.value())).toList());
+                if(record.timezone()!=null)provenance.put("timezone",record.timezone());
+                provenance.put("csv_header",record.header());provenance.put("wire_metadata",record.meta());
+                String basis;
+                try {
+                    // Labeled versioned, length-delimited canonical JSON. No receipt/connection facts.
+                    List<Object> identity=new ArrayList<>(Arrays.asList("s2s-id-v1",token.identity(),
+                        record.host(),record.source(),record.sourcetype(),record.channel(),record.index(),
+                         record.stream(),byteOffset,record.sequence(),positioned?0:lineNumber,line));
+                    identity.add(new TreeMap<>(record.fields()));
+                    identity.add(record.structured()?record.time():null);
+                     if(!positioned){
+                        identity.add(batchIdentity);
+                        identity.add(recordNumber);provenance.put("identity_scope","identical-batch-retry");
+                    }else provenance.put("identity_scope","source-coordinates");
+                    basis=HecProtocol.JSON.writeValueAsString(identity);
+                }catch(Exception e){throw HecException.invalid();}
+                event.put("@metadata",Map.of("splunk_hec",Map.of("id","s2s-v1:"+TokenStore.fingerprint(basis),"s2s",provenance)));
+                protocol.validateLogicalSize(event,memory);
+                out.add(event);
+                // Keep byte positions, including skipped leading delimiters and multibyte text.
+                rawCursor+=line.getBytes(StandardCharsets.UTF_8).length;
+                lineNumber++;
+            }
+            recordNumber++;
+        }
+        return out;
+    }
+}

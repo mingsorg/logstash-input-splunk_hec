@@ -1,0 +1,16 @@
+logstash-input-splunk_hec
+
+The S2S wire decoder and synthetic test body builder derive from
+mingshsg/elastic-ingest-splunk-forwarders, Apache License 2.0,
+revision 1280a8e16a30a979d9dde1ff0328ee7d32b0ce99:
+  plugin/src/main/java/co/elastic/s2shttp/S2SDecoder.java
+  plugin/src/test/java/co/elastic/s2shttp/S2SBodies.java
+https://github.com/mingshsg/elastic-ingest-splunk-forwarders
+The modified files carry change notices. No Elasticsearch implementation is bundled.
+
+Jackson Core/Databind/Annotations (FasterXML), Apache License 2.0.
+Bundled Jackson dependencies retain their upstream licenses and notices inside
+the plugin JAR, including artifact-specific copies under META-INF/third-party/.
+
+Logstash's Java plugin API is used as a compile-only dependency.
+Splunk and Logstash product names are the trademarks of their respective owners.
