@@ -6,6 +6,18 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
+/**
+ * Logstash Java Input adapter for one shared HEC listener. Each configured
+ * splunk_hec block owns one server, token snapshot registry and ACK/state store;
+ * HecServer registers all event/raw/S2S routes for that listener.
+ *
+ * <p>The Consumer supplied to start is Logstash's queue-writing boundary. The
+ * server passes native Maps to it; Logstash constructs its Event representation
+ * and supplies required internals. This adapter does not select an Elasticsearch
+ * index or call a destination: filters and outputs run later in the pipeline.
+ * Runtime-version enforcement also occurs in the Ruby loader, independently of
+ * the reusable Java plugin API version.
+ */
 @LogstashPlugin(name="splunk_hec")
 public final class SplunkHec implements Input {
     private static final PluginConfigSpec<String> HOST=PluginConfigSpec.stringSetting("host","0.0.0.0");
@@ -57,6 +69,8 @@ public final class SplunkHec implements Input {
     private static Path path(String s){return s.isEmpty()?null:Path.of(s);}
     @Override public void start(Consumer<Map<String,Object>> consumer){
         try{
+            // One dispatcher serves every supported path. The consumer is shared
+            // by concurrent requests, so cross-request insertion order can interleave.
             synchronized(this){if(stopped)return;server=new HecServer(host,port,tls,limits,tokens,acks,consumer);server.start();}
             synchronized(this){while(!stopped){
                 if(server.failure()!=null)throw new IllegalStateException("HEC listener failed",server.failure());
@@ -90,6 +104,8 @@ public final class SplunkHec implements Input {
     @Override public void awaitStop()throws InterruptedException{done.await();if(stopFailure!=null)throw stopFailure;}
     @Override public String getId(){return id;}
     @Override public Collection<PluginConfigSpec<?>> configSchema(){
+        // Listener/TLS/policy/limits are common to all routes. Payload format is
+        // defined by HecServer's path dispatch, not an input-wide JSON codec.
         List<PluginConfigSpec<?>> schema=new ArrayList<>(List.of(HOST,PORT,TOKENS,FILE,STATE,TLS,SANS,STORE,STORETYPE,PASSWORD,CERT,KEY,CA,MTLS));
         schema.addAll(NUMBERS.values());return schema;
     }

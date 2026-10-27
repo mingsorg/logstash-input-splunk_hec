@@ -8,7 +8,17 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
-/** One request per connection. Bounded connections include unauthenticated TLS/idle peers. */
+/**
+ * One HTTPS listener serves event, raw and binary S2S HTTP requests concurrently.
+ * The URL path selects the grammar; Content-Type does not auto-detect a format.
+ * Token policy, admission slots, memory and the downstream queue are shared.
+ *
+ * <p>Processing order: TLS/HTTP framing, authentication/admission, body decoding,
+ * complete request preparation, queue insertion, then a HEC response. This server
+ * uses one HTTP/1.1 request per connection with Connection: close. Parallelism is
+ * across bounded connections, including unauthenticated TLS/idle peers.
+ * See {@code docs/http-endpoints.md} for the complete route/payload contract.
+ */
 public final class HecServer implements AutoCloseable {
     private final Limits limits;
     private final TokenStore tokens;
@@ -79,8 +89,12 @@ public final class HecServer implements AutoCloseable {
             if(!processing.tryAcquire(limits.admissionMillis(),TimeUnit.MILLISECONDS))throw HecException.busy();
             admitted=true;
             if(stopped)throw HecException.busy();
+            // Re-authenticate after waiting: revocation while queued for admission
+            // must apply. Once admitted, this immutable policy covers the request.
             TokenStore.Token policy=tokens.authenticate(request.headers.get("authorization"),request.query.get("token"));
             String channel=null;
+            // This is the HTTP GUID channel for HEC ACKs, not the arbitrary S2S
+            // metadata-tuple channel contained inside a binary body.
             if(policy.ack())channel=channel(request);
             if(kind.equals("ack")&&!policy.ack())throw new HecException(400,14,"ACK is disabled");
             String expectation=request.headers.get("expect");
@@ -92,6 +106,8 @@ public final class HecServer implements AutoCloseable {
             {
                 byte[] body=body(socket,input,request.headers,deadline,lease);
                 readDeadline.cancel(false);
+                // Optional HTTP gzip wraps the selected format. A gzip-wrapped
+                // S2S request still contains F9 + zlib after this first expansion.
                 Compression.Expansion expansion=new Compression.Expansion(limits.expanded(),lease);
                 String encoding=request.headers.getOrDefault("content-encoding","identity");
                 if(encoding.equalsIgnoreCase("gzip"))body=Compression.gzip(body,expansion);
@@ -99,12 +115,19 @@ public final class HecServer implements AutoCloseable {
                 if(kind.equals("ack")){
                     respond(socket,200,Map.of("acks",acks.poll(policy,channel,protocol.acknowledgments(body,lease))));return;
                 }
+                // Dispatch is explicit, not sniffed from MIME type or body bytes:
+                // /event -> JSON envelopes; /raw -> UTF-8 lines; /s2s -> binary
+                // records then native envelopes. S2S must finish ALL validation
+                // before any of its records can reach the queue insertion loop.
                 HecProtocol.Prepared prepared;
                 if(kind.equals("s2s")){
                     List<S2SDecoder.Event> records=new S2SDecoder(limits).decode(body,expansion,lease);
                     prepared=new HecProtocol.Prepared(new S2SEvents(limits,protocol).map(records,policy,request.query,body,lease),null);
                 }else if(kind.equals("raw"))prepared=protocol.raw(body,policy,request.query,lease);
                 else prepared=protocol.events(body,policy,request.query,lease);
+                // Reserve ACK capacity before irreversible insertion. Event parsing
+                // may return a valid prefix plus an error; a failed request must
+                // never complete that ticket or return a success ackId.
                 AckManager.Ticket ticket=policy.ack()&&(prepared.failure()==null||!prepared.events().isEmpty())?acks.reserve(policy,channel):null;
                 boolean success=false;
                 try{
@@ -116,6 +139,8 @@ public final class HecServer implements AutoCloseable {
                     if(prepared.failure()!=null)throw prepared.failure();
                     success=true;
                 }finally{if(ticket!=null)acks.finish(ticket,success);}
+                // Reaching here means all insertions returned. This is QUEUE
+                // acceptance, not Elasticsearch/Splunk indexing or PQ fsync proof.
                 Map<String,Object> response=new LinkedHashMap<>();response.put("text","Success");response.put("code",0);
                 if(ticket!=null)response.put("ackId",ticket.id());
                 respond(socket,200,response);
@@ -133,6 +158,7 @@ public final class HecServer implements AutoCloseable {
             connections.release();
         }
     }
+    /** Exact observed routes/aliases; trailing slashes and collector/1.0 are not aliases. */
     static String route(String path){
         if(path.equals("/services/collector"))return "event";
         for(String kind:List.of("event","raw","s2s","ack","health"))

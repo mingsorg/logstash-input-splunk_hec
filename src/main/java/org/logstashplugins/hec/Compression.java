@@ -3,6 +3,12 @@ package org.logstashplugins.hec;
 import java.io.ByteArrayOutputStream;
 import java.util.zip.*;
 
+/**
+ * Compression framing around S2S records. HecServer first removes optional HTTP
+ * gzip; S2SDecoder then removes the mandatory F9 marker/zlib layer for a nonempty
+ * S2S entity. The same Expansion object accounts for BOTH inflated layers.
+ * Standard DEFLATE bit/Huffman decoding is delegated to the JDK Inflater.
+ */
 final class Compression {
     static final class Expansion {
         private final long max;
@@ -14,7 +20,13 @@ final class Compression {
             memory.charge(3L*n); expanded += n; // output + growth copy + final copy
         }
     }
+    /**
+     * Entity grammar: F9 | zlib header | DEFLATE records | stream ending.
+     * F9 itself is outside zlib. A fresh inflater handles each HTTP body; no
+     * cross-request compression dictionary/session state is carried here.
+     */
     static byte[] zlib(byte[] input, Expansion budget) {
+        // An authenticated empty S2S probe is zero events, not malformed framing.
         if (input.length == 0) return input;
         if ((input[0] & 255) != 0xf9 || input.length < 3) throw HecException.invalid();
         Inflater inflater = new Inflater();
@@ -24,6 +36,11 @@ final class Compression {
             pump(inflater, out, budget);
             if (inflater.needsDictionary() || inflater.getRemaining() != 0) throw HecException.invalid();
             if (!inflater.finished()) {
+                // Forwarders commonly Z_SYNC_FLUSH without closing their zlib
+                // stream. The aligned empty stored block ends in LEN=0000 and
+                // NLEN=FFFF. This compression suffix is NOT an S2S event delimiter.
+                // Accept only that exhausted-input case; do not bless truncation
+                // merely because some complete record bytes inflated successfully.
                 int n = input.length;
                 if (!inflater.needsInput() || n < 5 || input[n-4]!=0 || input[n-3]!=0 ||
                     (input[n-2]&255)!=255 || (input[n-1]&255)!=255) throw HecException.invalid();
@@ -32,12 +49,15 @@ final class Compression {
         } catch (DataFormatException e) { throw HecException.invalid(); }
         finally { inflater.end(); }
     }
+    /** Decode HTTP gzip members with their headers, optional fields and CRC/size trailers. */
     static byte[] gzip(byte[] input, Expansion budget) {
         ByteArrayOutputStream all = new ByteArrayOutputStream();
         int at = 0;
         do {
             int start = at;
             if (input.length-at < 10 || u8(input,at++)!=31 || u8(input,at++)!=139 || u8(input,at++)!=8) throw HecException.invalid();
+            // gzip FLG: bits 2/3/4 add extra/name/comment fields; bit 1 adds
+            // header CRC16. Reserved bits 5..7 must be zero.
             int flags = u8(input,at++);
             if ((flags & 224)!=0) throw HecException.invalid();
             at += 6;
@@ -52,6 +72,8 @@ final class Compression {
                 int expected = u8(input,at) | u8(input,at+1)<<8; at += 2;
                 if ((h.getValue()&65535)!=expected) throw HecException.invalid();
             }
+            // Header/trailer are handled above/below, so this inflater reads raw
+            // DEFLATE (nowrap=true), unlike the zlib-wrapped S2S inflater.
             Inflater inf = new Inflater(true);
             try {
                 inf.setInput(input,at,input.length-at);
@@ -67,7 +89,7 @@ final class Compression {
                 all.writeBytes(decoded);
             } catch (DataFormatException e) { throw HecException.invalid(); }
             finally { inf.end(); }
-        } while (at < input.length);
+        } while (at < input.length); // gzip permits concatenated members, including empty ones
         return all.toByteArray();
     }
     private static void pump(Inflater inf, ByteArrayOutputStream out, Expansion budget) throws DataFormatException {
@@ -76,6 +98,7 @@ final class Compression {
         while (!inf.finished()) {
             int n = inf.inflate(scratch);
             if (n > 0) { budget.allocate(n); out.write(scratch,0,n); }
+            // Empty members can finish with zero output while trailer bytes remain.
             else if (inf.finished()) break;
             else if (inf.needsDictionary()) throw HecException.invalid();
             else if (inf.needsInput()) break;

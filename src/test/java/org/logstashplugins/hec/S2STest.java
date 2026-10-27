@@ -12,16 +12,27 @@ import java.nio.file.*;
 class S2STest {
     /* Synthetic wire builders adapted from reference S2SBodies.java, pinned revision; Apache-2.0.
        Modified to cover native mappings, malformed input and fractional precision. */
+    /**
+     * Synthetic encoder mirroring S2SDecoder.Reader's primitives. It makes the
+     * grammar explicit in tests; captured real UF/HF bodies are exercised below
+     * independently, so this encoder is not the interoperability oracle.
+     */
     static class Body {
         ByteArrayOutputStream out=new ByteArrayOutputStream();
+        // Emit low seven-bit groups first, setting bit 7 until the final byte.
         Body v(long v){while((v&~127L)!=0){out.write((int)((v&127)|128));v>>>=7;}out.write((int)v);return this;}
         Body op(int v){out.write(v);return this;}
+        // S uses UTF-8 byte length; ns emits the non-null NS form (length + 1).
+        // A null NS can be built with v(0), without any following string bytes.
         Body str(String s){byte[] b=s.getBytes(StandardCharsets.UTF_8);v(b.length);out.writeBytes(b);return this;}
         Body ns(String s){byte[] b=s.getBytes(StandardCharsets.UTF_8);v(b.length+1);out.writeBytes(b);return this;}
         Body meta(){return op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::test").ns("channel").v(0);}
         Body csvMeta(){return op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::csv").ns("channel").v(2).str("a.b").str("message");}
         Body event(long flags,int count){return eventAt(flags,count,100,1);}
+        // FC/metaId/flags, the conditional four-varint block, then fieldCount.
+        // Individual tests append typed fields and payload blob lengths explicitly.
         Body eventAt(long flags,int count,long offset,long sequence){op(0xfc).v(1).v(flags);if((flags&10)!=0)v(7).v(offset).v(sequence).v(1790000000);return v(count);}
+        // Finished zlib and unfinished sync-flush exercise both accepted endings.
         byte[] compressed()throws Exception{ByteArrayOutputStream b=new ByteArrayOutputStream();b.write(0xf9);try(DeflaterOutputStream z=new DeflaterOutputStream(b)){z.write(out.toByteArray());}return b.toByteArray();}
         byte[] sync()throws Exception{ByteArrayOutputStream b=new ByteArrayOutputStream();b.write(0xf9);DeflaterOutputStream z=new DeflaterOutputStream(b,new Deflater(),true);z.write(out.toByteArray());z.flush();return b.toByteArray();}
     }

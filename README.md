@@ -16,6 +16,24 @@ The [current validation status](docs/validation-status.md) distinguishes passing
 final-artifact checks from the blocked fresh live UF/HF qualification. Classic
 S2S TCP is not implemented.
 
+## Event, raw and S2S on the same listener
+
+**One input serves these endpoints concurrently on HTTPS port 8088 by default:**
+
+| Endpoint | Payload |
+|---|---|
+| `POST /services/collector/event` | JSON event envelopes, concatenated or array batches |
+| `POST /services/collector/raw` | UTF-8 text with request metadata |
+| `POST /services/collector/s2s` | Native UF/HF `[httpout]` binary records |
+
+They share TLS, token policies, resource limits and the Logstash pipeline. The
+request path selects its decoder. See the [detailed endpoint guide](docs/http-endpoints.md)
+for exact aliases, simultaneous-use behavior, curl/forwarder examples, payload
+shapes, ACK requirements, error responses and downstream routing. A
+[shared-listener pipeline](examples/shared-listener.conf) and matching
+[token policy](examples/hec-inputs.conf) are included. The
+[bit-level S2S guide](docs/s2s-wire-format.md) explains the binary wire grammar.
+
 ## Configuration
 
 ```logstash

@@ -13,18 +13,49 @@ import java.time.Instant;
 import java.util.*;
 import org.logstash.Timestamp;
 
+/**
+ * Defines the native envelope understood by the input: event, time, host, source,
+ * sourcetype, index and indexed fields, plus required Logstash internals. JSON
+ * transport decoding is not a content-processing filter: objects/arrays stay
+ * native and raw text is not JSON-parsed, flattened or assigned a message field.
+ *
+ * <p>The /event grammar is one object, concatenated objects, or an array of
+ * envelope objects. The /raw grammar is UTF-8 text with request-local LF/CRLF
+ * framing. S2SEvents reuses envelope validation after its binary decoder has
+ * already established wire record types, timestamps and references.
+ */
 public final class HecProtocol {
+    /**
+     * Prepared events plus an optional validation failure after a valid prefix.
+     * No insertion happens here; HecServer owns queue writes and the response.
+     * @param events native envelopes prepared in request order
+     * @param failure error to return after prefix insertion, or null for full validation
+     */
     public record Prepared(List<Map<String, Object>> events, HecException failure) {}
     private final Limits limits;
     private final JsonFactory json;
     static final ObjectMapper JSON = new ObjectMapper();
 
+    /**
+     * Create the JSON parser with the input's nesting and logical-size constraints.
+     * @param limits JSON nesting, event size/count and allocation bounds
+     */
     public HecProtocol(Limits limits) {
         this.limits = limits;
         json = JsonFactory.builder().disable(JsonFactory.Feature.INTERN_FIELD_NAMES)
             .disable(JsonFactory.Feature.CANONICALIZE_FIELD_NAMES).streamReadConstraints(StreamReadConstraints.builder()
             .maxNestingDepth(limits.depth()).maxStringLength(limits.event()).maxNameLength(limits.event()).maxNumberLength(1024).build()).build();
     }
+    /**
+     * Parse public HEC event envelopes without running an application-data filter.
+     * Valid prefixes can accompany oracle-compatible parse/field failures;
+     * request resource-limit failures escape before the server begins insertion.
+     * @param body HTTP entity bytes after optional gzip decoding
+     * @param policy authenticated per-request token-policy snapshot
+     * @param request query metadata, with only supported keys used as defaults
+     * @param memory request allocation reservation shared with transport decoding
+     * @return prepared native envelopes and any prefix validation failure
+     */
     public Prepared events(byte[] body, TokenStore.Token policy, Map<String, String> request, MemoryBudget.Lease memory) {
         // Reserve parser scratch before Jackson can allocate a maximum-size token.
         memory.charge(4L * limits.event()+32768);
@@ -36,6 +67,8 @@ public final class HecProtocol {
         try (JsonParser p = json.createParser(body)) {
             JsonToken t = p.nextToken();
             if (t == null) return new Prepared(events,badEncoding?new HecException(400,6,"Invalid data format",0):new HecException(400, 5, "No data"));
+            // A top-level array batches ENVELOPES. An array inside an envelope's
+            // event property is instead one application payload, not a batch.
             boolean array = t == JsonToken.START_ARRAY;
             if (array) t = p.nextToken();
             while (t != null && (!array || t != JsonToken.END_ARRAY)) {
@@ -46,6 +79,8 @@ public final class HecProtocol {
                 try { events.add(prepare(envelope, policy, request, memory)); }
                 catch (HecException e) {
                     if (e.code == 9) throw e;
+                    // Preserve measured oracle numbering: index errors are one-
+                    // based, while the other recorded per-event errors are zero-based.
                     return new Prepared(events, new HecException(e.status, e.code, e.getMessage(), e.code == 7 ? number+1 : number));
                 }
                 number++;
@@ -111,6 +146,8 @@ public final class HecProtocol {
                                 Map<String, String> request, MemoryBudget.Lease memory) {
         if (!envelope.containsKey("event")) throw new HecException(400, 12, "Event field is required");
         Object event = envelope.get("event");
+        // This restriction is only on the root event value. Nested application
+        // booleans/nulls remain valid, as do strings/numbers/objects/arrays.
         if (event == null || event instanceof Boolean) throw HecException.invalid();
         if (event instanceof String s && s.isBlank()) throw new HecException(400, 13, "Event field cannot be blank");
         return finalizeEnvelope(envelope, policy, request, memory);
@@ -123,6 +160,9 @@ public final class HecProtocol {
                                           Map<String, String> request, MemoryBudget.Lease memory, Timestamp nativeTime) {
         memory.charge(64L + 96L * envelope.size());
         Map<String, Object> out = new LinkedHashMap<>(envelope);
+        // Only these four metadata names use query -> token/global fallback.
+        // Explicit source time is handled separately; raw query time/fields are
+        // not interpreted as event metadata by this implementation.
         for (String key : List.of("host", "source", "sourcetype", "index")) {
             Object v = out.containsKey(key) ? out.get(key) : request.getOrDefault(key, policy.defaults().get(key));
             if (v != null && !(v instanceof String)) throw HecException.invalid();
@@ -132,6 +172,8 @@ public final class HecProtocol {
         String index = (String) out.get("index");
         if (index == null || index.isEmpty() || (!policy.indexes().isEmpty() && !policy.indexes().contains(index)))
             throw new HecException(400, 7, "Incorrect index");
+        // HEC indexed fields are a flat map (scalar multivalues allowed). That
+        // constraint must not be applied to arbitrary nested event payloads.
         if (out.containsKey("fields")) {
             if (!(out.get("fields") instanceof Map<?, ?> fields)) throw new HecException(400, 15, "Error in handling indexed fields");
             for (Object v : fields.values()) {
@@ -139,8 +181,12 @@ public final class HecProtocol {
                     throw new HecException(400, 15, "Error in handling indexed fields");
             }
         }
+        // Application payloads may contain these literal keys inside event/fields,
+        // but the envelope root cannot overwrite the runtime's bookkeeping.
         if (out.containsKey("@timestamp") || out.containsKey("@metadata") || out.containsKey("@version"))
             throw HecException.invalid();
+        // Native S2S seconds bypass HEC unit inference. Keep the supplied source
+        // time in the envelope independently of this internal Timestamp object.
         Timestamp timestamp = nativeTime;
         if (timestamp == null && out.containsKey("time")) timestamp = timestamp(out.get("time"));
         @SuppressWarnings("unchecked") Map<String, Object> safe = (Map<String, Object>) lossless(out, memory);
@@ -170,6 +216,11 @@ public final class HecProtocol {
             throw HecException.invalid();
         }
     }
+    /**
+     * Prepare values for Logstash's Event/PQ model without silent numeric loss.
+     * Large integers/decimals retain BigInteger/BigDecimal. Container copies are
+     * reserved before allocation because one S2S field map can feed many lines.
+     */
     static Object lossless(Object value, MemoryBudget.Lease memory) {
         if(value instanceof String s)return unicode(s);
         if (value instanceof BigInteger i) {
@@ -195,6 +246,7 @@ public final class HecProtocol {
         }
         return value;
     }
+    /** HEC time interpretation only; binary S2S carries explicitly native epoch seconds. */
     static Timestamp timestamp(Object value) {
         try {
             if (!(value instanceof String || value instanceof Number)) throw HecException.invalid();
@@ -222,6 +274,14 @@ public final class HecProtocol {
             return new Timestamp(Instant.ofEpochSecond(seconds.longValueExact(),n.subtract(seconds).movePointRight(9).intValueExact()));
         }catch(RuntimeException e){throw HecException.invalid();}
     }
+    /**
+     * Decode the whole raw body before insertion; framing state is request-local.
+     * @param body UTF-8 text bytes after optional HTTP gzip decoding
+     * @param policy authenticated token defaults and index restrictions
+     * @param request supported request-level host/source/sourcetype/index metadata
+     * @param memory allocation reservation for text, framing and envelope copies
+     * @return prepared text envelopes, including an empty list for no logical lines
+     */
     public Prepared raw(byte[] body, TokenStore.Token policy, Map<String, String> request, MemoryBudget.Lease memory) {
         memory.charge(8L*body.length + 4L*limits.event() + 1024L*Math.min(limits.events(),(long)body.length+1));
         String text = utf8(body);
@@ -236,6 +296,8 @@ public final class HecProtocol {
     static List<String> lines(String text) {
         return lines(text, 10_000);
     }
+    // Empty delimiter records are skipped; whitespace-only nonempty lines and an
+    // unterminated tail remain. Indentation and JSON-looking text have no extra meaning.
     static List<String> lines(String text, int maximum) {
         List<String> lines = new ArrayList<>();
         int start = 0;
