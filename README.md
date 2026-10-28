@@ -1,6 +1,6 @@
 # Logstash Splunk HEC input
 
-A Java input for **Logstash 9.5.0+ / Java 21** that receives HEC event, raw and S2S HTTP envelopes. Payloads stay native for later filters. The default listener is **HTTPS**. No tokens are accepted until configured.
+A Java input for **Logstash 9.5.0+ / Java 21** that receives HEC event, raw and S2S HTTP envelopes, and optionally the classic UF/HF cooked `tcpout` stream. Payloads stay native for later filters. The default listeners use **TLS**. No HEC tokens are accepted until configured.
 
 Build and install locally:
 
@@ -12,9 +12,9 @@ bin/logstash-plugin install --local /absolute/path/logstash-input-splunk_hec-0.1
 The build needs Python 3, a JDK capable of `--release 21`, Docker and network access for the first dependency download. Gradle is checksum-pinned; the compile-only Logstash API is extracted from the pinned 9.5.5 image. The obsolete parent `.logstash/` is never used. Dependency versions and verification checksums are locked. The gem contains one plugin jar bundling Jackson, not Logstash or Elasticsearch.
 
 See [compatibility and evidence](docs/compatibility.md) for the exact tested scope and outstanding qualification work. This is not a claim of complete Splunk parsing-engine equivalence.
-The [current validation status](docs/validation-status.md) distinguishes passing
-final-artifact checks from the blocked fresh live UF/HF qualification. Classic
-S2S TCP is not implemented.
+The [current validation status](docs/validation-status.md) lists the passing
+final-artifact checks and live UF/HF qualification. Classic S2S TCP is optional,
+off by default and documented in [docs/s2s-tcp.md](docs/s2s-tcp.md).
 
 ## Event, raw and S2S on the same listener
 
@@ -33,6 +33,18 @@ shapes, ACK requirements, error responses and downstream routing. A
 [shared-listener pipeline](examples/shared-listener.conf) and matching
 [token policy](examples/hec-inputs.conf) are included. The
 [bit-level S2S guide](docs/s2s-wire-format.md) explains the binary wire grammar.
+
+## Optional classic S2S TCP (`tcpout`)
+
+Set `s2s_tcp_enabled => true` to also accept cooked-mode UF/HF `tcpout` on
+`s2s_tcp_port` (default 9997). It shares the TLS identity, limits and queue
+back-pressure of the HTTPS listener. TCP has **no HEC token**: TLS/mTLS is the
+trust boundary, and the sender GUID is self-declared. With `useACK = true` the
+sender is acknowledged only after the record's events entered the Logstash queue.
+Uncooked and legacy protocol levels are not supported. Details, observed wire
+facts and evidence are in [docs/s2s-tcp.md](docs/s2s-tcp.md); examples are
+[`examples/tcp-listener.conf`](examples/tcp-listener.conf) and
+[`examples/outputs-tcp.conf`](examples/outputs-tcp.conf).
 
 ## Configuration
 
@@ -97,7 +109,10 @@ Provided identity options:
 | `ssl_certificate`, `ssl_key` | PEM certificate chain and unencrypted PKCS8 private key; alternative to a keystore |
 | `ssl_client_ca` | Explicit trusted client certificates/CA bundle in X.509/PEM form |
 | `ssl_client_authentication` | Require a valid client certificate; default false |
-| `ssl_enabled` | Default true; set false explicitly only for isolated plaintext tests |
+| `ssl_enabled` | Default true; set false explicitly only for isolated plaintext tests (applies to both listeners) |
+| `s2s_tcp_enabled`, `s2s_tcp_port` | Optional classic TCP listener; default off, port 9997 |
+| `s2s_tcp_default_index`, `s2s_tcp_indexes` | TCP default index (`main`) and optional comma-separated allowlist |
+| `s2s_tcp_max_event_bytes` | TCP logical-event cap; 0 (default) allows at least 8 MiB because real HFs send >1 MiB internal records |
 
 TLS 1.2/1.3 are enabled. Invalid stores, expired certificates, missing SANs, mismatched PEM keys and inconsistent TLS options fail startup. The implementation never falls back to plaintext. Protect supplied unencrypted PEM keys with filesystem permissions.
 
@@ -154,12 +169,14 @@ python3 scripts/resolve-versions.py
 docker compose -f docker/compose.yml run --rm interop
 ```
 
-For a targeted rerun, append `--stage runtime` or `--stage senders` to the Compose
-command. The latter starts an owned oracle and runs the real sender stage; it
-does not recapture the complete HTTP oracle corpus.
+For a targeted rerun, append `--stage runtime`, `--stage senders` or `--stage tcp`
+to the Compose command. `senders` starts an owned oracle and runs the real HTTP
+sender stage followed by the TCP stage; it does not recapture the complete HTTP
+oracle corpus. `tcp` runs only the real UF/HF classic TCP matrix against an owned
+Logstash receiver.
 
 Run Compose from this plugin directory. It uses the host Docker socket and matching absolute bind paths; Docker Desktop needs host networking enabled. Auto networking uses bridge senders with Desktop's host gateway on Docker Desktop, and host-network senders accessing loopback on native Linux. Set `HEC_SENDER_NETWORK=host` or `bridge` explicitly to override detection. The native-Linux selection has unit coverage; the measured end-to-end environment is Docker Desktop, as recorded in compatibility evidence. Real Splunk/UF containers run amd64, with emulation on Apple Silicon. Test licenses/terms acceptance is explicit in the disposable setup. Each owned container has finite waits and ID-scoped cleanup; no package/image is published. The equivalent host orchestration is `python3 tests/interop/run.py`. It refuses to adopt an existing `hec-spec-oracle` container.
 
 `scripts/resolve-versions.py --refresh-ga` discovers only numeric stable release candidates and writes `versions-candidate.json` for review; builds do not refresh pins. Review and update `versions.properties`/checksums explicitly, then regenerate real fixtures and minimum/latest evidence. Bootstrap invalidates the API cache when its source image pin changes and runs the Gradle version selected by the same pins file.
 
-TCP is not enabled or implemented. See [the conditional feasibility record](docs/tcp-feasibility.md); `python3 tests/tcp/check.py` exits 2 while real TCP evidence is absent.
+`python3 tests/tcp/check.py` exits 0 only when the retained real UF/HF TCP evidence is complete and names the exact gem in this directory; otherwise it exits 2. See [docs/s2s-tcp.md](docs/s2s-tcp.md).

@@ -22,7 +22,8 @@ import uuid
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tests/interop'))
 import runtime
-from senders import sender_ready, sender_network
+from senders import sender_ready, sender_network, sender_bootstrap_args
+from oracle_query import source_events
 
 
 def main():
@@ -30,6 +31,7 @@ def main():
     parser.add_argument('--receiver',required=True,help='Owned oracle bridge IP and TCP port')
     parser.add_argument('--port',type=int,default=18097)
     parser.add_argument('--timeout',type=int,default=600)
+    parser.add_argument('--compressed',action='store_true',help='Capture the real sender compression mode separately')
     args=parser.parse_args()
     host,port=args.receiver.rsplit(':',1)
     output=ROOT/'tests/tcp/evidence'
@@ -37,7 +39,9 @@ def main():
     observations=[]
     lock=threading.Lock()
     retained=0
-    cap=4*1024*1024
+    # Fresh HF diagnostic traffic exceeded the original 4-MiB total cap before
+    # its fixture records. Keep a finite 32-MiB budget and report any truncation.
+    cap=32*1024*1024
     max_observations=4096
     dropped=0
     byte_counts={'sender':0,'receiver':0}
@@ -88,7 +92,7 @@ def main():
 
     senders=[]
     result={'status':'observed-only','tcp_input_qualified':False,'receiver':args.receiver,
-            'configuration':{'useACK':True,'compressed':False,'tls':False},'senders':[],
+            'configuration':{'useACK':True,'compressed':args.compressed,'tls':False},'senders':[],
             'limitations':['TCP decoder, receiver-side ACK generation, TLS, compression and induced retries are not implemented or qualified.']}
     server=Server(('0.0.0.0',args.port),Relay)
     thread=threading.Thread(target=server.serve_forever,daemon=True)
@@ -100,20 +104,32 @@ def main():
             senders.append(name)
             with lock:before=len(observations);before_bytes=dict(byte_counts)
             runtime.docker('run','-d','--name',name,'--platform','linux/amd64','--user','root',
+                *sender_bootstrap_args(name),
                 *network_flags,
                 '-e','SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com',
                 '-e','HEC_TRANSPORT=tcp','-e','HEC_TCP_RECEIVER='+receiver_host+':'+str(args.port),
+                '-e','HEC_TCP_COMPRESSED='+str(args.compressed).lower(),
                 '-v',str(ROOT/'tests/interop/sender_setup.py')+':/tmp/hec-sender-setup.py:ro',
                 '--entrypoint','/usr/bin/python3',image,'/tmp/hec-sender-setup.py')
             sender_ready(name,args.timeout)
-            deadline=time.monotonic()+30
+            hostname=runtime.docker('inspect',name,'--format','{{.Config.Hostname}}')
+            deadline=time.monotonic()+90
+            indexed=[]
             while time.monotonic()<deadline:
-                with lock:rows=observations[before:]
-                if any(r.get('direction')=='sender' for r in rows) and any(r.get('direction')=='receiver' for r in rows):break
-                time.sleep(.2)
+                indexed=source_events(hostname)
+                if len(indexed)>=6:break
+                time.sleep(1)
+            if len(indexed)!=6:raise RuntimeError(role+' TCP oracle did not index exactly six source events: '+str(indexed))
+            # Retain the reverse-channel ACKs following real receiver processing.
+            time.sleep(3)
+            home='/opt/splunkforwarder' if role=='uf' else '/opt/splunk'
+            runtime.docker('exec','--user','splunk',name,home+'/bin/splunk','stop',timeout=90)
+            time.sleep(1) # drain orderly close-channel records before snapshotting
             with lock:rows=list(observations[before:])
             result['senders'].append(dict(role=role,image=image,
-                hostname=runtime.docker('inspect',name,'--format','{{.Config.Hostname}}'),
+                hostname=hostname,oracle_indexed_events=indexed,
+                connection_ids=sorted({row['connection'] for row in rows}),
+                version=runtime.docker('exec','--user','splunk',name,home+'/bin/splunk','version'),
                 sent_bytes=byte_counts['sender']-before_bytes['sender'],
                 received_bytes=byte_counts['receiver']-before_bytes['receiver']))
             runtime.docker('rm','-f','-v',name)
@@ -135,7 +151,7 @@ def main():
             result['traffic']=observations
             result['dropped_observations']=dropped
             result['retained_bytes']=retained
-        (output/'tcp-capture.json').write_text(json.dumps(result,indent=2)+'\n')
+        (output/('tcp-capture-compressed.json' if args.compressed else 'tcp-capture.json')).write_text(json.dumps(result,indent=2)+'\n')
         for name in senders:subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
 
 

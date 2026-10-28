@@ -1,8 +1,8 @@
 # Compatibility and evidence
 
-See [current validation status](validation-status.md) for final-candidate results
-and the blocked fresh live-sender rerun. Historical successful sender observations
-must not be mistaken for completion of that rerun.
+See [current validation status](validation-status.md) for final-artifact results.
+Evidence files name the SHA-256 of the gem they exercised; a file that names a
+different digest is historical, not qualification of the current artifact.
 
 ## Pinned test environments
 
@@ -113,7 +113,7 @@ IDs, null and empty ACK lists were rejected.
 | M5 Capacity | Positive-limit validation/accounting; HTTP overload/health/read shutdown; actual memory/PQ writer interruption in both distributions; no worker activity after joining/release |
 | M6 ACK | Pending/consume/duplicates/concurrent poll/token/channel isolation; small-cap exhaustion and pinned monotonic cleanup; high-water restart; actual PQ crash with outstanding polling |
 | M7 TLS | Generated identity/reuse, DNS/IP SANs, wrong trust/hostname rejection; PEM/PKCS12/JKS; mTLS positive/negative; packaged HTTPS on both runtimes; direct UF/HF verified HTTPS |
-| M8 TCP | Conditional and unqualified; no listener; gate reports blocked rather than pass |
+| M8 TCP | Optional cooked `tcpout` listener: real captured UF/HF stream replay (plain and verified TLS, compressed and plain), ACK-after-queue/no-ACK-on-failure, truncation, shared back-pressure and shutdown; live UF/HF 10.6.1.1 matrix and receiver SIGKILL/resume (`tcp-senders.json`) |
 
 [`queue-cancellation.json`](../tests/interop/evidence/queue-cancellation.json)
 uses the actual Java `QueueWriter` implementations passed to Java inputs. Full
@@ -159,9 +159,16 @@ preserved; replay IDs remain stable rather than the input deduplicating them.
 - Linux arm64 runtimes and emulated amd64 senders were exercised here. There is
   no separate native-amd64 performance qualification. The pre-9.5 guard was
   tested by runtime-identity injection, not by installing on a pre-9.5 image.
-- TCP handshake/framing/ACK/retry evidence is absent. T8 remains conditional;
-  [`tcp-feasibility.md`](tcp-feasibility.md) records the attempted capture's
-  startup deadline failure and the qualification boundary.
+- TCP is qualified only for latest UF/HF 10.6.1.1 cooked `tcpout` as recorded in
+  [`tcp-senders.json`](../tests/interop/evidence/tcp-senders.json) and described in
+  [`s2s-tcp.md`](s2s-tcp.md). Uncooked streams, legacy protocol levels,
+  heartbeats/token/certificate controls, indexer discovery and cluster
+  features are not supported, and older forwarder versions were not tested. The
+  classic protocol has no HEC token; TLS/mTLS is the trust boundary, and the
+  sender GUID is self-declared. Live TCP sender runs used the persistent queue
+  with the 9.5.5 runtime; the minimum 9.5.0 runtime received a reduced TLS set.
+  TCP behavior under sustained load or with senders blocked for long periods is
+  not measured beyond the small-cap Java back-pressure test.
 
 ## Verification execution notes
 

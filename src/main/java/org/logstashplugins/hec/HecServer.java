@@ -26,8 +26,9 @@ public final class HecServer implements AutoCloseable {
     private final Consumer<Map<String,Object>> sink;
     private final HecProtocol protocol;
     private final MemoryBudget memory;
-    private final MemoryBudget.Lease healthReservation;
-    private final Semaphore emergencyHealth = new Semaphore(1);
+    private final IngressResources resources;
+    private final boolean ownsResources;
+    private final Semaphore emergencyHealth;
     private final Semaphore processing,connections;
     private final ServerSocket listener;
     private final Map<Socket,Thread> workers=new HashMap<>();
@@ -38,11 +39,17 @@ public final class HecServer implements AutoCloseable {
     private record Request(String method,String path,Map<String,String> query,Map<String,String> headers){}
 
     public HecServer(String host,int port,TlsConfig tls,Limits limits,TokenStore tokens,AckManager acks,Consumer<Map<String,Object>> sink)throws IOException{
+        this(host,port,tls,limits,tokens,acks,sink,new IngressResources(limits),true);
+    }
+    HecServer(String host,int port,TlsConfig tls,Limits limits,TokenStore tokens,AckManager acks,Consumer<Map<String,Object>> sink,IngressResources resources)throws IOException{
+        this(host,port,tls,limits,tokens,acks,sink,resources,false);
+    }
+    private HecServer(String host,int port,TlsConfig tls,Limits limits,TokenStore tokens,AckManager acks,Consumer<Map<String,Object>> sink,IngressResources resources,boolean ownsResources)throws IOException{
         this.limits=limits;this.tokens=tokens;this.acks=acks;this.sink=sink;
-        protocol=new HecProtocol(limits);memory=new MemoryBudget(limits.aggregate());
-        healthReservation=memory.lease();healthReservation.charge(256L<<10);
+        this.resources=resources;this.ownsResources=ownsResources;
+        protocol=new HecProtocol(limits);memory=resources.memory;emergencyHealth=resources.emergencyHealth;
         deadlines.setRemoveOnCancelPolicy(true);
-        processing=new Semaphore(limits.concurrency(),true);connections=new Semaphore(limits.connections(),true);
+        processing=resources.processing;connections=resources.connections;
         listener=tls.bind(host,port,limits.connections());
         acceptor=Thread.ofVirtual().name("hec-accept").unstarted(this::accept);
     }
@@ -262,11 +269,17 @@ public final class HecServer implements AutoCloseable {
     }
     private void quietResponse(Socket socket,int status,Map<String,?> body){try{respond(socket,status,body);}catch(IOException ignored){}finally{try{socket.close();}catch(IOException ignored){}}}
     private void stopAdmission(){stopped=true;try{listener.close();}catch(IOException ignored){}}
+    void beginStop(){
+        stopAdmission();deadlines.shutdownNow();
+        synchronized(workers){for(var entry:workers.entrySet()){
+            try{entry.getKey().close();}catch(IOException ignored){}entry.getValue().interrupt();
+        }}
+    }
     @Override public void close(){closeBy(System.nanoTime()+TimeUnit.MILLISECONDS.toNanos(limits.shutdownMillis()));}
     void closeBy(long deadline){
         boolean interrupted=Thread.interrupted();
         try{
-        stopAdmission();
+        beginStop();
         deadlines.shutdownNow();
         List<Thread> joining;
         synchronized(workers){
@@ -288,7 +301,7 @@ public final class HecServer implements AutoCloseable {
             try{deadlines.awaitTermination(left,TimeUnit.NANOSECONDS);}
             catch(InterruptedException stopInterrupt){interrupted=true;}
         }
-        healthReservation.close();
+        if(ownsResources)resources.close();
         }finally{if(interrupted)Thread.currentThread().interrupt();}
     }
 }

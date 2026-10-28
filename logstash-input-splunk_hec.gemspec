@@ -4,8 +4,8 @@ Gem::Specification.new do |s|
   s.platform = 'java'
   s.licenses = ['Apache-2.0']
   s.authors = ['Splunk HEC input contributors']
-  s.summary = 'Native-envelope HTTPS HEC input for Logstash 9.5+'
-  s.description = 'Receives HEC event, raw and S2S envelopes over verified HTTPS while preserving native payloads for later Logstash transformations.'
+  s.summary = 'Native-envelope HEC and optional S2S TCP input for Logstash 9.5+'
+  s.description = 'Receives HEC event, raw and S2S-over-HTTP envelopes over TLS, and optionally classic UF/HF cooked TCP, while preserving native payloads for later Logstash transformations.'
   s.required_ruby_version = '>= 3.1'
   s.homepage = 'https://github.com/mingshsg/elastic-ingest-splunk-forwarders'
   s.require_paths = ['lib']

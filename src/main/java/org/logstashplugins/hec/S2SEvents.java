@@ -20,11 +20,14 @@ final class S2SEvents {
     S2SEvents(Limits limits,HecProtocol protocol){this.limits=limits;this.protocol=protocol;}
     List<Map<String,Object>> map(List<S2SDecoder.Event> records,TokenStore.Token token,
                                   Map<String,String> request,byte[] batch,MemoryBudget.Lease memory){
+        return mapWithIdentity(records,token,request,TokenStore.fingerprint(batch),memory);
+    }
+    List<Map<String,Object>> mapWithIdentity(List<S2SDecoder.Event> records,TokenStore.Token token,
+                                  Map<String,String> request,String batchIdentity,MemoryBudget.Lease memory){
         List<Map<String,Object>> out=new ArrayList<>();
-        // This fallback names the exact S2S entity bytes, after any outer gzip
-        // decoding. It promises identical-batch replay stability, not deduplication
-        // across arbitrary recompression or changed sender source coordinates.
-        String batchIdentity=TokenStore.fingerprint(batch);
+        // HTTP supplies its entity digest; TCP supplies one decoded wire-record
+        // digest without retaining an extra copy. Missing-coordinate identities
+        // promise exact batch/record replay, not arbitrary rebatching stability.
         memory.charge(4L*limits.event());
         int recordNumber=0;
         for(S2SDecoder.Event record:records){

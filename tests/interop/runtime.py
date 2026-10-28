@@ -22,11 +22,24 @@ P = dict(line.split('=', 1) for line in (ROOT/'versions.properties').read_text()
 TOKEN = '11111111-1111-4111-8111-111111111111'
 CHANNEL = '12345678-1234-4234-8234-123456789abc'
 
+def read_events(path):
+    """Read complete JSON-lines only; a concurrent final write is not a bad event."""
+    if not path.exists():return []
+    return [json.loads(line) for line in path.read_bytes().split(b'\n')[:-1] if line.strip()]
+
+def artifact_info():
+    packages=sorted(ROOT.glob('logstash-input-splunk_hec-*-java.gem'))
+    if not packages:raise RuntimeError('build the plugin gem before qualification')
+    package=packages[-1]
+    return {'file':package.name,'sha256':hashlib.sha256(package.read_bytes()).hexdigest()}
+
 def docker(*args, **kw):
     return subprocess.run(['docker', *args], check=True, text=True, capture_output=True, timeout=kw.pop('timeout', 120), **kw).stdout.strip()
 
 def request(port, context, path, body=None):
-    c = http.client.HTTPSConnection('localhost', port, context=context, timeout=15)
+    """context=None selects the explicit test-only plaintext listener."""
+    c = (http.client.HTTPConnection('localhost', port, timeout=15) if context is None else
+         http.client.HTTPSConnection('localhost', port, context=context, timeout=15))
     try:
         headers={'Authorization':'Splunk '+TOKEN, 'X-Splunk-Request-Channel':CHANNEL}
         c.request('GET' if body is None else 'POST', '/services/collector/'+path,
@@ -36,12 +49,12 @@ def request(port, context, path, body=None):
     finally:
         c.close()
 
-def ready(name,directory):
+def ready(name,directory,plaintext=False):
     port=int(docker('port',name,'8088/tcp').split(':')[-1])
     deadline=time.monotonic()+600
     while time.monotonic()<deadline:
         try:
-            context=ssl.create_default_context(cafile=str(directory/'state/identity/server.crt'))
+            context=None if plaintext else ssl.create_default_context(cafile=str(directory/'state/identity/server.crt'))
             if request(port,context,'health')[0]==200:return port,context
         except (OSError,ValueError,ssl.SSLError):pass
         if docker('inspect',name,'--format','{{.State.Running}}')!='true':
@@ -50,6 +63,7 @@ def ready(name,directory):
     raise RuntimeError('runtime readiness timeout: '+docker('logs',name)+'\n'+docker('top',name))
 
 def run(role, queue='persisted', keep=False):
+    subject_artifact=artifact_info()
     success=False
     name='hec-runtime-'+uuid.uuid4().hex[:10]
     directory=ROOT/'build/interop'/name
@@ -93,9 +107,9 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
         output=directory/'events.ndjson'
         deadline=time.monotonic()+20
         while time.monotonic()<deadline:
-            if output.exists() and output.stat().st_size: break
+            if read_events(output): break
             time.sleep(.2)
-        event=json.loads(output.read_text().splitlines()[0])
+        event=read_events(output)[0]
         assert event['event']==payload['event'],event
         assert event['time']==payload['time'] and event['@timestamp']=='2023-11-14T22:13:20.123456789Z',event
         assert 'message' not in event and event['host']=='original' and event['fields']==payload['fields'],event
@@ -126,7 +140,9 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
             assert len(recovered)==1 and recovered[0]['@timestamp']=='2023-11-14T22:13:20.123456789Z',recovered
             restart={'pq_unacked_event_recovered':True,'old_ack_unknown':True,'old_ack_id':outstanding,
                      'new_ack_id':new['ackId'],'certificate_reused':True}
+        if artifact_info()!=subject_artifact:raise RuntimeError('plugin artifact changed during runtime verification')
         result=dict(role=role,queue=queue,image=P[f'logstash.{role}.image'],
+                    artifact=subject_artifact,
                     installed=True,verified_https=True,ack_consumed=True,event=event,
                     black_box_http=black_box,
                     restart=restart,
@@ -138,6 +154,42 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
         return result
     finally:
         if not keep or not success: subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
+
+def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998, name=None):
+    """Start an owned Logstash fixture with the classic TCP listener enabled.
+
+    TLS is the default. tls=False exists only to qualify the real sender's
+    plaintext classic-S2S mode inside a disposable loopback fixture.
+    """
+    subject=artifact_info()
+    name=name or 'hec-tcp-'+uuid.uuid4().hex[:10]
+    directory=ROOT/'build/interop'/name
+    config=directory/'config'
+    config.mkdir(parents=True)
+    directory.chmod(0o777)
+    (config/'logstash.yml').write_text('pipeline.workers: 1\npipeline.batch.size: 1\napi.enabled: false\n'
+        'xpack.monitoring.enabled: false\npath.data: /run-hec/data\npath.logs: /run-hec/logs\nqueue.type: '+queue+
+        '\nqueue.max_bytes: 256mb\nqueue.page_capacity: 16mb\nqueue.checkpoint.writes: 1\nqueue.checkpoint.acks: 1\n')
+    (config/'pipelines.yml').write_text('- pipeline.id: main\n  path.config: /run-hec/config/pipeline.conf\n')
+    (config/'pipeline.conf').write_text('''input { splunk_hec {
+  host => "0.0.0.0" port => 8088 state_directory => "/run-hec/state" ssl_enabled => '''+('true' if tls else 'false')+'''
+  ssl_self_signed_sans => "dns:localhost,dns:host.docker.internal,ip:127.0.0.1,ip:::1"
+  s2s_tcp_enabled => true s2s_tcp_port => 9997
+  tokens_json => '[{"token":"'''+TOKEN+'''","useACK":true}]'
+} }
+filter { ruby { code => 'event.set("verification_metadata", event.get("@metadata"))' } }
+output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_interval => 0 } }
+''')
+    try:
+        docker('run','-d','--name',name,'-p','127.0.0.1::8088','-p','127.0.0.1:'+str(tcp_port)+':9997',
+               '-e','JAVA_HOME=/usr/share/logstash/jdk','-v',str(ROOT)+':/work:ro',
+               '-v',str(directory)+':/run-hec','--entrypoint','/usr/share/logstash/vendor/jruby/bin/jruby',
+               P[f'logstash.{role}.image'],'/work/tests/interop/install_and_run.rb')
+        port,context=ready(name,directory,plaintext=not tls)
+    except BaseException:
+        subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
+        raise
+    return {'name':name,'directory':directory,'port':port,'context':context,'artifact':subject,'tcp_port':tcp_port}
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)

@@ -278,8 +278,9 @@ references/metric values, then produces native envelopes. Structured wire events
 retain their boundaries; unstructured UF chunks use the documented line framing.
 The complete batch is validated before queue insertion.
 
-For exact bytes and bit masks, see [S2S wire format](s2s-wire-format.md). Classic
-S2S TCP on port 9997 is not implemented; `httpout` uses this HTTPS listener.
+For exact bytes and bit masks, see [S2S wire format](s2s-wire-format.md). `httpout`
+uses this HTTPS listener. Classic `tcpout` on port 9997 is a separate, optional
+listener described in [S2S TCP](s2s-tcp.md).
 
 ## 4. Operate and route the shared input
 

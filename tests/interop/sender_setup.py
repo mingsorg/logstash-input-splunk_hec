@@ -30,9 +30,17 @@ if os.environ.get('HEC_RECEIVER_URI'):
     (app/'outputs.conf').write_text(outputs)
 if os.environ.get('HEC_TRANSPORT')=='tcp':
     receiver=os.environ['HEC_TCP_RECEIVER']
-    (app/'outputs.conf').write_text('[tcpout]\ndefaultGroup = capture\nindexAndForward = false\n'
+    tls=os.environ.get('HEC_TCP_TLS','false')=='true'
+    group=('[tcpout]\ndefaultGroup = capture\nindexAndForward = false\n'
         '[tcpout:capture]\nserver = '+receiver+'\nsendCookedData = true\n'
-        'useACK = true\ncompressed = false\n[indexAndForward]\nindex = false\n')
+        'useACK = '+os.environ.get('HEC_TCP_ACK','true')+'\ncompressed = '+os.environ.get('HEC_TCP_COMPRESSED','false')+'\n')
+    if tls:
+        # Real sender trust/name verification against the generated plugin identity.
+        group+='useSSL = true\nsslVerifyServerCert = true\nsslVerifyServerName = true\n'
+        shutil.copyfile('/tmp/hec-server.crt',app/'trusted-hec.crt')
+        (app/'trusted-hec.crt').chmod(0o644)
+        (app/'server.conf').write_text('[sslConfig]\nsslRootCAPath = '+str(app/'trusted-hec.crt')+'\n')
+    (app/'outputs.conf').write_text(group+'[indexAndForward]\nindex = false\n')
 (app/'inputs.conf').write_text('''[monitor://$SPLUNK_HOME/var/log/splunk]
 disabled = true
 
@@ -69,6 +77,9 @@ for name,content in [('log','alpha\n  indented remains separate\n重复\nrepeat\
     Path('/tmp/hec-source.'+name).write_text(content)
 subprocess.run(['chown','-R','splunk:splunk',str(app.parent)],check=True)
 print('sender setup: app configured',flush=True)
+if os.environ.get('HEC_STARTUP_MODE')=='direct':
+    from splunk_bootstrap import start,supervise
+    supervise(start(home,'HecSender-Test-Only-487!'),home)
 # Delegate first-start provisioning and process supervision to the image's own
 # entrypoint, as used by the working oracle fixture. A direct CLI start can emit
 # traffic before returning and bypasses the image's initialization/health state.

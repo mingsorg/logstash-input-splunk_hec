@@ -2,7 +2,7 @@
 
 This describes the observed binary format implemented by this plugin's decoder,
 ported from the pinned reference repository. It describes `/services/collector/s2s`
-HTTP bodies, **not** the classic TCP/9997 handshake or framing. Unknown flag bits
+HTTP bodies, **not** the classic TCP/9997 handshake or framing (see [S2S TCP](s2s-tcp.md); its event headers use independent flag bits). Unknown flag bits
 are identified as unknown rather than assigned speculative meanings.
 
 Notation: `U(x)` is an unsigned base-128 varint; `S(x)` is a length-prefixed UTF-8

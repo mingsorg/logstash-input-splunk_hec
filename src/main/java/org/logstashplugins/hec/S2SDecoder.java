@@ -6,14 +6,18 @@
  */
 package org.logstashplugins.hec;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
- * Decodes the observed UF/HF S2S-over-HTTP binary grammar, not HEC JSON.
+ * Decodes observed UF/HF compact records, not HEC JSON. The default entry point
+ * handles HTTP; StreamSession shares typed fields with a distinct TCP header.
  * The format described here is implemented from the pinned reference and wire
- * fixtures; it is not a claim to know every Splunk flag or TCP/9997 variant.
+ * fixtures; it is not a claim to know every Splunk flag or historical variant.
  * See {@code docs/s2s-wire-format.md} for annotated bytes and bit diagrams.
  *
  * <p>Notation: U = unsigned base-128 varint, S = UTF-8 byte-length + bytes,
@@ -36,10 +40,13 @@ import java.util.*;
  */
 public final class S2SDecoder {
     // Flags are decoded varint integers, not fixed-width bytes on the wire.
-    // Only these masks have semantics here: bit 6 means structured, either of
+    // For HTTP: bit 6 means structured, either of
     // bits 1/3 supplies ALL four time/stream varints, and bit 16 adds a metric blob.
     // Other bits are retained as flags; their individual meanings are not guessed.
     static final int STRUCTURED=0x40, TIME_OR_STREAM=0x0a, METRIC=0x10000;
+    // In the captured compact TCP profile these header bits are independent.
+    // HTTP retains its original four-varint TIME_OR_STREAM grammar below.
+    static final int TCP_STREAM_POS=0x02, TCP_EVENT_ID=0x04, TCP_TIMESTAMP=0x08, TCP_RESENT=0x46;
     /**
      * Original timestamp component; only part 0 drives fractional time here.
      * @param part observed component ID, with zero identifying subsecond encoding
@@ -138,10 +145,19 @@ public final class S2SDecoder {
      * seconds. Assigning separate guessed meanings would change byte alignment.
      */
     private Event event(Reader r,Map<Long,Meta> metas,String tz,MemoryBudget.Lease memory) {
+        return parsedEvent(r,metas,tz,memory,false).event();
+    }
+    private record Parsed(Event event,Long eventId){}
+    private Parsed parsedEvent(Reader r,Map<Long,Meta> metas,String tz,MemoryBudget.Lease memory,boolean tcp) {
         Meta m=metas.get(r.varint()); if(m==null) throw HecException.invalid();
         long flags=r.varint(),stream=0,offset=-1,seq=-1,seconds=-1;
+        Long eventId=null;
         if(flags<0||flags>0xffffffffL)throw HecException.invalid();
-        if((flags & TIME_OR_STREAM)!=0) {
+        if(tcp){
+            if((flags&TCP_STREAM_POS)!=0){stream=r.varint();offset=r.varint();seq=r.varint();}
+            if((flags&TCP_EVENT_ID)!=0)eventId=r.varint();
+            if((flags&TCP_TIMESTAMP)!=0){seconds=r.varint();if(seconds<0)throw HecException.invalid();}
+        }else if((flags & TIME_OR_STREAM)!=0) {
             stream=r.varint();offset=r.varint();seq=r.varint();seconds=r.varint();
             if(seconds<0)throw HecException.invalid();
         }
@@ -159,7 +175,17 @@ public final class S2SDecoder {
             int tag=r.length();
             // Exact tag 04 is S(key), S(value); _MetaData:Index supplies the index.
             if(tag==4) meta.put(r.str(),r.str());
+            else if(tcp&&tag==TCP_RESENT) {
+                // Observed on latest HF TLS streams only for records the sender retransmits
+                // after its acknowledgement wait expired: U(marker) S("resent"). Keep it as
+                // wire provenance; it is neither an indexed field nor a payload change.
+                long marker=r.varint();String text=r.str();
+                meta.put("resent",text);meta.put("resent_marker",Long.toUnsignedString(marker));
+            }
             else if((tag & 0xc0)==0x40) {
+                // Compact TCP date parts are known only as 0x42/0x4a (and their sign variants).
+                // Anything else is a new tag layout: fail closed instead of misparsing later bytes.
+                if(tcp&&(tag&0xdf)!=0x42&&(tag&0xdf)!=0x4a)throw HecException.invalid();
                 // Low-byte bits 7..6 = 01 identify date parts; bit 5 carries a
                 // negative sign (for example a zone offset). Preserve raw tags
                 // because some variants use shared constants, not calendar units.
@@ -196,7 +222,7 @@ public final class S2SDecoder {
         }
         // Critical exception: a zero-flags/zero-fields marker omits even the
         // raw-length varint. All other records have a first length-prefixed blob.
-        byte[] raw=flags==0&&count==0?new byte[0]:r.bytes(r.length());
+        byte[] raw=!tcp&&flags==0&&count==0?new byte[0]:r.bytes(r.length());
         if((flags & METRIC)!=0) {
             // Metric layout is B(binary values), B(raw text), not the reverse.
             // A measurement is an IEEE-754 double at the field's byte offset:
@@ -223,8 +249,18 @@ public final class S2SDecoder {
         // Keep decimal source time without a floating-point/millisecond round trip.
         // The downstream mapper creates the runtime Timestamp separately.
         String time=seconds<0?null:Long.toString(seconds)+(fraction.isEmpty()?"":"."+fraction);
-        return new Event(m.host,m.source,m.sourcetype,m.channel,meta.get("_MetaData:Index"),flags,
-            stream,offset,seq,seconds,time,List.copyOf(parts),tz,m.header,fields,meta,raw);
+        String host=m.host,source=m.source,sourcetype=m.sourcetype;
+        if(tcp){
+            // Compact TCP can override channel metadata on a record (for example
+            // zero-ID fwdinfo/fwd-hb records). Indexed fields named host are NOT
+            // these control keys. The reserved startup host delegates to peer defaults.
+            host=strip(meta.getOrDefault("MetaData:Host",host),"host::");
+            source=strip(meta.getOrDefault("MetaData:Source",source),"source::");
+            sourcetype=strip(meta.getOrDefault("MetaData:Sourcetype",sourcetype),"sourcetype::");
+            if("$decideOnStartup".equals(host))host=null;
+        }
+        return new Parsed(new Event(host,source,sourcetype,m.channel,meta.get("_MetaData:Index"),flags,
+            stream,offset,seq,seconds,time,List.copyOf(parts),tz,m.header,fields,meta,raw),eventId);
     }
     /**
      * Subsecond integer encoding: {@code v = (digits << (z+1)) | (1 << z)}, where z is
@@ -258,12 +294,75 @@ public final class S2SDecoder {
     }
     private static String header(Meta m,int index) { if(index>=m.header.size()) throw HecException.invalid(); return m.header.get(index); }
     private static String strip(String value,String prefix) {return value!=null&&value.startsWith(prefix)?value.substring(prefix.length()):value;}
+
+    record StreamRecord(Event event,Long eventId,String wireSha256,boolean retainsLease){}
+
+    /**
+     * Per-connection compact TCP dictionary. Typed field decoding is shared with
+     * HTTP, but TCP's event-ID bit and conditional header are transport-specific.
+     * Metadata/timezone leases are retained until replacement/close; event leases
+     * remain owned by the caller until queue acceptance. No growing input buffer
+     * or re-decoding of partial packets is needed: reads are exact and bounded.
+     */
+    final class StreamSession implements AutoCloseable{
+        private final Map<Long,Meta> metas=new HashMap<>();
+        private final Map<Long,MemoryBudget.Lease> leases=new HashMap<>();
+        private String timezone;
+        private MemoryBudget.Lease timezoneLease;
+        StreamRecord read(int opcode,InputStream input,MemoryBudget.Lease memory){
+            memory.charge(512);Reader r=new Reader(input,memory,opcode);
+            switch(opcode){
+                case 0xff -> {
+                    String next=r.str(),hash=r.hash();
+                    if(timezoneLease!=null)timezoneLease.close();
+                    timezone=next;timezoneLease=memory;
+                    return new StreamRecord(null,null,hash,true);
+                }
+                case 0xfe,0xf8 -> {
+                    // Latest real HF clone records use this observed U(1) prefix
+                    // and supply all four slots. Do not invent template inheritance.
+                    if(opcode==0xf8&&r.varint()!=1)throw HecException.invalid();
+                    long id=r.varint();
+                    if(!metas.containsKey(id)&&metas.size()>=S2STcpProtocol.CHANNEL_LIMIT)throw HecException.busy();
+                    String source=strip(r.nstr(),"source::"),host=strip(r.nstr(),"host::"),type=strip(r.nstr(),"sourcetype::");
+                    String channel=r.nstr();int count=r.count();List<String> header=new ArrayList<>();
+                    for(int i=0;i<count;i++)header.add(r.str());
+                    Meta next=new Meta(source,host,type,channel,List.copyOf(header));String hash=r.hash();
+                    var old=leases.put(id,memory);metas.put(id,next);if(old!=null)old.close();
+                    return new StreamRecord(null,null,hash,true);
+                }
+                case 0xfd -> {
+                    long id=r.varint();metas.remove(id);var old=leases.remove(id);if(old!=null)old.close();
+                    return new StreamRecord(null,null,r.hash(),false);
+                }
+                case 0xfc -> {
+                    Parsed parsed=parsedEvent(r,metas,timezone,memory,true);
+                    return new StreamRecord(parsed.event(),parsed.eventId(),r.hash(),false);
+                }
+                default -> throw HecException.invalid();
+            }
+        }
+        @Override public void close(){for(var lease:leases.values())lease.close();leases.clear();metas.clear();if(timezoneLease!=null)timezoneLease.close();}
+    }
     /** Byte cursor for the inflated body; string boundaries are length-based, not NUL-terminated. */
     private final class Reader {
-        final byte[] bytes;final MemoryBudget.Lease memory;int pos;
-        Reader(byte[] bytes,MemoryBudget.Lease memory){this.bytes=bytes;this.memory=memory;}
+        final byte[] bytes;final InputStream input;final MessageDigest digest;final MemoryBudget.Lease memory;int pos;
+        Reader(byte[] bytes,MemoryBudget.Lease memory){this.bytes=bytes;this.input=null;this.digest=null;this.memory=memory;}
+        Reader(InputStream input,MemoryBudget.Lease memory,int opcode){
+            this.bytes=null;this.input=input;this.memory=memory;this.pos=1;
+            try{digest=MessageDigest.getInstance("SHA-256");}catch(NoSuchAlgorithmException impossible){throw new IllegalStateException(impossible);}
+            digest.update((byte)opcode);
+        }
+        String hash(){return HexFormat.of().formatHex(digest.digest());}
         boolean eof(){return pos==bytes.length;}
-        int u8(){if(pos>=bytes.length) throw HecException.invalid();return bytes[pos++]&255;}
+        int u8(){
+            if(input==null){if(pos>=bytes.length)throw HecException.invalid();return bytes[pos++]&255;}
+            if(pos>=limits.expanded())throw HecException.busy();
+            try{
+                int value=input.read();if(value<0)throw new EOFException("truncated TCP record");
+                pos++;digest.update((byte)value);return value;
+            }catch(IOException error){throw new UncheckedIOException(error);}
+        }
         /**
          * Unsigned LEB128-style groups: bit 7 continues; bits 6..0 contribute
          * at shifts 0,7,14,... . {@code AC 02 = 44 + (2 << 7) = 300}. This is not ZigZag.
@@ -282,11 +381,16 @@ public final class S2SDecoder {
         }
         // Allocation lengths/counts have a narrower domain than uint64 identifiers.
         int length(){long n=varint();if(n<0||n>Integer.MAX_VALUE)throw HecException.invalid();return (int)n;}
-        int count(){int n=length();if(n>bytes.length-pos)throw HecException.invalid();return n;}
+        int count(){int n=length();if(n>(input==null?bytes.length:limits.expanded())-pos)throw HecException.invalid();return n;}
         byte[] bytes(int n){
-            if(n>bytes.length-pos)throw HecException.invalid();
+            if(n>(input==null?bytes.length:limits.expanded())-pos)throw HecException.invalid();
             // A UF raw record may contain many logical lines. Apply event cap after framing.
             if(n>limits.expanded())throw HecException.busy();
+            if(input!=null){
+                memory.charge(3L*n+64);
+                try{byte[] out=S2STcpProtocol.exact(input,n);pos+=n;digest.update(out);return out;}
+                catch(IOException error){throw new UncheckedIOException(error);}
+            }
             memory.charge(n+64L);byte[] out=Arrays.copyOfRange(bytes,pos,pos+n);pos+=n;return out;
         }
         // S("")=00; S("abc")=03 61 62 63. Count UTF-8 bytes, not Java characters.

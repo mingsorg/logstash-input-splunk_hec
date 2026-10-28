@@ -32,15 +32,22 @@ def sender_network():
     if mode not in ('host','bridge'):raise ValueError('HEC_SENDER_NETWORK must be auto, host or bridge')
     return (['--network','host'],'localhost') if mode=='host' else ([], 'host.docker.internal')
 
+def sender_bootstrap_args(name):
+    mode=os.environ.get('HEC_STARTUP_MODE','direct')
+    return ['--init',*(['--no-healthcheck'] if mode=='direct' else []),'-e','HEC_FIXTURE_OWNED='+name,
+        '-e','HEC_STARTUP_MODE='+mode,
+        '-v',str(ROOT/'tests/interop/splunk_bootstrap.py')+':/tmp/splunk_bootstrap.py:ro']
+
 def sender_ready(name, timeout=600):
     """A forwarder can emit traffic before its first-start CLI finishes."""
     deadline=time.monotonic()+timeout
     while time.monotonic()<deadline:
-        logs=runtime.docker('logs',name)
-        health=runtime.docker('inspect',name,'--format','{{if .State.Health}}{{.State.Health.Status}}{{end}}')
-        if health=='healthy':return
-        if runtime.docker('inspect',name,'--format','{{.State.Running}}')!='true':
-            raise RuntimeError('sender startup failed: '+logs)
+        state=json.loads(runtime.docker('inspect',name,'--format','{{json .State}}'))
+        if not state['Running']:raise RuntimeError('sender startup failed: '+runtime.docker('logs',name))
+        if os.environ.get('HEC_STARTUP_MODE','direct')=='direct':
+            probe=subprocess.run(['docker','exec',name,'test','-s','/tmp/hec-splunk-ready.json'],capture_output=True,timeout=30)
+            if probe.returncode==0:return
+        elif state.get('Health',{}).get('Status')=='healthy':return
         time.sleep(1)
     raise RuntimeError('sender startup deadline exceeded: '+runtime.docker('logs',name))
 
@@ -50,7 +57,7 @@ def main():
     result,name,directory,port,context=runtime.run('latest',keep=True)
     records=[]
     versions={}
-    injected=[0]
+    injected={'count':0,'sha256':None}
     mutex=threading.Lock()
     class Relay(BaseHTTPRequestHandler):
         def handle_request(self):
@@ -78,10 +85,15 @@ def main():
                     forwarded=dict(headers)
                     if target=='oracle':forwarded['Authorization']='Splunk '+runtime.TOKEN
                     forwarded_body=body
-                    if target=='plugin' and body and '/s2s' in self.path and injected[0]<2:
+                    corrupt=False
+                    if target=='plugin' and body and '/s2s' in self.path:
+                        with mutex:
+                            if injected['sha256'] is None:injected['sha256']=entry['body_sha256']
+                            if injected['count']<2 and injected['sha256']==entry['body_sha256']:
+                                injected['count']+=1;corrupt=True
+                    if corrupt:
                         expanded=zlib.decompressobj().decompress(body[1:])
                         forwarded_body=b'\xf9'+zlib.compress(expanded+b'\xfb')
-                        injected[0]+=1
                         entry['injected_invalid_opcode']=True
                     c.request(self.command,self.path,forwarded_body,forwarded)
                     response=c.getresponse();responses[target]=(response.status,response.read())
@@ -111,6 +123,7 @@ def main():
             before=len(records)
             sender='hec-sender-'+role+'-'+uuid.uuid4().hex[:8];senders.append(sender)
             runtime.docker('run','-d','--name',sender,'--platform','linux/amd64','--user','root',
+                *sender_bootstrap_args(sender),
                 *network_flags,'-e','HEC_RECEIVER_URI=http://'+receiver_host+':18090',
                 '-e','SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com',
                 '-v',str(ROOT/'tests/interop/sender_setup.py')+':/tmp/hec-sender-setup.py:ro',
@@ -136,7 +149,7 @@ def main():
             senders.remove(sender)
             time.sleep(2)
         time.sleep(10)
-        events=[json.loads(line) for line in (directory/'events.ndjson').read_text().splitlines()]
+        events=runtime.read_events(directory/'events.ndjson')
         observed=[e for e in events if e.get('source','').startswith('/tmp/hec-source.')]
         assert len(observed)==12,('expected five text + one structured event from each sender',len(observed))
         assert Counter(e['event'] for e in observed if e['source'].endswith('.log'))==Counter({'alpha':2,'  indented remains separate':2,'重复':2,'repeat':4})
@@ -176,7 +189,7 @@ def main():
                 finally:connection.close()
         deadline=time.monotonic()+30
         while time.monotonic()<deadline:
-            events=[json.loads(line) for line in (directory/'events.ndjson').read_text().splitlines()]
+            events=runtime.read_events(directory/'events.ndjson')
             observed=[e for e in events if e.get('source','').startswith('/tmp/hec-source.')]
             if len(observed)>=24:break
             time.sleep(.2)
@@ -187,6 +200,7 @@ def main():
             sender='hec-sender-tls-'+role+'-'+uuid.uuid4().hex[:8];senders.append(sender)
             before=len(observed)
             runtime.docker('run','-d','--name',sender,'--platform','linux/amd64','--user','root',
+                *sender_bootstrap_args(sender),
                 *network_flags,
                 '-e','SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com',
                 '-e','HEC_RECEIVER_URI=https://'+receiver_host+':'+str(port),
@@ -195,7 +209,7 @@ def main():
                 '--entrypoint','/usr/bin/python3',image,'/tmp/hec-sender-setup.py')
             deadline=time.monotonic()+600
             while time.monotonic()<deadline:
-                events=[json.loads(line) for line in (directory/'events.ndjson').read_text().splitlines()]
+                events=runtime.read_events(directory/'events.ndjson')
                 observed=[e for e in events if e.get('source','').startswith('/tmp/hec-source.')]
                 if len(observed)>=before+6:break
                 if runtime.docker('inspect',sender,'--format','{{.State.Running}}')!='true':raise RuntimeError(runtime.docker('logs',sender))
@@ -206,17 +220,19 @@ def main():
             direct_tls.append({'role':role,'verified_trust_and_hostname':True,'source_event_count':6,'image':image})
             runtime.docker('rm','-f','-v',sender);senders.remove(sender)
         (EVIDENCE/'senders.json').write_text(json.dumps({'traffic':records,'events':observed,
+            'artifact':result['artifact'],'startup_mode':os.environ.get('HEC_STARTUP_MODE','direct'),
             'versions':versions,'status':'pass','direct_tls':direct_tls,
             'oracle_indexed_events':indexed,'initial_source_event_count':len(initial),
             'identical_body_replay_source_event_count':12,'reconnect_ids_stable':True,
-            'scope':'live UF/HF initial traffic and deliberate invalid-batch retries; oversized configuration_change.log rejected by plugin limit'},indent=2)+'\n')
+            'resource_rejections':sum(r.get('plugin',{}).get('status')==503 for r in records),
+            'scope':'live UF/HF traffic, deliberate invalid-batch retries, identical-body replay and direct verified HTTPS'},indent=2)+'\n')
         print('PASS',len(records),'requests;',len(observed),'source events',flush=True)
     finally:
         (EVIDENCE/'sender-traffic-last-run.json').write_text(json.dumps(records,indent=2)+'\n')
         (EVIDENCE/'sender-versions-last-run.json').write_text(json.dumps(versions,indent=2)+'\n')
         if (directory/'events.ndjson').exists():
-            source_events=[json.loads(line) for line in (directory/'events.ndjson').read_text().splitlines()
-                           if json.loads(line).get('source','').startswith('/tmp/hec-source.')]
+            source_events=[event for event in runtime.read_events(directory/'events.ndjson')
+                           if event.get('source','').startswith('/tmp/hec-source.')]
             (EVIDENCE/'sender-source-events-last-run.json').write_text(json.dumps(source_events,indent=2)+'\n')
         server.shutdown();server.server_close();thread.join(5)
         for container in [*senders,name]:subprocess.run(['docker','rm','-f','-v',container],capture_output=True,timeout=60)

@@ -1,0 +1,1262 @@
+{
+  "capture_sha256": "afb5c1222f86166cec0e3d9c9c33781165f0ff24e4dedf3076ac437e0c7338ca",
+  "connections": [
+    {
+      "hostname": "e849b977638e",
+      "signature": "--splunk-cooked-mode-v3--",
+      "management_port": "8089",
+      "capabilities": {
+        "__s2s_capabilities": "ack=1;compression=1"
+      },
+      "forwarder_info": {
+        "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=e849b977638e guid=DBE6028E-6EAE-4A9A-94D8-A48E19C04E37 fwdType=uf lastIndexer=None ssl=false protocolLevel=7",
+        "_done": "_done",
+        "_time": "1793181173",
+        "_guid": "DBE6028E-6EAE-4A9A-94D8-A48E19C04E37",
+        "_MetaData:Index": "_internal",
+        "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;request_certificate=1;v4=1",
+        "MetaData:Sourcetype": "sourcetype::fwdinfo",
+        "_ingLatChained": "{\"green\":{\"count\":0}}",
+        "MetaData:Source": "source::fwd",
+        "MetaData:Host": "host::$decideOnStartup",
+        "_ingLatColor": "green",
+        "__s2s_eventId": "0"
+      },
+      "opcodes": {
+        "ff": 1,
+        "fe": 11,
+        "fc": 93
+      },
+      "flags": {
+        "0x3f": 68,
+        "0x235": 21,
+        "0x27f": 1,
+        "0x275": 2,
+        "0x20d": 1
+      },
+      "field_tags": {
+        "0x4": 289,
+        "0xf": 5,
+        "0x42": 7,
+        "0x4a": 2
+      },
+      "event_ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        0
+      ],
+      "source_records": [
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "e849b977638e",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x3f",
+          "event_id": 4,
+          "stream_id": 15977854335727242432,
+          "offset": 0,
+          "suboffset": 0,
+          "seconds": 1793181156,
+          "date_parts": [],
+          "fields": {},
+          "raw": "alpha\n  indented remains separate\n\u91cd\u590d\nrepeat\nrepeat\n"
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "e849b977638e",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x235",
+          "event_id": 5,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        },
+        {
+          "source": "/tmp/hec-source.json",
+          "host": "e849b977638e",
+          "sourcetype": "hec_native_json",
+          "index": "main",
+          "flags": "0x27f",
+          "event_id": 14,
+          "stream_id": 4661084260136768751,
+          "offset": 0,
+          "suboffset": 1,
+          "seconds": 1790000000,
+          "date_parts": [
+            [
+              66,
+              0,
+              246913
+            ],
+            [
+              66,
+              1,
+              20
+            ],
+            [
+              66,
+              3,
+              14
+            ],
+            [
+              66,
+              2,
+              13
+            ],
+            [
+              66,
+              4,
+              2026
+            ],
+            [
+              74,
+              5,
+              24
+            ],
+            [
+              66,
+              6,
+              21
+            ],
+            [
+              74,
+              7,
+              10
+            ],
+            [
+              66,
+              8,
+              0
+            ]
+          ],
+          "fields": {
+            "time": "1790000000.123456789",
+            "message": "native",
+            "a.b{}": [
+              "first",
+              "second"
+            ],
+            "host": "payload-host"
+          },
+          "raw": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}"
+        },
+        {
+          "source": "/tmp/hec-source.json",
+          "host": "e849b977638e",
+          "sourcetype": "hec_native_json",
+          "index": "main",
+          "flags": "0x275",
+          "event_id": 15,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        },
+        {
+          "source": "/tmp/hec-source.json",
+          "host": "e849b977638e",
+          "sourcetype": "hec_native_json",
+          "index": "main",
+          "flags": "0x275",
+          "event_id": 17,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "e849b977638e",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x235",
+          "event_id": 18,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        }
+      ],
+      "max_raw_bytes": 65536,
+      "clones": [],
+      "fully_consumed": true,
+      "connection": "c6028e3e3819456982be3c5311c55b07",
+      "reverse": {
+        "capabilities": {
+          "__s2s_control_msg": "cap_response=success;cap_flush_key=true;idx_can_send_hb=true;idx_can_recv_token=true;request_certificate=true;v4=true;channel_limit=300;pl=7"
+        },
+        "acks": [
+          {
+            "opcode": "0xfb",
+            "lo": 3,
+            "hi": 3
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 5,
+            "hi": 5
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 2,
+            "hi": 2
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 4,
+            "hi": 4
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 6,
+            "hi": 16
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 17,
+            "hi": 18
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 20,
+            "hi": 20
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 21,
+            "hi": 21
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 23,
+            "hi": 23
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 19,
+            "hi": 19
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 22,
+            "hi": 22
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 24,
+            "hi": 28
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 29,
+            "hi": 77
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 79,
+            "hi": 79
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 80,
+            "hi": 80
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 78,
+            "hi": 78
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 81,
+            "hi": 81
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 82,
+            "hi": 84
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 85,
+            "hi": 86
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 87,
+            "hi": 87
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 88,
+            "hi": 88
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 90,
+            "hi": 90
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 89,
+            "hi": 89
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 91,
+            "hi": 91
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 92,
+            "hi": 93
+          }
+        ]
+      },
+      "all_event_ids_acknowledged": true
+    },
+    {
+      "hostname": "bf3cf7891521",
+      "signature": "--splunk-cooked-mode-v3--",
+      "management_port": "8089",
+      "capabilities": {
+        "__s2s_capabilities": "ack=1;compression=1"
+      },
+      "forwarder_info": {
+        "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=bf3cf7891521 guid=622DD803-3357-4C1C-882D-920F8E590B7B fwdType=full lastIndexer=None ssl=false protocolLevel=7",
+        "_done": "_done",
+        "_time": "1793181286",
+        "_guid": "622DD803-3357-4C1C-882D-920F8E590B7B",
+        "_MetaData:Index": "_internal",
+        "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;request_certificate=1;v4=1",
+        "MetaData:Sourcetype": "sourcetype::fwdinfo",
+        "_ingLatChained": "{\"green\":{\"count\":0}}",
+        "MetaData:Source": "source::fwd",
+        "MetaData:Host": "host::$decideOnStartup",
+        "_ingLatColor": "green",
+        "__s2s_eventId": "0"
+      },
+      "opcodes": {
+        "fe": 11,
+        "fc": 333,
+        "f8": 3
+      },
+      "flags": {
+        "0x24f": 13,
+        "0x437f": 268,
+        "0x37f": 7,
+        "0x375": 20,
+        "0x1037f": 2,
+        "0x1437f": 20,
+        "0x36f": 1,
+        "0x345": 1,
+        "0x20d": 1
+      },
+      "field_tags": {
+        "0x42": 2538,
+        "0x4": 1027,
+        "0x4a": 589,
+        "0xf": 338,
+        "0x33": 43,
+        "0x3": 91,
+        "0x1b3": 38,
+        "0xb": 4
+      },
+      "event_ids": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148,
+        149,
+        150,
+        151,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        159,
+        160,
+        161,
+        162,
+        163,
+        164,
+        165,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        173,
+        174,
+        175,
+        176,
+        177,
+        178,
+        179,
+        180,
+        181,
+        182,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        199,
+        200,
+        201,
+        202,
+        203,
+        204,
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328,
+        329,
+        330,
+        331,
+        332,
+        333,
+        0
+      ],
+      "source_records": [
+        {
+          "source": "/tmp/hec-source.json",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_json",
+          "index": "main",
+          "flags": "0x37f",
+          "event_id": 4,
+          "stream_id": 4661084260136768751,
+          "offset": 0,
+          "suboffset": 1,
+          "seconds": 1790000000,
+          "date_parts": [
+            [
+              66,
+              0,
+              246913
+            ],
+            [
+              66,
+              1,
+              20
+            ],
+            [
+              66,
+              3,
+              14
+            ],
+            [
+              66,
+              2,
+              13
+            ],
+            [
+              66,
+              4,
+              2026
+            ],
+            [
+              74,
+              5,
+              24
+            ],
+            [
+              66,
+              6,
+              21
+            ],
+            [
+              74,
+              7,
+              10
+            ],
+            [
+              66,
+              8,
+              0
+            ]
+          ],
+          "fields": {
+            "time": "1790000000.123456789",
+            "message": "native",
+            "a.b{}": [
+              "first",
+              "second"
+            ],
+            "host": "payload-host"
+          },
+          "raw": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}"
+        },
+        {
+          "source": "/tmp/hec-source.json",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_json",
+          "index": "main",
+          "flags": "0x375",
+          "event_id": 5,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x37f",
+          "event_id": 6,
+          "stream_id": 15977854335727242432,
+          "offset": 0,
+          "suboffset": 1,
+          "seconds": 1793181286,
+          "date_parts": [
+            [
+              74,
+              46,
+              48
+            ]
+          ],
+          "fields": {},
+          "raw": "alpha"
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x437f",
+          "event_id": 7,
+          "stream_id": 15977854335727242432,
+          "offset": 0,
+          "suboffset": 2,
+          "seconds": 1793181286,
+          "date_parts": [
+            [
+              74,
+              46,
+              48
+            ]
+          ],
+          "fields": {},
+          "raw": "  indented remains separate"
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x437f",
+          "event_id": 8,
+          "stream_id": 15977854335727242432,
+          "offset": 0,
+          "suboffset": 3,
+          "seconds": 1793181286,
+          "date_parts": [
+            [
+              74,
+              46,
+              48
+            ]
+          ],
+          "fields": {},
+          "raw": "\u91cd\u590d"
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x437f",
+          "event_id": 9,
+          "stream_id": 15977854335727242432,
+          "offset": 0,
+          "suboffset": 4,
+          "seconds": 1793181286,
+          "date_parts": [
+            [
+              74,
+              46,
+              48
+            ]
+          ],
+          "fields": {},
+          "raw": "repeat"
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x437f",
+          "event_id": 10,
+          "stream_id": 15977854335727242432,
+          "offset": 0,
+          "suboffset": 5,
+          "seconds": 1793181286,
+          "date_parts": [
+            [
+              74,
+              46,
+              48
+            ]
+          ],
+          "fields": {},
+          "raw": "repeat"
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x375",
+          "event_id": 11,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        },
+        {
+          "source": "/tmp/hec-source.json",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_json",
+          "index": "main",
+          "flags": "0x375",
+          "event_id": 260,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        },
+        {
+          "source": "/tmp/hec-source.log",
+          "host": "bf3cf7891521",
+          "sourcetype": "hec_native_text",
+          "index": "main",
+          "flags": "0x375",
+          "event_id": 261,
+          "stream_id": null,
+          "offset": null,
+          "suboffset": null,
+          "seconds": null,
+          "date_parts": [],
+          "fields": {},
+          "raw": ""
+        }
+      ],
+      "max_raw_bytes": 1241039,
+      "clones": [
+        {
+          "prefix": 1,
+          "channel_id": 5,
+          "wire_slots": [
+            "source::/opt/splunk/var/log/introspection/disk_objects.log",
+            "host::bf3cf7891521",
+            "sourcetype::splunk_intro_disk_objects",
+            "CLONE_CHANNEL"
+          ],
+          "prior_channel_exists": true
+        },
+        {
+          "prefix": 1,
+          "channel_id": 9,
+          "wire_slots": [
+            "source::/opt/splunk/var/log/introspection/disk_objects.log",
+            "host::bf3cf7891521",
+            "sourcetype::splunk_intro_disk_objects",
+            "CLONE_CHANNEL"
+          ],
+          "prior_channel_exists": true
+        },
+        {
+          "prefix": 1,
+          "channel_id": 10,
+          "wire_slots": [
+            "source::/opt/splunk/var/log/introspection/resource_usage.log",
+            "host::bf3cf7891521",
+            "sourcetype::splunk_intro_resource_usage",
+            "CLONE_CHANNEL"
+          ],
+          "prior_channel_exists": true
+        }
+      ],
+      "fully_consumed": true,
+      "connection": "c6feba5470d64b728a70e0a96aefe246",
+      "reverse": {
+        "capabilities": {
+          "__s2s_control_msg": "cap_response=success;cap_flush_key=true;idx_can_send_hb=true;idx_can_recv_token=true;request_certificate=true;v4=true;channel_limit=300;pl=7"
+        },
+        "acks": [
+          {
+            "opcode": "0xfb",
+            "lo": 5,
+            "hi": 5
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 11,
+            "hi": 11
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 16,
+            "hi": 16
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 54,
+            "hi": 55
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 2,
+            "hi": 4
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 6,
+            "hi": 10
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 12,
+            "hi": 15
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 17,
+            "hi": 53
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 56,
+            "hi": 81
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 82,
+            "hi": 259
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 260,
+            "hi": 260
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 261,
+            "hi": 263
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 264,
+            "hi": 306
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 307,
+            "hi": 307
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 308,
+            "hi": 308
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 309,
+            "hi": 316
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 317,
+            "hi": 318
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 319,
+            "hi": 330
+          },
+          {
+            "opcode": "0xfa",
+            "lo": 331,
+            "hi": 332
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 333,
+            "hi": 333
+          }
+        ]
+      },
+      "all_event_ids_acknowledged": true
+    },
+    {
+      "hostname": "e849b977638e",
+      "signature": "--splunk-cooked-mode-v3--",
+      "management_port": "8089",
+      "capabilities": {
+        "__s2s_capabilities": "ack=1;compression=1"
+      },
+      "forwarder_info": {
+        "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=e849b977638e guid=DBE6028E-6EAE-4A9A-94D8-A48E19C04E37 fwdType=uf lastIndexer=None ssl=false protocolLevel=7",
+        "_done": "_done",
+        "_time": "1793181202",
+        "_guid": "DBE6028E-6EAE-4A9A-94D8-A48E19C04E37",
+        "_MetaData:Index": "_internal",
+        "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;request_certificate=1;v4=1",
+        "MetaData:Sourcetype": "sourcetype::fwdinfo",
+        "_ingLatChained": "{\"green\":{\"count\":0}}",
+        "MetaData:Source": "source::fwd",
+        "MetaData:Host": "host::$decideOnStartup",
+        "_ingLatColor": "green",
+        "__s2s_eventId": "0"
+      },
+      "opcodes": {
+        "ff": 1,
+        "fe": 3,
+        "fc": 6
+      },
+      "flags": {
+        "0x3f": 1,
+        "0x235": 1,
+        "0x25": 1,
+        "0x205": 1,
+        "0x20d": 2
+      },
+      "field_tags": {
+        "0x4": 20
+      },
+      "event_ids": [
+        2,
+        3,
+        4,
+        5,
+        0,
+        0
+      ],
+      "source_records": [],
+      "max_raw_bytes": 747,
+      "clones": [],
+      "fully_consumed": true,
+      "connection": "f989cc189938418c99e9d36cec7007a6",
+      "reverse": {
+        "capabilities": {
+          "__s2s_control_msg": "cap_response=success;cap_flush_key=true;idx_can_send_hb=true;idx_can_recv_token=true;request_certificate=true;v4=true;channel_limit=300;pl=7"
+        },
+        "acks": [
+          {
+            "opcode": "0xfa",
+            "lo": 2,
+            "hi": 3
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 5,
+            "hi": 5
+          },
+          {
+            "opcode": "0xfb",
+            "lo": 4,
+            "hi": 4
+          }
+        ]
+      },
+      "all_event_ids_acknowledged": true
+    }
+  ],
+  "source_values_match_oracle": true
+}

@@ -11,6 +11,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tests/interop'))
 import senders
 import start_oracle
+import splunk_bootstrap
 
 spec=importlib.util.spec_from_file_location('hec_bootstrap',ROOT/'scripts/bootstrap.py')
 bootstrap=importlib.util.module_from_spec(spec)
@@ -18,6 +19,54 @@ spec.loader.exec_module(bootstrap)
 
 
 class HelpersTest(unittest.TestCase):
+    def test_event_reader_waits_for_complete_lines_without_masking_bad_complete_events(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'events.ndjson'
+            path.write_bytes(b'{"event":"complete"}\n'+b'{"event":"\xe9\x87')
+            self.assertEqual([{'event':'complete'}],senders.runtime.read_events(path))
+            path.write_bytes('{"event":"complete"}\n{"event":"重复"}\n'.encode())
+            self.assertEqual(2,len(senders.runtime.read_events(path)))
+            path.write_bytes(b'invalid complete line\n')
+            with self.assertRaises(ValueError):senders.runtime.read_events(path)
+
+    def test_native_pid_reader_accepts_worker_lines_and_waits_for_restart_marker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            home=Path(directory);pid=home/'var/run/splunk/splunkd.pid'
+            pid.parent.mkdir(parents=True)
+            pid.write_text('987654321\n987654322\n')
+            with patch.object(splunk_bootstrap.os,'kill'):
+                self.assertEqual(987654321,splunk_bootstrap.daemon_pid(home))
+            pid.write_text('987654321restarting\n')
+            with patch.object(splunk_bootstrap.os,'kill') as inspect:
+                self.assertIsNone(splunk_bootstrap.daemon_pid(home));inspect.assert_not_called()
+            pid.write_text('987654321\n')
+            with patch.object(splunk_bootstrap.os,'kill',side_effect=ProcessLookupError):
+                self.assertIsNone(splunk_bootstrap.daemon_pid(home))
+
+    def test_native_bootstrap_refuses_unowned_host_execution(self):
+        with patch.dict(splunk_bootstrap.os.environ,{'HEC_FIXTURE_OWNED':''}),\
+            patch.object(splunk_bootstrap.subprocess,'run') as execute:
+            with self.assertRaisesRegex(RuntimeError,'owned Docker fixture'):
+                splunk_bootstrap.start('/opt/splunk','fixture-password')
+            execute.assert_not_called()
+
+    def test_direct_sender_ready_requires_native_marker_not_stock_health(self):
+        state='{"Running":true,"Health":{"Status":"healthy"}}'
+        absent=subprocess.CompletedProcess([],1)
+        present=subprocess.CompletedProcess([],0)
+        with patch.dict(senders.os.environ,{'HEC_STARTUP_MODE':'direct'}),\
+            patch.object(senders.runtime,'docker',return_value=state),\
+            patch.object(senders.subprocess,'run',side_effect=[absent,absent,present]) as probe,\
+            patch.object(senders.time,'sleep'):
+            senders.sender_ready('owned-fixture',timeout=5)
+            self.assertEqual(3,probe.call_count)
+
+    def test_native_sender_bootstrap_disables_racy_root_healthcheck(self):
+        with patch.dict(senders.os.environ,{'HEC_STARTUP_MODE':'direct'}):
+            self.assertIn('--no-healthcheck',senders.sender_bootstrap_args('owned-fixture'))
+        with patch.dict(senders.os.environ,{'HEC_STARTUP_MODE':'official'}):
+            self.assertNotIn('--no-healthcheck',senders.sender_bootstrap_args('owned-fixture'))
+
     def test_cache_tracks_image_and_keeps_last_complete_api_after_failed_extraction(self):
         with tempfile.TemporaryDirectory() as directory:
             cache=Path(directory)

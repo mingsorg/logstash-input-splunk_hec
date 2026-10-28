@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Start an isolated pinned Splunk oracle; explicit license acceptance per spec."""
 from pathlib import Path
+import os
 import subprocess
 import uuid
 
@@ -11,15 +12,25 @@ def create_oracle():
     ownership='org.logstash.hec.oracle-run='+uuid.uuid4().hex
     cid=None
     try:
-        cid=subprocess.check_output(['docker', 'create', '--name', 'hec-spec-oracle', '--platform', 'linux/amd64',
+        arguments=['docker', 'create', '--name', 'hec-spec-oracle', '--platform', 'linux/amd64','--init',
                 '--label',ownership,
                 '-p', '127.0.0.1:18088:8088', '-p', '127.0.0.1:18089:8089',
+                '-p', '127.0.0.1:19997:9997',
                 '-e', 'SPLUNK_START_ARGS=--accept-license',
                 '-e', 'SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com',
                 '-e', 'SPLUNK_PASSWORD=HecOracle-Test-Only-487!',
                 '-v', f'{ROOT}/tests/interop/oracle/inputs.conf:/tmp/hec-inputs.conf:ro',
-                '-v', f'{ROOT}/tests/interop/oracle/props.conf:/tmp/hec-props.conf:ro',
-                props['splunk.image']], text=True, timeout=120).strip()
+                '-v', f'{ROOT}/tests/interop/oracle/props.conf:/tmp/hec-props.conf:ro']
+        if os.environ.get('HEC_STARTUP_MODE','direct')=='direct':
+            # The image's stock healthcheck invokes btool as container root and
+            # can create root-owned var/run dirs during service-UID initialization.
+            # Native readiness is verified by marker/PID and the actual HEC route.
+            arguments+=['--user','root','--no-healthcheck','-e','HEC_FIXTURE_OWNED='+ownership,
+                '-v',f'{ROOT}/tests/interop/splunk_bootstrap.py:/tmp/splunk_bootstrap.py:ro',
+                '-v',f'{ROOT}/tests/interop/oracle_setup.py:/tmp/hec-oracle-setup.py:ro',
+                '--entrypoint','/usr/bin/python3',props['splunk.image'],'/tmp/hec-oracle-setup.py']
+        else:arguments+=[props['splunk.image']]
+        cid=subprocess.check_output(arguments, text=True, timeout=120).strip()
         subprocess.run(['docker','start',cid],check=True,timeout=120)
         return cid
     except BaseException:
