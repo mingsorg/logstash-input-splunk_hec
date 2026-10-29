@@ -129,7 +129,7 @@ public final class HecServer implements AutoCloseable {
                 HecProtocol.Prepared prepared;
                 if(kind.equals("s2s")){
                     List<S2SDecoder.Event> records=new S2SDecoder(limits).decode(body,expansion,lease);
-                    prepared=new HecProtocol.Prepared(new S2SEvents(limits,protocol).map(records,policy,request.query,body,lease),null);
+                    prepared=new HecProtocol.Prepared(new S2SEvents(limits,protocol,resources.metadata).map(records,policy,request.query,body,lease),null);
                 }else if(kind.equals("raw"))prepared=protocol.raw(body,policy,request.query,lease);
                 else prepared=protocol.events(body,policy,request.query,lease);
                 // Reserve ACK capacity before irreversible insertion. Event parsing

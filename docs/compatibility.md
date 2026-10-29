@@ -112,7 +112,7 @@ IDs, null and empty ACK lists were rejected.
 | M4 Auth | Oracle credentials/query conflicts/index errors; full file reload/revocation, last-good retention, rename/rotation/ACK-disable and admitted-request snapshots |
 | M5 Capacity | Positive-limit validation/accounting; HTTP overload/health/read shutdown; actual memory/PQ writer interruption in both distributions; no worker activity after joining/release |
 | M6 ACK | Pending/consume/duplicates/concurrent poll/token/channel isolation; small-cap exhaustion and pinned monotonic cleanup; high-water restart; actual PQ crash with outstanding polling |
-| M7 TLS | Generated identity/reuse, DNS/IP SANs, wrong trust/hostname rejection; PEM/PKCS12/JKS; mTLS positive/negative; packaged HTTPS on both runtimes; direct UF/HF verified HTTPS |
+| M7 TLS (per listener) | Generated identity/reuse, DNS/IP SANs, wrong trust/hostname rejection; PEM/PKCS12/JKS; mTLS positive/negative; packaged HTTPS on both runtimes; direct UF/HF verified HTTPS |
 | M8 TCP | Optional cooked `tcpout` listener: real captured UF/HF stream replay (plain and verified TLS, compressed and plain), ACK-after-queue/no-ACK-on-failure, truncation, shared back-pressure and shutdown; live UF/HF 10.6.1.1 matrix and receiver SIGKILL/resume (`tcp-senders.json`) |
 
 [`queue-cancellation.json`](../tests/interop/evidence/queue-cancellation.json)

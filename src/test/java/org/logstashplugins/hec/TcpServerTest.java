@@ -153,6 +153,25 @@ class TcpServerTest {
             assertTrue(events.isEmpty());
         }
     }
+    @Test void hecMetadataModeControlsProvenanceButNeverTheEventIdentityOrBody()throws Exception{
+        Map<MetadataMode,Map<String,Object>> seen=new EnumMap<>(MetadataMode.class);
+        for(MetadataMode mode:MetadataMode.values()){
+            List<Map<String,Object>> mine=Collections.synchronizedList(new ArrayList<>());
+            try(var resources=new IngressResources(limits,mode);var server=new S2STcpServer("127.0.0.1",0,plain(),limits,resources,mine::add,"main",Set.of(),diagnostics::add)){
+                server.start();
+                try(Socket socket=connect(server.port(),null)){greeting(socket,true);socket.getOutputStream().write(record(5,"same\n"));socket.getOutputStream().flush();assertEquals(5,ack(socket));}
+            }
+            assertEquals(1,mine.size(),mode.name());seen.put(mode,mine.getFirst());
+        }
+        var full=(Map<?,?>)seen.get(MetadataMode.FULL).get("@metadata");
+        var splunk=(Map<?,?>)full.get("splunk_hec");
+        assertTrue(splunk.containsKey("tcp")&&splunk.containsKey("s2s")&&splunk.containsKey("id"));
+        var idOnly=(Map<?,?>)((Map<?,?>)seen.get(MetadataMode.ID_ONLY).get("@metadata")).get("splunk_hec");
+        assertEquals(Set.of("id"),idOnly.keySet());
+        assertEquals(splunk.get("id"),idOnly.get("id"),"the id must not depend on the metadata mode");
+        assertFalse(seen.get(MetadataMode.NONE).containsKey("@metadata"));
+        for(var event:seen.values()){assertEquals("same",event.get("event"));assertTrue(event.containsKey("@timestamp")&&event.containsKey("@version")||event.containsKey("time"));}
+    }
     @Test void blockedTcpQueueAppliesSharedHttpBackpressureAndStopJoinsBoth()throws Exception{
         Limits bounded=new Limits(1,8,8192,16384,4<<20,4096,100,10,2000,40,1500);
         CountDownLatch inserted=new CountDownLatch(1),finished=new CountDownLatch(1);

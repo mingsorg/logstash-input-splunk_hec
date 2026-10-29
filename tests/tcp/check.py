@@ -36,6 +36,7 @@ def main():
     restart=report.get('restart',{}).get('restart',{})
     if not (restart.get('receiver_killed_with_sigkill') and restart.get('all_delivered_after_restart')):
         blocked('receiver kill/restart delivery evidence is absent')
+    if set(report.get('hec_metadata_modes',{}))!={'id_only','none'}:blocked('real-sender hec_metadata id_only/none evidence is absent')
     if len(report.get('minimum_logstash',{}).get('runs',[]))<2:blocked('minimum Logstash TCP runs are absent')
     for name in ('decoded-capture.json','decoded-capture-compressed.json'):
         if not (CAPTURE/name).exists():blocked(name+' (oracle wire analysis) is absent')

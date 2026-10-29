@@ -1,11 +1,11 @@
 {
   "summary_type": "recorded verification outcomes",
   "artifact": "logstash-input-splunk_hec-0.1.0-java.gem",
-  "artifact_sha256": "478d870ca907f8e814a4eab421a072e64f22540a5b8f25353f52fa756963e9f7",
+  "artifact_sha256": "de29277aef13783b5fdd87ba2190a953bafe457cd1818016ea95b706af73e34b",
   "overall": "http-and-optional-tcp-qualified-for-tested-scope",
   "java_tests": {
     "status": "pass",
-    "tests": 60,
+    "tests": 66,
     "command": "./gradlew test",
     "source": "Gradle test reports"
   },
@@ -39,22 +39,33 @@
     "status": "pass",
     "evidence": "tcp-senders.json",
     "gate": "python3 tests/tcp/check.py",
-    "scope": "UF/HF 10.6.1.1 cooked tcpout: compressed x useACK x verified TLS/plaintext (16 runs), receiver SIGKILL/resume, reduced Logstash 9.5.0 run"
+    "scope": "UF/HF 10.6.1.1 cooked tcpout: compressed x useACK x verified TLS / default plaintext (16 runs), receiver SIGKILL/resume, hec_metadata id_only and none, reduced Logstash 9.5.0 run; plaintext startup warning asserted"
   },
   "not_covered": [
     "uncooked and legacy protocol levels",
     "heartbeats/token/certificate controls",
     "indexer discovery/cluster features",
     "throughput and long-duration soak",
-    "native amd64 senders (emulated on Apple Silicon)"
+    "native amd64 senders (emulated on Apple Silicon)",
+    "package/tarball host installs, systemd, keystore, proxy, Kubernetes (documented, not tested)",
+    "sender-side mTLS (clientCert) with a live forwarder"
   ],
   "configuration_reference": {
     "status": "pass",
     "evidence": "config-check.json",
     "document": "docs/configuration.md",
-    "scope": "6 documented snippets pass logstash -t on 9.5.0 and 9.5.5; 12 documented startup errors rejected; unit test requires every option/policy key to be documented"
+    "scope": "7 documented snippets and 3 example pipelines pass logstash -t on 9.5.0 and 9.5.5; 15 documented startup errors rejected with the documented message; a unit test requires every option and policy key to be documented"
   },
   "defects_found_by_documenting": [
-    "standard id/enable_metric/add_field/tags/type options were rejected; fixed and tested"
-  ]
+    "standard id/enable_metric/add_field/tags/type options were rejected; fixed",
+    "gem lacked its own gemspec so logstash-plugin list did not show the plugin; fixed",
+    "Java plugin registry required vendor/jars on the require paths; fixed",
+    "Logstash older than 9.5.0 accepted the install and failed later; gem now depends on logstash-core >= 9.5.0"
+  ],
+  "installation_guide": {
+    "status": "pass",
+    "evidence": "install-check.json",
+    "document": "docs/installation.md",
+    "scope": "install/list/validate/run with verified TLS/event accepted/no-token refused/reinstall/remove on 9.5.0 and 9.5.5; Docker image build with writable named state volume; Logstash 9.4.0 install rejected"
+  }
 }

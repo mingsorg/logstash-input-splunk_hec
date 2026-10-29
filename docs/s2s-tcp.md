@@ -23,9 +23,9 @@ Qualified, for the tested scope only: pinned **latest UF and HF 10.6.1.1**
 (`b2ae2962645c`) sending cooked-mode `tcpout` directly to the packaged plugin on
 Logstash 9.5.5 with a persistent queue. The evidence is
 [`tcp-senders.json`](../tests/interop/evidence/tcp-senders.json): 16 real sender
-runs (UF/HF x compressed on/off x `useACK` on/off x verified TLS/plaintext) plus a
-receiver `SIGKILL` and restart while an ACK-enabled compressed TLS UF stayed
-running. `python3 tests/tcp/check.py` exits 0 only when that evidence is complete
+runs (UF/HF x compressed on/off x `useACK` on/off x verified TLS/default plaintext),
+a receiver `SIGKILL` and restart while an ACK-enabled compressed TLS UF stayed
+running, and real UF runs with `hec_metadata` set to `id_only` and `none`. `python3 tests/tcp/check.py` exits 0 only when that evidence is complete
 and names the exact gem in this directory.
 
 This is not a claim of complete Splunk indexer or cluster equivalence. See
@@ -37,11 +37,12 @@ This is not a claim of complete Splunk indexer or cluster equivalence. See
 input {
   splunk_hec {
     host => "0.0.0.0"
-    port => 8088
+    port => 8088                     # HEC over TLS (default)
     state_directory => "/var/lib/logstash/hec-shared"
     ssl_self_signed_sans => "dns:localhost,dns:logs.example.test,ip:127.0.0.1,ip:::1"
     s2s_tcp_enabled => true
     s2s_tcp_port => 9997
+    s2s_tcp_ssl_enabled => false     # the default: plaintext TCP; set true to encrypt it
     s2s_tcp_default_index => "main"
     # s2s_tcp_indexes => "main,application"   # empty means unrestricted
     # s2s_tcp_max_event_bytes => 0             # automatic: at least 8 MiB
@@ -53,24 +54,35 @@ input {
 |---|---|---|
 | `s2s_tcp_enabled` | false | Start the classic TCP listener |
 | `s2s_tcp_port` | 9997 | Must differ from `port` |
+| `s2s_tcp_ssl_enabled` | false | TLS on the TCP listener. **Default plaintext**, like a stock Splunk 9997 receiver; the plugin logs a startup warning |
+| `s2s_tcp_ssl_client_authentication` | false | Require client certificates on TCP (needs TLS on and `ssl_client_ca`) |
 | `s2s_tcp_default_index` | `main` | Index used when a record names none; must be allowed |
 | `s2s_tcp_indexes` | empty | Comma-separated allowlist; a record for another index closes the connection without ACK |
 | `s2s_tcp_max_event_bytes` | 0 (automatic) | Serialized logical-event cap for TCP. Automatic is the larger of `max_event_bytes` and `min(8 MiB, max_expanded_bytes)`; an explicit value may not exceed `max_expanded_bytes` |
 
-TCP reuses the HTTP listener's bind address, **TLS identity and TLS options**,
-aggregate memory budget, connection cap, ingestion slots, event-size cap, request
-deadline and shutdown grace. A slow queue therefore applies back-pressure to both
-listeners. `ssl_enabled => false` makes **both** listeners plaintext and is for
-isolated tests only. `ssl_client_authentication => true` requires client
-certificates on TCP as well.
+TLS is configured **per listener**: `ssl_enabled` (HEC, default on) and
+`s2s_tcp_ssl_enabled` (TCP, default off) are independent. When both use TLS they share
+one certificate identity and the certificate options (`ssl_keystore`, `ssl_certificate`,
+`ssl_key`, `ssl_client_ca`). TCP also shares the bind address, aggregate memory budget,
+connection cap, ingestion slots, request deadline and shutdown grace with HTTP, so a
+slow queue applies back-pressure to both listeners.
 
-A sender needs the same trust setup as for `httpout` (see
-[`examples/outputs-tcp.conf`](../examples/outputs-tcp.conf)):
+The sender's TLS setting must match the listener. Plaintext (default):
 
 ```ini
 [tcpout]
 defaultGroup = logstash
 
+[tcpout:logstash]
+server = logs.example.test:9997
+sendCookedData = true
+useACK = true
+```
+
+TLS (`s2s_tcp_ssl_enabled => true`), with the same trust setup as for `httpout`
+(see [`examples/outputs-tcp.conf`](../examples/outputs-tcp.conf)):
+
+```ini
 [tcpout:logstash]
 server = logs.example.test:9997
 sendCookedData = true
@@ -84,13 +96,16 @@ sslVerifyServerName = true
 ## Security model
 
 * There is **no HEC token** in the classic protocol. Authorization is the network
-  boundary plus TLS/mTLS. Use TLS verification on the sender and prefer
-  `ssl_client_authentication` when the listener is reachable by untrusted hosts.
+  boundary plus TLS/mTLS. **The default is plaintext**, so by default anyone who can
+  reach the port can send events. Restrict it by network, or set
+  `s2s_tcp_ssl_enabled => true` with verification on the sender, and prefer
+  `s2s_tcp_ssl_client_authentication` when untrusted hosts can reach the listener.
 * The sender's `_guid` must have UUID shape. It namespaces event IDs and is
   **self-declared, not authenticated identity**.
 * Token/password/secret-named ForwarderInfo entries are never copied into events.
 * Peer IP, sender hostname, negotiated options and ForwarderInfo are exposed as
   connection provenance under `@metadata.splunk_hec.tcp` (not in the event body).
+  Set `hec_metadata => "id_only"` or `"none"` to omit it.
 
 ## Delivery semantics
 

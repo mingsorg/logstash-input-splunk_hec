@@ -1,17 +1,23 @@
 # Logstash Splunk HEC input
 
-A Java input for **Logstash 9.5.0+ / Java 21** that receives HEC event, raw and S2S HTTP envelopes, and optionally the classic UF/HF cooked `tcpout` stream. Payloads stay native for later filters. The default listeners use **TLS**. No HEC tokens are accepted until configured.
+A Java input for **Logstash 9.5.0+ / Java 21** that receives HEC event, raw and S2S HTTP envelopes, and optionally the classic UF/HF cooked `tcpout` stream. Payloads stay native for later filters. The HEC listener uses **TLS by default**; the optional TCP listener is **plaintext by default** and can be switched to TLS separately. No HEC tokens are accepted until configured.
 
-Build and install locally:
+Build and install locally (the full step-by-step guide, including Docker, Kubernetes, verification, upgrade and
+troubleshooting, is [docs/installation.md](docs/installation.md)):
 
 ```sh
 ./gradlew test gem
-bin/logstash-plugin install --local /absolute/path/logstash-input-splunk_hec-0.1.0-java.gem
+bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.1.0-java.gem
+bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.1.0)
 ```
+
+Installation needs access to rubygems.org (Logstash resolves dependencies even for a local gem) and a Logstash of
+**9.5.0 or newer**; older versions are refused at install time. For air-gapped sites bake the plugin into a Docker image
+with [`docker/Dockerfile.logstash`](docker/Dockerfile.logstash).
 
 The build needs Python 3, a JDK capable of `--release 21`, Docker and network access for the first dependency download. Gradle is checksum-pinned; the compile-only Logstash API is extracted from the pinned 9.5.5 image. The obsolete parent `.logstash/` is never used. Dependency versions and verification checksums are locked. The gem contains one plugin jar bundling Jackson, not Logstash or Elasticsearch.
 
-**All configuration options, token policy, TLS, TCP, limits, sender settings and troubleshooting are in the [configuration reference](docs/configuration.md).**
+**Installation:** [docs/installation.md](docs/installation.md). **All configuration options, token policy, TLS, TCP, limits, sender settings and troubleshooting are in the [configuration reference](docs/configuration.md).**
 
 See [compatibility and evidence](docs/compatibility.md) for the exact tested scope and outstanding qualification work. This is not a claim of complete Splunk parsing-engine equivalence.
 The [current validation status](docs/validation-status.md) lists the passing
@@ -39,9 +45,10 @@ shapes, ACK requirements, error responses and downstream routing. A
 ## Optional classic S2S TCP (`tcpout`)
 
 Set `s2s_tcp_enabled => true` to also accept cooked-mode UF/HF `tcpout` on
-`s2s_tcp_port` (default 9997). It shares the TLS identity, limits and queue
-back-pressure of the HTTPS listener. TCP has **no HEC token**: TLS/mTLS is the
-trust boundary, and the sender GUID is self-declared. With `useACK = true` the
+`s2s_tcp_port` (default 9997). It shares the certificate identity, limits and queue
+back-pressure of the HTTPS listener, but has its own TLS switch
+(`s2s_tcp_ssl_enabled`, default **off**). TCP has **no HEC token**: the network and
+TLS/mTLS are the trust boundary, and the sender GUID is self-declared. With `useACK = true` the
 sender is acknowledged only after the record's events entered the Logstash queue.
 Uncooked and legacy protocol levels are not supported. Details, observed wire
 facts and evidence are in [docs/s2s-tcp.md](docs/s2s-tcp.md); examples are
@@ -111,7 +118,10 @@ Provided identity options:
 | `ssl_certificate`, `ssl_key` | PEM certificate chain and unencrypted PKCS8 private key; alternative to a keystore |
 | `ssl_client_ca` | Explicit trusted client certificates/CA bundle in X.509/PEM form |
 | `ssl_client_authentication` | Require a valid client certificate; default false |
-| `ssl_enabled` | Default true; set false explicitly only for isolated plaintext tests (applies to both listeners) |
+| `ssl_enabled` | TLS on the HEC (HTTP) listener; default true. Set false only on isolated networks |
+| `s2s_tcp_ssl_enabled` | TLS on the TCP listener; default **false** (plaintext) |
+| `ssl_client_authentication`, `s2s_tcp_ssl_client_authentication` | Client-certificate auth per listener |
+| `hec_metadata` | `full` (default), `id_only` or `none`: provenance under `@metadata.splunk_hec`. `@timestamp`/`@version` are unaffected |
 | `s2s_tcp_enabled`, `s2s_tcp_port` | Optional classic TCP listener; default off, port 9997 |
 | `s2s_tcp_default_index`, `s2s_tcp_indexes` | TCP default index (`main`) and optional comma-separated allowlist |
 | `s2s_tcp_max_event_bytes` | TCP logical-event cap; 0 (default) allows at least 8 MiB because real HFs send >1 MiB internal records |
@@ -171,7 +181,7 @@ python3 scripts/resolve-versions.py
 docker compose -f docker/compose.yml run --rm interop
 ```
 
-For a targeted rerun, append `--stage runtime`, `--stage senders`, `--stage tcp` or `--stage config`
+For a targeted rerun, append `--stage runtime`, `--stage senders`, `--stage tcp`, `--stage config` or `python3 tests/interop/install_check.py` (install flows)
 to the Compose command. `senders` starts an owned oracle and runs the real HTTP
 sender stage followed by the TCP stage; it does not recapture the complete HTTP
 oracle corpus. `config` validates every snippet in the configuration reference with `logstash -t` on both runtimes. `tcp` runs only the real UF/HF classic TCP matrix against an owned

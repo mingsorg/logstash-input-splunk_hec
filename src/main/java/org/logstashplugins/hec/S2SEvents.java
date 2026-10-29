@@ -17,7 +17,9 @@ import java.util.*;
 final class S2SEvents {
     private final Limits limits;
     private final HecProtocol protocol;
-    S2SEvents(Limits limits,HecProtocol protocol){this.limits=limits;this.protocol=protocol;}
+    private final MetadataMode mode;
+    S2SEvents(Limits limits,HecProtocol protocol){this(limits,protocol,MetadataMode.FULL);}
+    S2SEvents(Limits limits,HecProtocol protocol,MetadataMode mode){this.limits=limits;this.protocol=protocol;this.mode=mode;}
     List<Map<String,Object>> map(List<S2SDecoder.Event> records,TokenStore.Token token,
                                   Map<String,String> request,byte[] batch,MemoryBudget.Lease memory){
         return mapWithIdentity(records,token,request,TokenStore.fingerprint(batch),memory);
@@ -64,33 +66,36 @@ final class S2SEvents {
                 // ms/us/ns inference, which would misread future native seconds.
                 Map<String,Object> event=protocol.finalizeEnvelope(envelope,token,request,memory,
                     record.time()==null?null:HecProtocol.epochSeconds(record.time()));
-                // Preserve protocol interpretation separately from the searchable
-                // envelope. Typical outputs omit @metadata after filters use it.
-                Map<String,Object> provenance=new LinkedHashMap<>();
-                provenance.put("flags",record.flags());provenance.put("stream",record.stream()<0?Long.toUnsignedString(record.stream()):record.stream());
-                provenance.put("offset",record.offset());provenance.put("sequence",record.sequence());
-                provenance.put("logical_offset",byteOffset);provenance.put("logical_line",lineNumber);
-                if(record.channel()!=null)provenance.put("channel",record.channel());
-                provenance.put("date_parts",record.dateParts().stream().map(p->Map.of("part",p.part(),"tag",p.tag(),"value",p.value())).toList());
-                if(record.timezone()!=null)provenance.put("timezone",record.timezone());
-                provenance.put("csv_header",record.header());provenance.put("wire_metadata",record.meta());
-                String basis;
-                try {
-                    // Labeled versioned, length-delimited canonical JSON. No receipt/connection facts.
-                    List<Object> identity=new ArrayList<>(Arrays.asList("s2s-id-v1",token.identity(),
-                        record.host(),record.source(),record.sourcetype(),record.channel(),record.index(),
-                         record.stream(),byteOffset,record.sequence(),positioned?0:lineNumber,line));
-                    // Field order is not identity, but changed measurements/indexed
-                    // values are changed content. Ordered multivalues remain ordered.
-                    identity.add(new TreeMap<>(record.fields()));
-                    identity.add(record.structured()?record.time():null);
-                     if(!positioned){
-                        identity.add(batchIdentity);
-                        identity.add(recordNumber);provenance.put("identity_scope","identical-batch-retry");
-                    }else provenance.put("identity_scope","source-coordinates");
-                    basis=HecProtocol.JSON.writeValueAsString(identity);
-                }catch(Exception e){throw HecException.invalid();}
-                event.put("@metadata",Map.of("splunk_hec",Map.of("id","s2s-v1:"+TokenStore.fingerprint(basis),"s2s",provenance)));
+                if(mode!=MetadataMode.NONE){
+                    // Preserve protocol interpretation separately from the searchable
+                    // envelope. Typical outputs omit @metadata after filters use it.
+                    Map<String,Object> provenance=new LinkedHashMap<>();
+                    provenance.put("flags",record.flags());provenance.put("stream",record.stream()<0?Long.toUnsignedString(record.stream()):record.stream());
+                    provenance.put("offset",record.offset());provenance.put("sequence",record.sequence());
+                    provenance.put("logical_offset",byteOffset);provenance.put("logical_line",lineNumber);
+                    if(record.channel()!=null)provenance.put("channel",record.channel());
+                    provenance.put("date_parts",record.dateParts().stream().map(p->Map.of("part",p.part(),"tag",p.tag(),"value",p.value())).toList());
+                    if(record.timezone()!=null)provenance.put("timezone",record.timezone());
+                    provenance.put("csv_header",record.header());provenance.put("wire_metadata",record.meta());
+                    String basis;
+                    try {
+                        // Labeled versioned, length-delimited canonical JSON. No receipt/connection facts.
+                        List<Object> identity=new ArrayList<>(Arrays.asList("s2s-id-v1",token.identity(),
+                            record.host(),record.source(),record.sourcetype(),record.channel(),record.index(),
+                             record.stream(),byteOffset,record.sequence(),positioned?0:lineNumber,line));
+                        // Field order is not identity, but changed measurements/indexed
+                        // values are changed content. Ordered multivalues remain ordered.
+                        identity.add(new TreeMap<>(record.fields()));
+                        identity.add(record.structured()?record.time():null);
+                         if(!positioned){
+                            identity.add(batchIdentity);
+                            identity.add(recordNumber);provenance.put("identity_scope","identical-batch-retry");
+                        }else provenance.put("identity_scope","source-coordinates");
+                        basis=HecProtocol.JSON.writeValueAsString(identity);
+                    }catch(Exception e){throw HecException.invalid();}
+                    String id="s2s-v1:"+TokenStore.fingerprint(basis);
+                    event.put("@metadata",mode==MetadataMode.FULL?Map.of("splunk_hec",Map.of("id",id,"s2s",provenance)):Map.of("splunk_hec",Map.of("id",id)));
+                }
                 // Validate again AFTER attaching source-derived provenance; large
                 // headers/timezone/date-part lists must not bypass the logical cap.
                 protocol.validateLogicalSize(event,memory);

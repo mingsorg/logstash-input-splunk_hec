@@ -1,6 +1,6 @@
 # Configuration reference
 
-Everything you can configure for the `splunk_hec` input: the Logstash options, the
+To install the plugin first, see the [installation guide](installation.md). Everything you can configure for the `splunk_hec` input: the Logstash options, the
 token-policy file, TLS, the optional classic TCP listener, resource limits, and
 the matching UF/HF sender settings. Defaults below are the plugin's own, not
 Splunk's. Requires **Logstash 9.5.0+ (Java 21)**.
@@ -33,7 +33,7 @@ input {
 This serves HTTPS on port 8088: `/services/collector[/event|/raw|/s2s|/ack|/health]`.
 Until at least one token exists every ingestion request is rejected.
 
-### B. HEC + classic UF/HF `tcpout` (port 9997)
+### B. HEC over TLS + classic UF/HF `tcpout` (port 9997)
 
 ```logstash
 input {
@@ -43,6 +43,21 @@ input {
     inputs_conf => "/etc/logstash/hec-inputs.conf"
     s2s_tcp_enabled => true
     s2s_tcp_default_index => "main"
+  }
+}
+```
+
+With only `s2s_tcp_enabled => true`, HEC stays on TLS (the default) and the TCP listener is
+**plaintext** (its default, like a stock Splunk 9997 receiver). The plugin logs a warning at
+startup. To encrypt TCP as well, add `s2s_tcp_ssl_enabled => true`:
+
+```logstash
+input {
+  splunk_hec {
+    state_directory => "/var/lib/logstash/hec-1"
+    ssl_self_signed_sans => "dns:logs.example.test,ip:10.0.0.5"
+    s2s_tcp_enabled => true
+    s2s_tcp_ssl_enabled => true
   }
 }
 ```
@@ -70,14 +85,19 @@ input {
 | TCP port | `s2s_tcp_port` | TCP only |
 | Enable TCP | `s2s_tcp_enabled` | TCP only (**default off**) |
 | HTTP listener on/off | *(not configurable)* | Always starts, even with TCP enabled |
-| TLS on/off, certificates, client-cert auth | `ssl_*` | **Both** listeners (not separately configurable) |
+| TLS on/off | `ssl_enabled` (HTTP, **default on**), `s2s_tcp_ssl_enabled` (TCP, **default off**) | Each listener separately |
+| Client-certificate auth (mTLS) | `ssl_client_authentication` (HTTP), `s2s_tcp_ssl_client_authentication` (TCP) | Each listener separately; needs TLS on that listener |
+| Certificate, key, keystore, client CA, generated-certificate SANs | `ssl_keystore*`, `ssl_certificate`, `ssl_key`, `ssl_client_ca`, `ssl_self_signed_sans` | **Shared** by whichever listeners use TLS (one identity) |
 | Authentication | tokens (`tokens_json`, `inputs_conf`) | HEC/S2S-over-HTTP only. **TCP has no token**; TLS/mTLS and the network are its boundary |
 | Index policy | token `index`/`indexes` | HTTP; TCP uses `s2s_tcp_default_index` / `s2s_tcp_indexes` |
 | Event-size cap | `max_event_bytes` | HTTP; TCP uses `s2s_tcp_max_event_bytes` |
+| Provenance in `@metadata` | `hec_metadata` | Both listeners (`full`, `id_only`, `none`) |
 | Connection/memory/concurrency limits, timeouts | `max_*`, `*_timeout_ms` | **Shared budget** across both listeners |
 | ACK state and TLS identity directory | `state_directory` | One per input, shared by both listeners |
 
-To run HEC and TCP with different TLS or limits, use two inputs (recipe C). There
+TLS can be set per listener (for example HEC over TLS with plaintext TCP, which is the
+default, or the reverse). Certificates are shared: both listeners present the same identity.
+For different certificates, tokens or limits per listener, use two inputs (recipe C). There
 is no option to disable the HTTP listener; with no tokens it rejects everything
 but still binds `port`, so choose a free one.
 
@@ -104,11 +124,14 @@ work in any value.
 
 Both sources are merged. A duplicate token (same secret) anywhere fails startup.
 
-### 3.3 TLS (both listeners)
+### 3.3 TLS (per-listener switches, shared certificate)
 
 | Option | Type | Default | Notes |
 |---|---|---|---|
-| `ssl_enabled` | boolean | `true` | `false` makes **both** listeners plaintext. Isolated tests only. Supplying a keystore, certificate, key, client CA or client authentication while `false` is an error. |
+| `ssl_enabled` | boolean | `true` | TLS on the **HTTP (HEC)** listener. `false` serves HEC over plaintext HTTP, so tokens travel unencrypted; isolated networks only. A startup warning is logged. |
+| `ssl_client_authentication` | boolean | `false` | Require a client certificate on the **HTTP** listener (mTLS). Needs `ssl_enabled` and `ssl_client_ca`. |
+| `s2s_tcp_ssl_enabled` | boolean | `false` | TLS on the **TCP** listener. Only relevant when `s2s_tcp_enabled` is true. Default plaintext matches a stock Splunk 9997 receiver; the plugin logs a warning because the classic protocol has no token. |
+| `s2s_tcp_ssl_client_authentication` | boolean | `false` | Require a client certificate on the **TCP** listener (mTLS). Needs `s2s_tcp_ssl_enabled` and `ssl_client_ca`. |
 | `ssl_self_signed_sans` | string | `dns:localhost,ip:127.0.0.1,ip:::1` | keytool SAN list used **only when generating** the identity (first start). Include every DNS name/IP the senders connect to. Later changes do not replace an existing identity. |
 | `ssl_keystore` | string | empty | PKCS12/JKS identity with a private key and chain. Exclusive with `ssl_certificate`/`ssl_key`. |
 | `ssl_keystore_type` | string | `PKCS12` | `PKCS12` or `JKS`. |
@@ -116,10 +139,12 @@ Both sources are merged. A duplicate token (same secret) anywhere fails startup.
 | `ssl_certificate` | string | empty | PEM certificate chain. Requires `ssl_key`. |
 | `ssl_key` | string | empty | **Unencrypted PKCS8** PEM private key (RSA, EC or Ed25519). Protect with file permissions. |
 | `ssl_client_ca` | string | empty | PEM bundle of client CAs/certificates to trust. |
-| `ssl_client_authentication` | boolean | `false` | Require a client certificate (mTLS). Needs `ssl_client_ca`. |
 
 TLS 1.3 and 1.2 only. The server certificate must be valid, carry SANs, and match
-its key. Nothing ever falls back to plaintext.
+its key. A listener never falls back to plaintext on its own: plaintext happens only when that
+listener's switch is off. The certificate options (`ssl_keystore`, `ssl_certificate`, `ssl_key`,
+`ssl_client_ca`) are used by every listener that has TLS on; supplying them when **neither**
+listener uses TLS is a startup error, because they would be silently unused.
 
 ### 3.4 Optional TCP listener
 
@@ -130,6 +155,12 @@ its key. Nothing ever falls back to plaintext.
 | `s2s_tcp_default_index` | string | `main` | Index for records that name none. Must be in `s2s_tcp_indexes` if that is set. |
 | `s2s_tcp_indexes` | string | empty | Comma-separated allowlist (no empty members). Empty = unrestricted. A record for another index closes the connection **without ACK**. |
 | `s2s_tcp_max_event_bytes` | number | `0` (automatic) | Serialized logical-event cap for TCP. `0` = larger of `max_event_bytes` and `min(8 MiB, max_expanded_bytes)`. An explicit value must be positive and ≤ `max_expanded_bytes`. |
+
+### 3.4a Event provenance
+
+| Option | Type | Default | Notes |
+|---|---|---|---|
+| `hec_metadata` | string | `full` | How much provenance is attached under `@metadata.splunk_hec`: `full` (stable `id`, `s2s` wire details, and for TCP the `tcp` connection block), `id_only` (only the stable `id`, enough for idempotent outputs) or `none` (no `@metadata` at all). Applies to S2S over HTTP and TCP. The `id` is identical in `full` and `id_only`. `@metadata` is never written by outputs unless a filter copies it; it only affects memory and the size cap (provenance counts toward the event-size cap only when attached). **`@timestamp` and `@version` are added by Logstash itself and are never affected.** |
 
 ### 3.5 Limits (shared)
 
@@ -228,6 +259,16 @@ UF/HF `httpout` sends no channel: keep `useACK = false` for those tokens.
 
 ## 5. TLS
 
+### 5.0 Which listener uses TLS
+
+| Goal | Settings |
+|---|---|
+| HEC TLS, TCP plaintext (default) | nothing, or `s2s_tcp_enabled => true` |
+| HEC TLS, TCP TLS | `s2s_tcp_enabled => true  s2s_tcp_ssl_enabled => true` |
+| HEC plaintext, TCP TLS | `ssl_enabled => false  s2s_tcp_enabled => true  s2s_tcp_ssl_enabled => true` |
+| Both plaintext (isolated test only) | `ssl_enabled => false  s2s_tcp_enabled => true` |
+| mTLS on TCP only | `s2s_tcp_ssl_enabled => true  s2s_tcp_ssl_client_authentication => true  ssl_client_ca => "..."` |
+
 ### 5.1 Generated identity (default)
 
 On first start the input creates `state_directory/identity/` (`server.p12`,
@@ -271,14 +312,18 @@ splunk_hec {
 }
 ```
 
-This applies to both the HTTPS and TCP listeners. For TCP it is the strongest
+`ssl_client_authentication` applies to the HTTPS listener only. For the TCP listener use
+`s2s_tcp_ssl_enabled => true` together with `s2s_tcp_ssl_client_authentication => true` (both
+listeners trust the same `ssl_client_ca`). For TCP, client certificates are the strongest
 available authentication, since the classic protocol has no token.
 
 ## 6. Optional classic TCP listener
 
 Details, wire facts and unsupported modes: [s2s-tcp.md](s2s-tcp.md). Summary:
 
-- Accepts UF/HF cooked-mode `tcpout` (`sendCookedData = true`, protocol level 7).
+- Accepts UF/HF cooked-mode `tcpout` (`sendCookedData = true`, protocol level 7), over
+  plaintext by default or TLS with `s2s_tcp_ssl_enabled => true`. Plaintext means anyone who
+  can reach the port can send events: restrict it by network or use TLS with client certificates.
 - Replies with reverse ACKs **after** the record's events entered the queue. A
   failed or interrupted insertion closes the connection without ACK; the sender
   retries (a prefix may already be queued, so duplicates are possible; IDs stay
@@ -360,10 +405,21 @@ every index the forwarder sends (heavy forwarders also send internal indexes).
 
 ### 9.2 UF/HF `tcpout` (classic)
 
+Plaintext (the plugin's default for TCP):
+
 ```ini
 [tcpout]
 defaultGroup = logstash
 
+[tcpout:logstash]
+server = logs.example.test:9997
+sendCookedData = true
+useACK = true
+```
+
+TLS (requires `s2s_tcp_ssl_enabled => true` on the plugin):
+
+```ini
 [tcpout:logstash]
 server = logs.example.test:9997
 sendCookedData = true
@@ -373,8 +429,9 @@ sslVerifyServerCert = true
 sslVerifyServerName = true
 ```
 
-Plus the same `server.conf [sslConfig] sslRootCAPath` as above. `compressed` is
-optional. If you enabled mTLS, present a client certificate with `clientCert = <pem>` (this
+The TLS form also needs the same `server.conf [sslConfig] sslRootCAPath` as above. The sender
+setting must match the listener: a TLS sender cannot talk to a plaintext listener and vice versa.
+`compressed` is optional. If you enabled mTLS, present a client certificate with `clientCert = <pem>` (this
 sender-side mTLS setting was **not** exercised with a live forwarder). `sendCookedData = false` (uncooked) is **not supported**.
 
 ### 9.3 Generic HEC clients
@@ -403,7 +460,8 @@ The input preserves HEC-native fields and adds none of its own: `event`, `time`,
 | `@metadata.splunk_hec.tcp` | TCP only: `protocol`, `sender_guid`, `sender_hostname`, `management_port`, `peer_ip`, `compression_requested`, `stream_compressed`, `ack_requested`, `forwarder_info`, `event_id` |
 
 `@metadata` is not written by most outputs; copy fields you want to keep in a
-filter. HEC event/raw requests carry no `@metadata.splunk_hec` entry. Numbers are
+filter. Set `hec_metadata => "id_only"` or `"none"` to attach less (or nothing) when you do not
+need the provenance; `@timestamp` and `@version` always remain. HEC event/raw requests carry no `@metadata.splunk_hec` entry. Numbers are
 lossless (`BigInteger`/`BigDecimal` when needed). Source `time` is kept separately
 from `@timestamp`.
 
@@ -417,10 +475,13 @@ from `@timestamp`.
 | `TCP default index must not be blank` / `must be allowed` / `empty TCP allowed index` | `s2s_tcp_default_index`/`s2s_tcp_indexes` |
 | `s2s_tcp_max_event_bytes must not be negative` / `must not exceed max_expanded_bytes` | TCP cap |
 | `inconsistent positive resource limits` | A limit is ≤ 0 or violates a constraint in 3.5 |
-| `TLS material requires TLS enabled` | `ssl_*` set with `ssl_enabled => false` |
+| `TLS material requires TLS enabled` | Keystore/certificate/key/client CA supplied while **neither** listener uses TLS |
+| `ssl_client_authentication requires ssl_enabled` | mTLS requested on a plaintext HTTP listener |
+| `s2s_tcp_ssl_client_authentication requires s2s_tcp_ssl_enabled and s2s_tcp_enabled` | mTLS requested on a plaintext or disabled TCP listener |
+| `hec_metadata must be full, id_only or none` | Bad `hec_metadata` value |
 | `choose keystore or PEM` / `both PEM certificate and PKCS8 key required` | Conflicting/missing TLS inputs |
 | `server certificate requires SANs` / `certificate and key mismatch` | Bad identity |
-| `mTLS requires an explicit client CA` | `ssl_client_authentication` without `ssl_client_ca` |
+| `mTLS requires an explicit client CA` | Client authentication without `ssl_client_ca` |
 | `existing TLS identity unreadable; refusing regeneration` | Damaged `identity/` (never silently recreated) |
 | `ACK state already owned` | Two inputs (or two Logstash processes) use the same `state_directory`; give each its own |
 | `invalid inline token JSON` / `unknown inline token key` / `duplicate token identity` | `tokens_json` problems |
@@ -432,6 +493,8 @@ Run `bin/logstash -t -f pipeline.conf` to validate a configuration.
 
 | Symptom | Likely cause and fix |
 |---|---|
+| Sender cannot connect to 9997 / handshake errors | TLS mismatch: the sender's `useSSL` must match `s2s_tcp_ssl_enabled` (default off) |
+| Startup warning "plaintext" | A listener has TLS off; expected for the TCP default |
 | Sender gets `401/403` | Missing/invalid token or `disabled`; check `tokens_json`/`inputs_conf` and the log line `token reload rejected` |
 | Sender gets `400` code 6 | Malformed body; S2S batches are all-or-nothing, nothing was queued |
 | Sender gets `503` code 9 | Slots or memory exhausted (slow outputs, small limits); retry is safe |

@@ -155,11 +155,20 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
     finally:
         if not keep or not success: subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
 
-def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998, name=None):
-    """Start an owned Logstash fixture with the classic TCP listener enabled.
+def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998, name=None, hec_metadata=None):
+    """Start an owned Logstash container running the packaged gem with the classic TCP listener on.
 
-    TLS is the default. tls=False exists only to qualify the real sender's
-    plaintext classic-S2S mode inside a disposable loopback fixture.
+    * ``tls=True``  sets ``s2s_tcp_ssl_enabled => true`` (the TCP listener then uses the generated
+      certificate, which the forwarder verifies).
+    * ``tls=False`` OMITS the option so the real default, plaintext TCP, is what gets tested.
+    * The HTTP listener is never configured here and therefore keeps its default (TLS on); ``ready()``
+      waits for it over verified HTTPS using the generated certificate.
+    * ``hec_metadata`` (None, ``full``, ``id_only`` or ``none``) selects how much provenance is attached.
+    * The pipeline's ``ruby`` filter copies ``@metadata`` into a visible ``verification_metadata`` field
+      ONLY so the ``file`` output (which never writes ``@metadata``) records it for the assertions.
+    * The persistent queue uses 16 MB pages: a persistent queue rejects any single event larger than its
+      page, and a real heavy forwarder sends ~1.2 MB internal records.
+    The container is the caller's to remove; a failed start removes it here.
     """
     subject=artifact_info()
     name=name or 'hec-tcp-'+uuid.uuid4().hex[:10]
@@ -172,7 +181,9 @@ def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998
         '\nqueue.max_bytes: 256mb\nqueue.page_capacity: 16mb\nqueue.checkpoint.writes: 1\nqueue.checkpoint.acks: 1\n')
     (config/'pipelines.yml').write_text('- pipeline.id: main\n  path.config: /run-hec/config/pipeline.conf\n')
     (config/'pipeline.conf').write_text('''input { splunk_hec {
-  host => "0.0.0.0" port => 8088 state_directory => "/run-hec/state" ssl_enabled => '''+('true' if tls else 'false')+'''
+  host => "0.0.0.0" port => 8088 state_directory => "/run-hec/state"
+  '''+('s2s_tcp_ssl_enabled => true' if tls else '# s2s_tcp_ssl_enabled omitted: the TCP default (plaintext) is exercised')+'''
+  '''+('hec_metadata => "'+hec_metadata+'"' if hec_metadata else '')+'''
   ssl_self_signed_sans => "dns:localhost,dns:host.docker.internal,ip:127.0.0.1,ip:::1"
   s2s_tcp_enabled => true s2s_tcp_port => 9997
   tokens_json => '[{"token":"'''+TOKEN+'''","useACK":true}]'
@@ -185,7 +196,7 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
                '-e','JAVA_HOME=/usr/share/logstash/jdk','-v',str(ROOT)+':/work:ro',
                '-v',str(directory)+':/run-hec','--entrypoint','/usr/share/logstash/vendor/jruby/bin/jruby',
                P[f'logstash.{role}.image'],'/work/tests/interop/install_and_run.rb')
-        port,context=ready(name,directory,plaintext=not tls)
+        port,context=ready(name,directory)   # HEC always uses its default TLS here
     except BaseException:
         subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
         raise

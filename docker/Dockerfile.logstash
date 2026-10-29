@@ -1,0 +1,30 @@
+# Logstash image with the splunk_hec input pre-installed.
+#
+# Build (from the directory that contains the built gem and this file):
+#   docker build -f Dockerfile.logstash \
+#     --build-arg LOGSTASH_IMAGE=docker.elastic.co/logstash/logstash:9.5.5 -t logstash-splunk-hec .
+#
+# The base image must be Logstash 9.5.0 or newer: the gem declares logstash-core >= 9.5.0, so the build
+# FAILS on older versions instead of producing an image whose pipeline cannot start.
+ARG LOGSTASH_IMAGE=docker.elastic.co/logstash/logstash:9.5.5
+FROM ${LOGSTASH_IMAGE}
+
+# Install the gem as the unprivileged "logstash" user the image already runs as. Logstash vendors the plugin
+# under /usr/share/logstash/vendor/local_gems, so it stays in this image layer.
+COPY --chown=logstash:logstash logstash-input-splunk_hec-0.1.0-java.gem /tmp/
+RUN bin/logstash-plugin install /tmp/logstash-input-splunk_hec-0.1.0-java.gem \
+ && rm /tmp/logstash-input-splunk_hec-0.1.0-java.gem
+
+# A ready-made, persistent-volume-friendly state directory owned by the logstash user. A NAMED Docker volume
+# mounted here inherits this ownership when it is first created, so the plugin can write its ACK counter and
+# generated TLS identity. (A bind mount keeps the host directory's ownership: chown it to uid 1000 yourself.)
+USER root
+RUN install -d -o logstash -g logstash -m 0750 /var/lib/logstash/hec
+USER logstash
+
+# Ports: 8088 HEC (TLS by default) and 9997 for the optional classic TCP listener.
+EXPOSE 8088 9997
+
+# The plugin keeps its ACK counter and, when generated, its TLS identity under the input's state_directory.
+# Mount a persistent volume there and point the input at it, for example:
+#   docker run -v hec-state:/var/lib/logstash/hec ...   with   state_directory => "/var/lib/logstash/hec"

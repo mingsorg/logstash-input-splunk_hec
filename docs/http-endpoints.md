@@ -76,7 +76,7 @@ input {
   splunk_hec {
     host => "0.0.0.0"
     port => 8088
-    ssl_enabled => true
+    ssl_enabled => true               # the default
     inputs_conf => "/etc/logstash/hec-inputs.conf"
     state_directory => "/var/lib/logstash/hec-shared"
     ssl_self_signed_sans => "dns:localhost,dns:logs.example.test,ip:127.0.0.1,ip:::1"

@@ -20,6 +20,8 @@ ROOT = runtime.ROOT
 DOC = (ROOT / 'docs/configuration.md').read_text()
 
 BLOCKS = [b for b in re.findall(r'```logstash\n(.*?)```', DOC, re.S) if 'splunk_hec' in b]
+# Complete example pipelines shipped in examples/ are validated too, so they cannot rot either.
+EXAMPLES = [f.read_text() for f in sorted((ROOT / 'examples').glob('*.conf')) if re.search(r'^\s*splunk_hec\s*{', f.read_text(), re.M)]
 SUBSTITUTIONS = [
     ('/var/lib/logstash/', '/tmp/state/'),
     ('/etc/logstash/hec-inputs.conf', '/tmp/files/hec-inputs.conf'),
@@ -32,6 +34,8 @@ SUBSTITUTIONS = [
 def prepare(block):
     for old, new in SUBSTITUTIONS:
         block = block.replace(old, new)
+    if re.search(r'^\s*output\s*{', block, re.M):
+        return block           # an example that is already a complete pipeline
     if not re.search(r'^\s*input\s*{', block, re.M):
         block = 'input {\n' + block + '\n}\n'
     # Examples use different state paths per input already; make each snippet independent.
@@ -42,7 +46,12 @@ NEGATIVE = {
     'codec rejected': ('splunk_hec { state_directory => "/tmp/n2" codec => "json" }', "Unknown setting 'codec'"),
     'tcp port equals http': ('splunk_hec { state_directory => "/tmp/n3" port => 9000 s2s_tcp_enabled => true s2s_tcp_port => 9000 }', 'S2S TCP port must be distinct'),
     'inconsistent limits': ('splunk_hec { state_directory => "/tmp/n4" max_connections => 1 max_concurrent_requests => 16 }', 'inconsistent positive resource limits'),
-    'tls material with tls off': ('splunk_hec { state_directory => "/tmp/n5" ssl_enabled => false ssl_client_authentication => true }', 'TLS material requires TLS enabled'),
+    # Certificate material is shared, so it is only an error when NO listener uses TLS.
+    'tls material with all tls off': ('splunk_hec { state_directory => "/tmp/n5" ssl_enabled => false ssl_keystore => "/tmp/files/hec.p12" ssl_keystore_password => "changeit" }', 'TLS material requires TLS enabled'),
+    # Client-certificate authentication needs TLS on THAT listener.
+    'http client auth without http tls': ('splunk_hec { state_directory => "/tmp/n5b" ssl_enabled => false ssl_client_authentication => true }', 'ssl_client_authentication requires ssl_enabled'),
+    'tcp client auth without tcp tls': ('splunk_hec { state_directory => "/tmp/n5c" s2s_tcp_enabled => true s2s_tcp_ssl_client_authentication => true }', 's2s_tcp_ssl_client_authentication requires s2s_tcp_ssl_enabled'),
+    'bad hec_metadata': ('splunk_hec { state_directory => "/tmp/n5d" hec_metadata => "everything" }', 'hec_metadata must be full, id_only or none'),
     'mtls without ca': ('splunk_hec { state_directory => "/tmp/n6" ssl_client_authentication => true }', 'mTLS requires an explicit client CA'),
     'keystore and pem': ('splunk_hec { state_directory => "/tmp/n7" ssl_keystore => "/tmp/files/hec.p12" ssl_keystore_password => "changeit" ssl_certificate => "/tmp/files/hec.crt" ssl_key => "/tmp/files/hec.pkcs8.key" }', 'choose keystore or PEM'),
     'tcp cap above expanded': ('splunk_hec { state_directory => "/tmp/n8" s2s_tcp_max_event_bytes => 1073741824 }', 'must not exceed max_expanded_bytes'),
@@ -69,6 +78,7 @@ export HEC_TOKENS_JSON='[{"token":"11111111-1111-4111-8111-111111111111","index"
 export APP_TOKENS_JSON='[{"token":"22222222-2222-4222-8222-222222222222"}]'
 export FWD_TOKENS_JSON='[{"token":"33333333-3333-4333-8333-333333333333"}]'
 export HEC_P12_PASSWORD=changeit
+export ELASTICSEARCH_URL=http://localhost:9200 ELASTICSEARCH_API_KEY=test
 for f in /conf/*.conf; do
   n=$(basename $f .conf)
   out=$(/usr/share/logstash/bin/logstash -t -f $f --path.data /tmp/data-$n 2>&1)
@@ -87,6 +97,8 @@ def main():
             conf.chmod(0o755)
             for i, block in enumerate(BLOCKS):
                 (conf / ('doc%02d.conf' % i)).write_text(prepare(block))
+            for i, text in enumerate(EXAMPLES):
+                (conf / ('example%02d.conf' % i)).write_text(prepare(text))
             for name, (body, _) in NEGATIVE.items():
                 slug = re.sub(r'\W+', '_', name)
                 (conf / ('neg_%s.conf' % slug)).write_text('input {\n  %s\n}\noutput { stdout { } }\n' % body)
@@ -110,6 +122,12 @@ def main():
                 report['positive'].append({'role': role, 'snippet': i, 'ok': ok, 'errors': detail.get(name, [])})
                 if not ok:
                     failures.append((role, name, detail.get(name), block[:200]))
+            for i in range(len(EXAMPLES)):
+                name = 'example%02d' % i
+                ok = results.get(name) == 'OK'
+                report['positive'].append({'role': role, 'example': i, 'ok': ok, 'errors': detail.get(name, [])})
+                if not ok:
+                    failures.append((role, name, detail.get(name), EXAMPLES[i][:200]))
             for name, (_, expected) in NEGATIVE.items():
                 key = 'neg_' + re.sub(r'\W+', '_', name)
                 failed = results.get(key) == 'FAIL'
@@ -121,10 +139,11 @@ def main():
     report['artifact'] = runtime.artifact_info()
     report['status'] = 'pass' if not failures else 'fail'
     report['snippets'] = len(BLOCKS)
+    report['example_pipelines'] = len(EXAMPLES)
     (ROOT / 'tests/interop/evidence/config-check.json').write_text(json.dumps(report, indent=2) + '\n')
     for f in failures:
         print('FAIL', f)
-    print(report['status'].upper(), len(BLOCKS), 'documented snippets,', len(NEGATIVE), 'negative cases, 2 runtimes')
+    print(report['status'].upper(), len(BLOCKS), 'documented snippets,', len(EXAMPLES), 'example pipelines,', len(NEGATIVE), 'negative cases, 2 runtimes')
     return 0 if not failures else 1
 
 if __name__ == '__main__':

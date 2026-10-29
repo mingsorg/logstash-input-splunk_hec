@@ -28,6 +28,12 @@ if os.environ.get('HEC_RECEIVER_URI'):
         (app/'trusted-hec.crt').chmod(0o644)
         (app/'server.conf').write_text('[sslConfig]\nsslRootCAPath = '+str(app/'trusted-hec.crt')+'\n')
     (app/'outputs.conf').write_text(outputs)
+# --- Classic TCP forwarding (HEC_TRANSPORT=tcp) ----------------------------------------------------
+# Replaces the httpout configuration above with a tcpout group aimed at the plugin's TCP listener.
+# HEC_TCP_ACK    -> useACK (ask the receiver to acknowledge records after they are queued)
+# HEC_TCP_COMPRESSED -> compressed (request the compact zlib record stream)
+# HEC_TCP_TLS    -> useSSL plus certificate AND hostname verification against the plugin's own
+#                   generated certificate, which the harness mounts at /tmp/hec-server.crt.
 if os.environ.get('HEC_TRANSPORT')=='tcp':
     receiver=os.environ['HEC_TCP_RECEIVER']
     tls=os.environ.get('HEC_TCP_TLS','false')=='true'

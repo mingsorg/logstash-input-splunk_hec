@@ -1,0 +1,59 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.1.0-java.gem",
+    "sha256": "de29277aef13783b5fdd87ba2190a953bafe457cd1818016ea95b706af73e34b"
+  },
+  "runtimes": {
+    "minimum": {
+      "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "logstash": "9.5.0",
+      "steps": {
+        "install": true,
+        "list_shows_plugin": true,
+        "config_test": true,
+        "tls_health": true,
+        "event_accepted": true,
+        "event_in_output": true,
+        "no_token_rejected": true,
+        "reinstall": true,
+        "remove": true,
+        "gone_from_list": true,
+        "clear_error_after_remove": true
+      }
+    },
+    "latest": {
+      "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "logstash": "9.5.5",
+      "steps": {
+        "install": true,
+        "list_shows_plugin": true,
+        "config_test": true,
+        "tls_health": true,
+        "event_accepted": true,
+        "event_in_output": true,
+        "no_token_rejected": true,
+        "reinstall": true,
+        "remove": true,
+        "gone_from_list": true,
+        "clear_error_after_remove": true
+      }
+    }
+  },
+  "status": "pass",
+  "docker_image": {
+    "built": true,
+    "plugin_listed": true,
+    "config_ok": true,
+    "state_volume_writable": true
+  },
+  "pre_floor_rejected": {
+    "image": "docker.elastic.co/logstash/logstash:9.4.0",
+    "output": [
+      "EXIT 1",
+      "Plugin version conflict, aborting",
+      "Because every version of logstash-input-splunk_hec depends on logstash-core >= 9.5.0",
+      "LISTED 0"
+    ],
+    "rejected": true
+  }
+}

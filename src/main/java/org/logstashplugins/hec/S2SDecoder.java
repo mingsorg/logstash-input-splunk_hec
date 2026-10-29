@@ -46,7 +46,13 @@ public final class S2SDecoder {
     static final int STRUCTURED=0x40, TIME_OR_STREAM=0x0a, METRIC=0x10000;
     // In the captured compact TCP profile these header bits are independent.
     // HTTP retains its original four-varint TIME_OR_STREAM grammar below.
-    static final int TCP_STREAM_POS=0x02, TCP_EVENT_ID=0x04, TCP_TIMESTAMP=0x08, TCP_RESENT=0x46;
+    static final int TCP_STREAM_POS=0x02, TCP_EVENT_ID=0x04, TCP_TIMESTAMP=0x08;
+    /**
+     * Field tag seen only on records a forwarder RETRANSMITS after its acknowledgement wait expired.
+     * Wire form: tag 0x46, U(marker), S("resent"). It is recorded as provenance and is never an indexed
+     * field. Because it falls in the date-part tag range, it must be matched BEFORE the date-part branch.
+     */
+    static final int TCP_RESENT=0x46;
     /**
      * Original timestamp component; only part 0 drives fractional time here.
      * @param part observed component ID, with zero identifying subsecond encoding
@@ -295,6 +301,15 @@ public final class S2SDecoder {
     private static String header(Meta m,int index) { if(index>=m.header.size()) throw HecException.invalid(); return m.header.get(index); }
     private static String strip(String value,String prefix) {return value!=null&&value.startsWith(prefix)?value.substring(prefix.length()):value;}
 
+    /**
+     * Result of decoding ONE record from a TCP stream.
+     * @param event       the decoded event, or null for metadata/timezone/close records
+     * @param eventId     the sender's unsigned event/ACK id, or null when the record has none
+     * @param wireSha256  SHA-256 over every byte consumed for this record; used only as the fallback
+     *                    identity for records without source coordinates
+     * @param retainsLease true when the record's memory reservation must be kept (channel metadata and
+     *                    timezone stay live for the connection) instead of released after processing
+     */
     record StreamRecord(Event event,Long eventId,String wireSha256,boolean retainsLease){}
 
     /**
@@ -305,14 +320,28 @@ public final class S2SDecoder {
      * or re-decoding of partial packets is needed: reads are exact and bounded.
      */
     final class StreamSession implements AutoCloseable{
+        /** Channel id to its (source, host, sourcetype, header) tuple, as defined by FE/F8 records. */
         private final Map<Long,Meta> metas=new HashMap<>();
+        /** The memory reservation backing each live channel definition; freed on replace/close. */
         private final Map<Long,MemoryBudget.Lease> leases=new HashMap<>();
+        /** Serialized timezone most recently announced by an FF record, attached to later events. */
         private String timezone;
         private MemoryBudget.Lease timezoneLease;
+        /**
+         * Read the remainder of one record whose first byte (the opcode) the caller already consumed.
+         * The reader pulls bytes directly from the stream with exact bounded reads, so a record split
+         * across TCP segments simply blocks until the rest arrives (under the caller's deadline); there
+         * is never a partially parsed record to resume.
+         *
+         * <p>Opcodes: {@code FF} timezone text; {@code FE} define/replace a channel; {@code F8} the same
+         * with an extra leading U(1) (observed on heavy-forwarder "clone" channels); {@code FD} close a
+         * channel; {@code FC} one event. Anything else is a corrupt or unsupported stream.
+         */
         StreamRecord read(int opcode,InputStream input,MemoryBudget.Lease memory){
             memory.charge(512);Reader r=new Reader(input,memory,opcode);
             switch(opcode){
                 case 0xff -> {
+                    // Timezone: kept for later events. Replacing it frees the previous reservation.
                     String next=r.str(),hash=r.hash();
                     if(timezoneLease!=null)timezoneLease.close();
                     timezone=next;timezoneLease=memory;
@@ -323,19 +352,25 @@ public final class S2SDecoder {
                     // and supply all four slots. Do not invent template inheritance.
                     if(opcode==0xf8&&r.varint()!=1)throw HecException.invalid();
                     long id=r.varint();
+                    // Cap NEW channels at the advertised limit; redefining an existing id is always fine.
                     if(!metas.containsKey(id)&&metas.size()>=S2STcpProtocol.CHANNEL_LIMIT)throw HecException.busy();
                     String source=strip(r.nstr(),"source::"),host=strip(r.nstr(),"host::"),type=strip(r.nstr(),"sourcetype::");
                     String channel=r.nstr();int count=r.count();List<String> header=new ArrayList<>();
                     for(int i=0;i<count;i++)header.add(r.str());
                     Meta next=new Meta(source,host,type,channel,List.copyOf(header));String hash=r.hash();
+                    // Install the new definition and free the reservation of the one it replaced. The new
+                    // record's own lease is retained (retainsLease=true) for the lifetime of the channel.
                     var old=leases.put(id,memory);metas.put(id,next);if(old!=null)old.close();
                     return new StreamRecord(null,null,hash,true);
                 }
                 case 0xfd -> {
+                    // Channel closed by the sender: forget it and release its reservation.
                     long id=r.varint();metas.remove(id);var old=leases.remove(id);if(old!=null)old.close();
                     return new StreamRecord(null,null,r.hash(),false);
                 }
                 case 0xfc -> {
+                    // One event. "true" selects the TCP header layout (independent flag bits) and the
+                    // per-record MetaData:* overrides; see parsedEvent.
                     Parsed parsed=parsedEvent(r,metas,timezone,memory,true);
                     return new StreamRecord(parsed.event(),parsed.eventId(),r.hash(),false);
                 }
