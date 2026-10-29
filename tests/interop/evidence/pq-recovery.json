@@ -12,7 +12,7 @@
     "mode": "read",
     "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
     "exit_code": 0,
-    "stdout": "{\"recovered\":true,\"exact_decimal_roundtrip\":true,\"unsigned_integer_roundtrip\":true,\"event\":{\"@timestamp\":\"2023-11-14T22:13:20.123456789Z\",\"event\":{\"message\":\"native\",\"unsigned\":9223372036854775808,\"decimal\":0.5,\"tenth\":0.1,\"precise\":123.45678901234567890123456789,\"a.b\":9223372036854775807},\"@version\":\"1\",\"time\":\"1700000000.123456789\"},\"metadata_id\":\"recovery-id\"}\n",
+    "stdout": "{\"recovered\":true,\"exact_decimal_roundtrip\":true,\"unsigned_integer_roundtrip\":true,\"event\":{\"event\":{\"message\":\"native\",\"decimal\":0.5,\"precise\":123.45678901234567890123456789,\"tenth\":0.1,\"unsigned\":9223372036854775808,\"a.b\":9223372036854775807},\"@timestamp\":\"2023-11-14T22:13:20.123456789Z\",\"@version\":\"1\",\"time\":\"1700000000.123456789\"},\"metadata_id\":\"recovery-id\"}\n",
     "stderr": ""
   },
   {
@@ -28,7 +28,7 @@
     "mode": "read",
     "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
     "exit_code": 0,
-    "stdout": "{\"recovered\":true,\"exact_decimal_roundtrip\":true,\"unsigned_integer_roundtrip\":true,\"event\":{\"@timestamp\":\"2023-11-14T22:13:20.123456789Z\",\"event\":{\"decimal\":0.5,\"a.b\":9223372036854775807,\"message\":\"native\",\"unsigned\":9223372036854775808,\"tenth\":0.1,\"precise\":123.45678901234567890123456789},\"@version\":\"1\",\"time\":\"1700000000.123456789\"},\"metadata_id\":\"recovery-id\"}\n",
+    "stdout": "{\"recovered\":true,\"exact_decimal_roundtrip\":true,\"unsigned_integer_roundtrip\":true,\"event\":{\"@timestamp\":\"2023-11-14T22:13:20.123456789Z\",\"event\":{\"tenth\":0.1,\"message\":\"native\",\"unsigned\":9223372036854775808,\"precise\":123.45678901234567890123456789,\"decimal\":0.5,\"a.b\":9223372036854775807},\"@version\":\"1\",\"time\":\"1700000000.123456789\"},\"metadata_id\":\"recovery-id\"}\n",
     "stderr": ""
   }
 ]

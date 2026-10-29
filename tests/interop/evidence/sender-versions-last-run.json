@@ -2,13 +2,13 @@
   "uf": {
     "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
     "architecture": "linux/amd64",
-    "host": "51ebb1844a73",
+    "host": "d4c13965466c",
     "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)"
   },
   "hf": {
     "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
     "architecture": "linux/amd64",
-    "host": "44497106f469",
+    "host": "44036c28a3eb",
     "version": "Splunk 10.6.1.1 (build b2ae2962645c)"
   }
 }

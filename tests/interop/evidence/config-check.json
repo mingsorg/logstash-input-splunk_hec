@@ -1,0 +1,324 @@
+{
+  "positive": [
+    {
+      "role": "minimum",
+      "snippet": 0,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "minimum",
+      "snippet": 1,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "minimum",
+      "snippet": 2,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "minimum",
+      "snippet": 3,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "minimum",
+      "snippet": 4,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "minimum",
+      "snippet": 5,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "latest",
+      "snippet": 0,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "latest",
+      "snippet": 1,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "latest",
+      "snippet": 2,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "latest",
+      "snippet": 3,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "latest",
+      "snippet": 4,
+      "ok": true,
+      "errors": []
+    },
+    {
+      "role": "latest",
+      "snippet": 5,
+      "ok": true,
+      "errors": []
+    }
+  ],
+  "negative": [
+    {
+      "role": "minimum",
+      "case": "unknown option",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:17:57,068][ERROR][co.elastic.logstash.api.PluginHelper] Unknown setting 'nonsense' specified for plugin 'splunk_hec'",
+        "[2026-10-29T01:17:57,072][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: Config errors found for plugin 'splunk_hec'"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "codec rejected",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:15:09,505][ERROR][co.elastic.logstash.api.PluginHelper] Unknown setting 'codec' specified for plugin 'splunk_hec'",
+        "[2026-10-29T01:15:09,508][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: Config errors found for plugin 'splunk_hec'"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "tcp port equals http",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:17:22,445][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: S2S TCP port must be distinct and within 1..65535",
+        "[2026-10-29T01:17:22,465][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "inconsistent limits",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:15:56,432][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: inconsistent positive resource limits",
+        "[2026-10-29T01:15:56,443][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "tls material with tls off",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:17:38,816][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: TLS material requires TLS enabled",
+        "[2026-10-29T01:17:38,838][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "mtls without ca",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:16:26,333][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: mTLS requires an explicit client CA",
+        "[2026-10-29T01:16:26,354][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "keystore and pem",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:16:11,654][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: choose keystore or PEM",
+        "[2026-10-29T01:16:11,663][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "tcp cap above expanded",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:16:54,459][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: s2s_tcp_max_event_bytes must not exceed max_expanded_bytes",
+        "[2026-10-29T01:16:54,477][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "tcp default index not allowed",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:17:08,038][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: TCP default index must be allowed",
+        "[2026-10-29T01:17:08,048][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "bad token json",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:14:53,747][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: unknown inline token key",
+        "[2026-10-29T01:14:53,759][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "duplicate token",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:15:22,846][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: duplicate token identity",
+        "[2026-10-29T01:15:22,869][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "minimum",
+      "case": "shared state directory",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:16:40,848][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.io.IOException: ACK state already owned",
+        "[2026-10-29T01:16:40,863][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "unknown option",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:23:16,388][ERROR][co.elastic.logstash.api.PluginHelper] Unknown setting 'nonsense' specified for plugin 'splunk_hec'",
+        "[2026-10-29T01:23:16,390][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: Config errors found for plugin 'splunk_hec'"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "codec rejected",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:20:56,312][ERROR][co.elastic.logstash.api.PluginHelper] Unknown setting 'codec' specified for plugin 'splunk_hec'",
+        "[2026-10-29T01:20:56,314][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: Config errors found for plugin 'splunk_hec'"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "tcp port equals http",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:22:49,238][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: S2S TCP port must be distinct and within 1..65535",
+        "[2026-10-29T01:22:49,253][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "inconsistent limits",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:21:24,490][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: inconsistent positive resource limits",
+        "[2026-10-29T01:21:24,498][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "tls material with tls off",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:23:02,634][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: TLS material requires TLS enabled",
+        "[2026-10-29T01:23:02,646][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "mtls without ca",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:21:53,075][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: mTLS requires an explicit client CA",
+        "[2026-10-29T01:21:53,085][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "keystore and pem",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:21:38,350][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: choose keystore or PEM",
+        "[2026-10-29T01:21:38,360][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "tcp cap above expanded",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:22:21,013][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: s2s_tcp_max_event_bytes must not exceed max_expanded_bytes",
+        "[2026-10-29T01:22:21,025][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "tcp default index not allowed",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:22:35,918][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: TCP default index must be allowed",
+        "[2026-10-29T01:22:35,929][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "bad token json",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:20:41,334][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: unknown inline token key",
+        "[2026-10-29T01:20:41,348][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "duplicate token",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:21:10,540][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.lang.IllegalArgumentException: duplicate token identity",
+        "[2026-10-29T01:21:10,554][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    },
+    {
+      "role": "latest",
+      "case": "shared state directory",
+      "rejected": true,
+      "message_matched": true,
+      "errors": [
+        "[2026-10-29T01:22:08,312][FATAL][logstash.runner          ] The given configuration is invalid. Reason: Unable to configure plugins: java.io.IOException: ACK state already owned",
+        "[2026-10-29T01:22:08,326][FATAL][org.logstash.Logstash    ] Logstash stopped processing because of an error: (SystemExit) exit"
+      ]
+    }
+  ],
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.1.0-java.gem",
+    "sha256": "478d870ca907f8e814a4eab421a072e64f22540a5b8f25353f52fa756963e9f7"
+  },
+  "status": "pass",
+  "snippets": 6
+}

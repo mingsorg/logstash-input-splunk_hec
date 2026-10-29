@@ -11,6 +11,8 @@ bin/logstash-plugin install --local /absolute/path/logstash-input-splunk_hec-0.1
 
 The build needs Python 3, a JDK capable of `--release 21`, Docker and network access for the first dependency download. Gradle is checksum-pinned; the compile-only Logstash API is extracted from the pinned 9.5.5 image. The obsolete parent `.logstash/` is never used. Dependency versions and verification checksums are locked. The gem contains one plugin jar bundling Jackson, not Logstash or Elasticsearch.
 
+**All configuration options, token policy, TLS, TCP, limits, sender settings and troubleshooting are in the [configuration reference](docs/configuration.md).**
+
 See [compatibility and evidence](docs/compatibility.md) for the exact tested scope and outstanding qualification work. This is not a claim of complete Splunk parsing-engine equivalence.
 The [current validation status](docs/validation-status.md) lists the passing
 final-artifact checks and live UF/HF qualification. Classic S2S TCP is optional,
@@ -169,10 +171,10 @@ python3 scripts/resolve-versions.py
 docker compose -f docker/compose.yml run --rm interop
 ```
 
-For a targeted rerun, append `--stage runtime`, `--stage senders` or `--stage tcp`
+For a targeted rerun, append `--stage runtime`, `--stage senders`, `--stage tcp` or `--stage config`
 to the Compose command. `senders` starts an owned oracle and runs the real HTTP
 sender stage followed by the TCP stage; it does not recapture the complete HTTP
-oracle corpus. `tcp` runs only the real UF/HF classic TCP matrix against an owned
+oracle corpus. `config` validates every snippet in the configuration reference with `logstash -t` on both runtimes. `tcp` runs only the real UF/HF classic TCP matrix against an owned
 Logstash receiver.
 
 Run Compose from this plugin directory. It uses the host Docker socket and matching absolute bind paths; Docker Desktop needs host networking enabled. Auto networking uses bridge senders with Desktop's host gateway on Docker Desktop, and host-network senders accessing loopback on native Linux. Set `HEC_SENDER_NETWORK=host` or `bridge` explicitly to override detection. The native-Linux selection has unit coverage; the measured end-to-end environment is Docker Desktop, as recorded in compatibility evidence. Real Splunk/UF containers run amd64, with emulation on Apple Silicon. Test licenses/terms acceptance is explicit in the disposable setup. Each owned container has finite waits and ID-scoped cleanup; no package/image is published. The equivalent host orchestration is `python3 tests/interop/run.py`. It refuses to adopt an existing `hec-spec-oracle` container.

@@ -154,4 +154,33 @@ class HelpersTest(unittest.TestCase):
             request.send_error=Mock();request.do_POST();request.send_error.assert_called_once_with(408)
 
 
+class ConfigurationDocumentTest(unittest.TestCase):
+    """The configuration reference must not drift from the plugin schema."""
+    def test_every_configuration_option_and_policy_key_is_documented(self):
+        import re
+        source=(ROOT/'src/main/java/org/logstashplugins/hec/SplunkHec.java').read_text()
+        options=set(re.findall(r'PluginConfigSpec\.\w+Setting\("([a-z0-9_]+)"',source))
+        options|=set(re.findall(r'Map\.entry\("([a-z0-9_]+)",',source))
+        self.assertGreaterEqual(len(options),30,options)
+        document=(ROOT/'docs/configuration.md').read_text()
+        missing=sorted(name for name in options if '`'+name+'`' not in document)
+        self.assertEqual([],missing,'options missing from docs/configuration.md')
+        tokens=(ROOT/'src/main/java/org/logstashplugins/hec/TokenStore.java').read_text()
+        keys=set(re.findall(r'"([A-Za-z]+)"',re.search(r'GLOBAL = Set.of\((.*?)\);',tokens,re.S).group(1)))|{'token','indexes'}
+        undocumented=sorted(key for key in keys if '`'+key+'`' not in document)
+        self.assertEqual([],undocumented,'policy keys missing from docs/configuration.md')
+        for standard in ('id','enable_metric','add_field','tags','type'):
+            self.assertIn('`'+standard+'`',document)
+
+    def test_every_option_documented_has_a_default_row_that_matches_the_source(self):
+        import re
+        source=(ROOT/'src/main/java/org/logstashplugins/hec/SplunkHec.java').read_text()
+        document=(ROOT/'docs/configuration.md').read_text()
+        for name,default in re.findall(r'PluginConfigSpec\.(?:string|num|boolean)Setting\("([a-z0-9_]+)",("[^"]*"|\w+)\)',source):
+            row=next((line for line in document.splitlines() if line.startswith('| `'+name+'`')),None)
+            self.assertIsNotNone(row,name)
+            expected=default.strip('"')
+            if expected and expected!='0':self.assertTrue(expected in row or expected in row.replace(',',''),name+' default '+expected+' not in '+row)
+
+
 if __name__=='__main__':unittest.main()

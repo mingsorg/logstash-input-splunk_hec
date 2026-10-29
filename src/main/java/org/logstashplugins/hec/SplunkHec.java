@@ -149,6 +149,12 @@ public final class SplunkHec implements Input {
         // HTTP format is selected by path, not an input-wide JSON codec. Optional
         // TCP shares TLS/limits but has its own index defaults and wire handshake.
         List<PluginConfigSpec<?>> schema=new ArrayList<>(List.of(HOST,PORT,TOKENS,FILE,STATE,TLS,SANS,STORE,STORETYPE,PASSWORD,CERT,KEY,CA,MTLS,TCP,TCPPORT,TCPINDEX,TCPINDEXES,TCPEVENT));
-        schema.addAll(NUMBERS.values());return schema;
+        schema.addAll(NUMBERS.values());
+        // Accept Logstash's standard input options (id, enable_metric, add_field, tags, type).
+        // codec is removed on purpose: this input emits native maps and has no codec stage, so
+        // accepting one would be silently ignored.
+        List<PluginConfigSpec<?>> all=new ArrayList<>(PluginHelper.commonInputSettings(schema));
+        all.removeIf(spec->spec.name().equals("codec"));
+        return all;
     }
 }

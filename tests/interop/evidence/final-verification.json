@@ -1,16 +1,17 @@
 {
   "summary_type": "recorded verification outcomes",
   "artifact": "logstash-input-splunk_hec-0.1.0-java.gem",
-  "artifact_sha256": "89a2476627e250d2f8dc27ffeb6d9692dee26b66bf64b18392d8292a5b9f1036",
+  "artifact_sha256": "478d870ca907f8e814a4eab421a072e64f22540a5b8f25353f52fa756963e9f7",
   "overall": "http-and-optional-tcp-qualified-for-tested-scope",
   "java_tests": {
     "status": "pass",
-    "tests": 59,
-    "command": "./gradlew test"
+    "tests": 60,
+    "command": "./gradlew test",
+    "source": "Gradle test reports"
   },
   "helper_tests": {
     "status": "pass",
-    "tests": 12,
+    "tests": 14,
     "command": "python3 -m unittest discover -s tests/build -v"
   },
   "reproducibility": {
@@ -46,5 +47,14 @@
     "indexer discovery/cluster features",
     "throughput and long-duration soak",
     "native amd64 senders (emulated on Apple Silicon)"
+  ],
+  "configuration_reference": {
+    "status": "pass",
+    "evidence": "config-check.json",
+    "document": "docs/configuration.md",
+    "scope": "6 documented snippets pass logstash -t on 9.5.0 and 9.5.5; 12 documented startup errors rejected; unit test requires every option/policy key to be documented"
+  },
+  "defects_found_by_documenting": [
+    "standard id/enable_metric/add_field/tags/type options were rejected; fixed and tested"
   ]
 }

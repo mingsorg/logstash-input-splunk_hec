@@ -1,5 +1,7 @@
 # Classic S2S TCP receiver (`tcpout` cooked mode)
 
+All options are described in the [configuration reference](configuration.md); this page covers the wire protocol and delivery semantics.
+
 The same `splunk_hec` input can optionally accept the classic Universal/Heavy
 Forwarder `tcpout` stream on a second port. It is **disabled by default**. HTTP
 `httpout`, HEC event and HEC raw stay on the HTTPS listener; this document covers

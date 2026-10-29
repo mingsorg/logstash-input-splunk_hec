@@ -7,17 +7,26 @@ with `sha256sum logstash-input-splunk_hec-0.1.0-java.gem` before relying on it.
 
 ## Passing on the reviewed implementation
 
-- 59 Java tests: saved real-Splunk HTTP corpus replay, captured UF/HF HTTP bodies,
+- 60 Java tests (counted from the Gradle test reports): saved real-Splunk HTTP corpus replay, captured UF/HF HTTP bodies,
   native value precision, S2S HTTP framing/identity, TLS/mTLS, queue-failure ACK
   behavior, `100-continue`, write deadlines, lifecycle regressions, and the
   classic-TCP protocol/server tests that replay eight real captured UF/HF streams
   (plain and verified TLS, compressed and uncompressed).
-- 12 Python build/fixture regression tests.
+- 14 Python build/fixture regression tests, including a check that every plugin option and policy key is documented in `configuration.md` with its source default.
+- `config-check.json`: every `splunk_hec` snippet in the configuration reference passes `logstash -t` with the packaged gem on Logstash 9.5.0 and 9.5.5, and 12 documented startup errors (unknown option, `codec`, port clash, inconsistent limits, TLS misuse, token JSON, shared state directory, ...) are rejected with the documented messages.
 - Packaged installation and trusted HTTPS on Logstash 9.5.0 and 9.5.5 with
   memory and persistent queues (`runtime.json`), actual Event/PQ recovery of exact
   numerics and timestamps, ACK reset and TLS identity reuse after a crash.
 - Two clean builds of the reviewed source produced byte-identical gems
   (`reproducibility.json`).
+
+## Defects found while documenting configuration
+
+Writing the configuration reference and validating it with `logstash -t` showed the
+plugin rejected Logstash's standard `id`, `enable_metric`, `add_field`, `tags` and
+`type` options. They are now accepted (a unit test and the live `logstash -t`
+check cover this and confirm `type`/`tags`/`add_field` are applied); `codec`
+remains deliberately unsupported.
 
 ## Real sender evidence
 

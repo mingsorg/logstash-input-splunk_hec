@@ -19,7 +19,7 @@ def run(script,*args):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=('all','runtime','senders','tcp'),default='all',
+    parser.add_argument('--stage',choices=('all','runtime','senders','tcp','config'),default='all',
                         help='Run a targeted verification stage, or the full suite (default).')
     stage=parser.parse_args().stage
     owned=None
@@ -33,7 +33,8 @@ def main():
                     runtime.P[f'logstash.{role}.image'],'/work/tests/interop/version_guard.rb',runtime.P['logstash.'+role])
                 print(output,flush=True)
             run('runtime.py')
-        if stage=='runtime':return 0
+        if stage in ('all','runtime','config'):run('config_check.py')
+        if stage in ('runtime','config'):return 0
         if stage=='tcp':
             # Real UF/HF classic TCP stage owns its Logstash receiver; no HEC oracle is required.
             run('tcp_senders.py')

@@ -98,4 +98,11 @@ class InputLifecycleTest {
         while(true)try{Socket socket=new Socket("127.0.0.1",port);socket.setSoTimeout(10000);return socket;}
         catch(ConnectException retry){if(System.nanoTime()>until)throw retry;Thread.sleep(25);}
     }
+
+    @Test void schemaAcceptsStandardLogstashInputOptionsButNotACodec()throws Exception{
+        Set<String> names=new HashSet<>();for(var spec:input().configSchema())names.add(spec.name());
+        for(String standard:List.of("id","enable_metric","add_field","tags","type"))assertTrue(names.contains(standard),standard);
+        assertFalse(names.contains("codec"));
+        for(String own:List.of("port","s2s_tcp_enabled","s2s_tcp_max_event_bytes","max_event_bytes","ssl_enabled"))assertTrue(names.contains(own),own);
+    }
 }
