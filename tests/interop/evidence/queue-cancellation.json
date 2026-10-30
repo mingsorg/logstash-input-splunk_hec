@@ -3,14 +3,14 @@
     "role": "latest",
     "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
     "exit_code": 0,
-    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":110,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":107,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
+    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":111,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":108,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
     "stderr": "uri:classloader:/jruby/java/core_ext/object.rb:3: warning: already initialized constant Thread\n"
   },
   {
     "role": "minimum",
     "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
     "exit_code": 0,
-    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":110,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":112,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
+    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":109,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":111,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
     "stderr": "uri:classloader:/jruby/java/core_ext/object.rb:3: warning: already initialized constant Thread\n"
   }
 ]

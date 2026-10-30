@@ -70,6 +70,13 @@ public final class SplunkHec implements Input {
      * Logstash itself and are not affected.
      */
     private static final PluginConfigSpec<String> METADATA=PluginConfigSpec.stringSetting("hec_metadata","full");
+    /**
+     * Exact decoded S2S per-record key -> simple destination name inside searchable s2s_metadata.
+     * Empty by default. Applies to HTTP and TCP even with hec_metadata=none; values remain strings.
+     * This does not select indexed fields, handshake provenance, or change coordinate-based IDs.
+     * Strictly parsed once at startup; invalid policies fail without echoing configured values.
+     */
+    private static final PluginConfigSpec<String> S2SMETADATA=PluginConfigSpec.stringSetting("s2s_metadata_fields_json","{}");
 
     // ---- optional classic TCP listener ---------------------------------------------------
     /** Start the cooked-mode tcpout receiver (default off). */
@@ -133,7 +140,7 @@ public final class SplunkHec implements Input {
         if(tcpEvent>limits.expanded())throw new IllegalArgumentException("s2s_tcp_max_event_bytes must not exceed max_expanded_bytes");
         tcpLimits=new Limits(limits.concurrency(),limits.connections(),limits.wire(),limits.expanded(),limits.aggregate(),(int)tcpEvent,
             limits.events(),limits.depth(),limits.readMillis(),limits.admissionMillis(),limits.shutdownMillis());
-        resources=new IngressResources(limits,MetadataMode.parse(config.get(METADATA)));
+        resources=new IngressResources(limits,MetadataMode.parse(config.get(METADATA)),S2SMetadataFields.parse(config.get(S2SMETADATA)));
         Path state=Path.of(config.get(STATE)).toAbsolutePath();
         tokens=new TokenStore(path(config.get(FILE)),config.get(TOKENS).getValue(),message->context.getLogger(this).warn(message));
         // --- Per-listener TLS -------------------------------------------------------------------------
@@ -224,7 +231,7 @@ public final class SplunkHec implements Input {
     @Override public Collection<PluginConfigSpec<?>> configSchema(){
         // HTTP format is selected by path, not an input-wide JSON codec. Optional
         // TCP shares TLS/limits but has its own index defaults and wire handshake.
-        List<PluginConfigSpec<?>> schema=new ArrayList<>(List.of(HOST,PORT,TOKENS,FILE,STATE,TLS,SANS,STORE,STORETYPE,PASSWORD,CERT,KEY,CA,MTLS,TCP,TCPPORT,TCPINDEX,TCPINDEXES,TCPEVENT,TCPTLS,TCPMTLS,METADATA));
+        List<PluginConfigSpec<?>> schema=new ArrayList<>(List.of(HOST,PORT,TOKENS,FILE,STATE,TLS,SANS,STORE,STORETYPE,PASSWORD,CERT,KEY,CA,MTLS,TCP,TCPPORT,TCPINDEX,TCPINDEXES,TCPEVENT,TCPTLS,TCPMTLS,METADATA,S2SMETADATA));
         schema.addAll(NUMBERS.values());
         // Accept Logstash's standard input options (id, enable_metric, add_field, tags, type).
         // codec is removed on purpose: this input emits native maps and has no codec stage, so

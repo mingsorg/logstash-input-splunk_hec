@@ -92,6 +92,7 @@ input {
 | Index policy | token `index`/`indexes` | HTTP; TCP uses `s2s_tcp_default_index` / `s2s_tcp_indexes` |
 | Event-size cap | `max_event_bytes` | HTTP; TCP uses `s2s_tcp_max_event_bytes` |
 | Provenance in `@metadata` | `hec_metadata` | Both listeners (`full`, `id_only`, `none`) |
+| Searchable per-record metadata | `s2s_metadata_fields_json` | S2S over HTTP and TCP, independently of `hec_metadata` |
 | Connection/memory/concurrency limits, timeouts | `max_*`, `*_timeout_ms` | **Shared budget** across both listeners |
 | ACK state and TLS identity directory | `state_directory` | One per input, shared by both listeners |
 
@@ -161,6 +162,51 @@ listener uses TLS is a startup error, because they would be silently unused.
 | Option | Type | Default | Notes |
 |---|---|---|---|
 | `hec_metadata` | string | `full` | How much provenance is attached under `@metadata.splunk_hec`: `full` (stable `id`, `s2s` wire details, and for TCP the `tcp` connection block), `id_only` (only the stable `id`, enough for idempotent outputs) or `none` (no `@metadata` at all). Applies to S2S over HTTP and TCP. The `id` is identical in `full` and `id_only`. `@metadata` is never written by outputs unless a filter copies it; it only affects memory and the size cap (provenance counts toward the event-size cap only when attached). **`@timestamp` and `@version` are added by Logstash itself and are never affected.** |
+
+### 3.4b Searchable S2S metadata
+
+| Option | Type | Default | Notes |
+|---|---|---|---|
+| `s2s_metadata_fields_json` | string | `{}` | JSON object mapping exact decoded per-record wire keys to literal destination names inside `s2s_metadata`. Applies equally to S2S over HTTP and classic TCP, including `hec_metadata => "none"`. Empty mapping disables the namespace. |
+
+```logstash
+input {
+  splunk_hec {
+    state_directory => "/var/lib/logstash/hec-mapped"
+    tokens_json => '${HEC_TOKENS_JSON}'
+    s2s_metadata_fields_json => '{"_path":"path","crcSalt":"salt"}'
+    hec_metadata => "none"
+  }
+}
+```
+
+For a record with `_path=/var/log/app.log` and `crcSalt=<SOURCE>`, the searchable
+output gains `"s2s_metadata":{"path":"/var/log/app.log","salt":"<SOURCE>"}`.
+These keys were observed on the synthetic monitor fixtures; metadata availability
+depends on the sender and record. A custom mapping such as `{"custom_tenant":"tenant"}`
+copies `acme` only if the record actually carries that exact decoded key.
+
+- Source keys are nonblank, case-sensitive exact strings; no trimming, aliases,
+  wildcard matching, inference, text parsing or automatic protocol-field copying.
+- Destination names must match `[A-Za-z_][A-Za-z0-9_]*`. Dots/brackets and field
+  paths are invalid. `{"custom_tenant":"host"}` writes `s2s_metadata.host` and
+  cannot overwrite root `host` or `fields.host`.
+- All selected values remain **strings**, including numeric-looking values. Typed
+  indexed values remain in `fields`; handshake facts are not mapping sources.
+- Missing source keys are omitted; if none match, `s2s_metadata` is absent. No nulls
+  or empty namespace are invented. Each logical line gets its own selected map.
+- Parsed once at startup, immutable until restart. Nonobjects, nonstring values,
+  duplicate JSON source keys (including escaped equivalents), duplicate destinations,
+  blank names, invalid identifiers and trailing JSON fail startup with a value-free
+  diagnostic; a partially loaded policy is never used.
+- Copies are charged to the shared allocation budget before allocation. The complete
+  logical event including selected metadata must fit the transport's cap **before
+  insertion**. Failure yields HTTP 503/code 9 without a success ACK, or TCP close
+  without ACK. Limits are not raised automatically.
+- Mapping does **not** change event-ID derivation. Selected metadata is not an input
+  to coordinate-based IDs; changing only selected metadata can retain the same ID.
+  The existing positionless fallback still includes original batch/record bytes.
+  Unknown wire tags remain unsupported and rejected.
 
 ### 3.5 Limits (shared)
 
@@ -449,12 +495,14 @@ See [http-endpoints.md](http-endpoints.md) for every route, alias and error code
 
 ## 10. Output shape
 
-The input preserves HEC-native fields and adds none of its own: `event`, `time`,
+The input preserves HEC-native fields: `event`, `time`,
 `host`, `source`, `sourcetype`, `index`, `fields`, plus Logstash's `@timestamp`,
 `@version`, `@metadata`. No `message`, ECS fields, flattening or guessed multiline.
 
 | Location | Contents |
 |---|---|
+| `fields` | Typed indexed fields/measurements, with literal names and ordered multivalues |
+| `s2s_metadata` | Opt-in selected per-record metadata strings; searchable, independent of provenance mode |
 | `@metadata.splunk_hec.id` | S2S event identity (`s2s-v1:<sha256>`) for idempotent outputs (S2S over HTTP and TCP) |
 | `@metadata.splunk_hec.s2s` | Wire provenance: channel, flags, stream/offset/sequence, `date_parts`, timezone, CSV header, `wire_metadata` (including `resent`), `identity_scope` |
 | `@metadata.splunk_hec.tcp` | TCP only: `protocol`, `sender_guid`, `sender_hostname`, `management_port`, `peer_ip`, `compression_requested`, `stream_compressed`, `ack_requested`, `forwarder_info`, `event_id` |
@@ -479,6 +527,7 @@ from `@timestamp`.
 | `ssl_client_authentication requires ssl_enabled` | mTLS requested on a plaintext HTTP listener |
 | `s2s_tcp_ssl_client_authentication requires s2s_tcp_ssl_enabled and s2s_tcp_enabled` | mTLS requested on a plaintext or disabled TCP listener |
 | `hec_metadata must be full, id_only or none` | Bad `hec_metadata` value |
+| `s2s_metadata_fields_json requires a JSON object ...` | Invalid mapping; see 3.4b. Diagnostic omits configured names/values |
 | `choose keystore or PEM` / `both PEM certificate and PKCS8 key required` | Conflicting/missing TLS inputs |
 | `server certificate requires SANs` / `certificate and key mismatch` | Bad identity |
 | `mTLS requires an explicit client CA` | Client authentication without `ssl_client_ca` |

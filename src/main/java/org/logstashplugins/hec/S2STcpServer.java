@@ -175,7 +175,7 @@ final class S2STcpServer implements AutoCloseable{
             connectionInfo.put("stream_compressed",streamCompressed);
             // The mapper turns decoded wire records into the native envelope; the session keeps the
             // per-connection dictionary of channels (source/host/sourcetype tuples) and the timezone.
-            HecProtocol protocol=new HecProtocol(limits);S2SEvents mapper=new S2SEvents(limits,protocol,resources.metadata);
+            HecProtocol protocol=new HecProtocol(limits);S2SEvents mapper=new S2SEvents(limits,protocol,resources.metadata,resources.metadataFields);
             try(var session=new S2SDecoder(limits).new StreamSession()){
                 // The first byte of every record is its opcode (FE/F8 metadata, FC event, FD close, FF timezone).
                 int opcode;

@@ -304,6 +304,16 @@ TLS) are in the [configuration reference, section 9](configuration.md#9-sender-c
 [`examples/`](../examples/). Remember that the sender's TLS setting must match the listener:
 HEC defaults to TLS, the TCP listener defaults to plaintext.
 
+To retain selected forwarder per-record metadata in output, add
+`s2s_metadata_fields_json => '{"_path":"path","crcSalt":"salt"}'` to the input.
+It applies to both transports and works even with `hec_metadata => "none"`.
+The default `{}` leaves output unchanged. Only exact present wire keys become
+string values inside `s2s_metadata`; typed indexed fields remain in `fields`,
+and handshake provenance is separate. See the
+[configuration contract](configuration.md#34b-searchable-s2s-metadata) for startup
+validation, limits and event-ID limitations, and
+[`examples/metadata-fields.conf`](../examples/metadata-fields.conf) for a pipeline.
+
 ## 10. Upgrade and remove
 
 ### Upgrade

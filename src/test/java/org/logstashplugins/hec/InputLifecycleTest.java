@@ -199,4 +199,67 @@ class InputLifecycleTest {
         for(String ok:List.of("full","id_only","none","FULL")){SplunkHec i=input(Map.of("state_directory",directory.resolve("m-"+ok).toString(),"hec_metadata",ok));assertNotNull(i);i.stop();}
         assertEquals("hec_metadata must be full, id_only or none",assertThrows(IllegalArgumentException.class,()->input(Map.of("state_directory",directory.resolve("m-bad").toString(),"hec_metadata","some"))).getMessage());
     }
+    @Test void metadataMappingFailsStartupAtomicallyWithValueFreeDiagnostics()throws Exception{
+        for(String bad:List.of("", "null", "[]", "42", "\"private-value\"", "{\"source\":1}",
+            "{\"source\":null}", "{\"source\":true}", "{\"source\":{}}", "{\"source\":[]}",
+            "{\"\":\"dest\"}", "{\" \t\":\"dest\"}", "{\"source\":\"\"}", "{\"source\":\" \"}",
+            "{\"source\":\"a.b\"}", "{\"source\":\"[a]\"}", "{\"source\":\"1a\"}", "{\"source\":\"a-b\"}",
+            "{\"source\":\"é\"}", "{\"source\":\"a\",\"source\":\"b\"}",
+            "{\"source\":\"a\",\"sour\\u0063e\":\"b\"}",
+             "{\"source\":\"a\",\"other\":\"a\"}", "{\"source\":\"a\"} {}", "{\"source\":\"a\"} trailing", "{",
+             "{\"private-syntax-sentinel\":\"dest\", broken}",
+             "{\"private-duplicate-sentinel\":\"one\",\"private-duplicate-sentinel\":\"two\"}")){
+             var failure=assertThrows(IllegalArgumentException.class,()->input(Map.of("s2s_metadata_fields_json",bad)),bad);
+             assertEquals("s2s_metadata_fields_json requires a JSON object of unique nonblank source names and unique simple destination identifiers ([A-Za-z_][A-Za-z0-9_]*) with string values",failure.getMessage());
+            assertNull(failure.getCause());assertEquals(0,failure.getSuppressed().length);
+            assertFalse(failure.getMessage().contains("private-value"));
+        }
+        for(String good:List.of("{}", "{\"custom tenant.key[]\":\"_dest2\"}")){
+            var input=input(Map.of("s2s_metadata_fields_json",good));
+            try{assertTrue(input.configSchema().stream().anyMatch(s->s.name().equals("s2s_metadata_fields_json")));}finally{input.stop();}
+        }
+    }
+    @Test void metadataMappingIsWiredIdenticallyThroughHttpAndTcpAndOversizeNeverAcks()throws Exception{
+        for(boolean oversized:List.of(false,true))for(String mode:List.of("full","id_only","none")){
+            int tcp=freePort();String value=oversized?"x".repeat(mode.equals("full")?2500:4096):"acme";
+            var input=input(Map.of("state_directory",directory.resolve(mode+oversized).toString(),
+                "s2s_tcp_enabled",true,"s2s_tcp_port",(long)tcp,"hec_metadata",mode,
+                "max_event_bytes",4096L,"s2s_tcp_max_event_bytes",4096L,
+                "tokens_json",new Password("[{\"token\":\""+ProtocolTest.SECRET+"\",\"useACK\":true}]"),
+                "s2s_metadata_fields_json","{\"custom_tenant\":\"host\"}"));
+            var events=Collections.synchronizedList(new ArrayList<Map<String,Object>>());
+            Thread running=Thread.ofVirtual().start(()->input.start(events::add));
+            try(Socket socket=connectTcp(tcp)){
+                var body=new S2STest.Body().meta();
+                // A fitting prefix must not be queued or acknowledged when a
+                // later record makes the same HTTP batch invalid after mapping.
+                if(oversized)body.event(0x23b,0).str("fitting prefix");
+                var httpBody=body.event(0x23b,2).v(4).str("custom_tenant").str(value)
+                    .v(3).str("host").v(42).str("one\ntwo").compressed();
+                var response=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build().send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+server(input).port()+"/services/collector/s2s"))
+                    .timeout(Duration.ofSeconds(10))
+                    .header("Authorization","Splunk "+ProtocolTest.SECRET).header("X-Splunk-Request-Channel","12345678-1234-4234-8234-123456789abc")
+                    .POST(HttpRequest.BodyPublishers.ofByteArray(httpBody)).build(),HttpResponse.BodyHandlers.ofString());
+                tcpHello(socket);
+                S2STcpProtocol.writeFrame(socket.getOutputStream(),Map.of("_guid","00000000-0000-4000-8000-000000000002","__s2s_capabilities","v4=1;pl=7"));
+                socket.getOutputStream().write(new S2STest.Body().meta().op(0xfc).v(1).v(0x3f).v(7).v(100).v(1).v(5).v(1790000000)
+                    .v(2).v(4).str("custom_tenant").str(value).v(3).str("host").v(42).str("one\ntwo").out.toByteArray());
+                socket.getOutputStream().flush();
+                if(oversized){
+                    assertEquals(503,response.statusCode());assertFalse(HecProtocol.JSON.readTree(response.body()).has("ackId"));
+                    assertEquals(-1,socket.getInputStream().read());assertTrue(events.isEmpty());
+                }else{
+                    assertEquals(200,response.statusCode());assertTrue(HecProtocol.JSON.readTree(response.body()).has("ackId"));
+                    assertEquals(0xfb,socket.getInputStream().read());assertEquals(5,socket.getInputStream().read());assertEquals(4,events.size());
+                    for(int i=0;i<2;i++){
+                        var http=new LinkedHashMap<>(events.get(i));var classic=new LinkedHashMap<>(events.get(i+2));
+                        assertEquals(Map.of("host","acme"),http.get("s2s_metadata"));assertEquals("host",http.get("host"));
+                        assertEquals(Map.of("host",42L),http.get("fields"));
+                        assertEquals(mode.equals("none"),!http.containsKey("@metadata"));
+                        http.remove("@metadata");classic.remove("@metadata");assertEquals(http,classic);
+                    }
+                }
+            }finally{input.stop();running.join(5000);}
+        }
+    }
 }

@@ -18,8 +18,12 @@ final class S2SEvents {
     private final Limits limits;
     private final HecProtocol protocol;
     private final MetadataMode mode;
+    private final S2SMetadataFields metadataFields;
     S2SEvents(Limits limits,HecProtocol protocol){this(limits,protocol,MetadataMode.FULL);}
-    S2SEvents(Limits limits,HecProtocol protocol,MetadataMode mode){this.limits=limits;this.protocol=protocol;this.mode=mode;}
+    S2SEvents(Limits limits,HecProtocol protocol,MetadataMode mode){this(limits,protocol,mode,S2SMetadataFields.EMPTY);}
+    S2SEvents(Limits limits,HecProtocol protocol,MetadataMode mode,S2SMetadataFields metadataFields){
+        this.limits=limits;this.protocol=protocol;this.mode=mode;this.metadataFields=metadataFields;
+    }
     List<Map<String,Object>> map(List<S2SDecoder.Event> records,TokenStore.Token token,
                                   Map<String,String> request,byte[] batch,MemoryBudget.Lease memory){
         return mapWithIdentity(records,token,request,TokenStore.fingerprint(batch),memory);
@@ -39,6 +43,7 @@ final class S2SEvents {
             // was stripped on the wire. Never join the tail to the next record or
             // infer continuation from indentation. Structured embedded newlines stay.
             List<String> lines=record.structured()?List.of(text):HecProtocol.lines(text,limits.events());
+            var selectedMetadata=metadataFields.select(record.meta(),memory);
             int rawCursor=0, lineNumber=0;
             // Stream=0/offset=0 can describe data without a file position. Treating
             // it as a unique source coordinate could collapse legitimate repeats.
@@ -62,6 +67,11 @@ final class S2SEvents {
                 // Indexed names, even "host" or "message", stay inside fields and
                 // cannot overwrite host/source metadata from the wire tuple.
                 if(!record.fields().isEmpty())envelope.put("fields",record.fields());
+                // Searchable opt-in metadata is independent of diagnostic provenance.
+                // Use only exact decoded wire keys, never root/fields/handshake data.
+                // finalizeEnvelope copies and size-checks this namespace with the
+                // rest of the native envelope before either transport can queue it.
+                selectedMetadata.apply(envelope,memory);
                 // S2S time is explicitly epoch SECONDS. Bypass HEC's large-integer
                 // ms/us/ns inference, which would misread future native seconds.
                 Map<String,Object> event=protocol.finalizeEnvelope(envelope,token,request,memory,

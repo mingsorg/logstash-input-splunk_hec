@@ -1,0 +1,35 @@
+{
+  "status": "pass",
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.1.0-java.gem",
+    "sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54"
+  },
+  "path": "UF -> HEC S2S -> Logstash -> HEC -> Splunk",
+  "logstash_version": "9.5.5",
+  "sender_and_indexer_version": "10.6.1.1",
+  "uf_image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+  "logstash_image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+  "run_id": "9efedabb9f34",
+  "transport": {
+    "uf_to_logstash": "HTTPS HEC S2S with certificate trust and hostname verification",
+    "logstash_to_indexer": "HTTPS HEC event output with certificate trust and hostname verification"
+  },
+  "index": "hec_demo",
+  "search": "index=hec_demo earliest=0 \"9efedabb9f34\" | stats count by sourcetype host source",
+  "search_results_at_verification": [
+    {
+      "sourcetype": "hec_chain_json",
+      "host": "008c3759cb81",
+      "source": "/tmp/hec-chain.json",
+      "count": 56
+    },
+    {
+      "sourcetype": "hec_chain_text",
+      "host": "008c3759cb81",
+      "source": "/tmp/hec-chain.log",
+      "count": 328
+    }
+  ],
+  "continuous_generation_seconds": 5,
+  "scope": "Synthetic text and JSON monitored by a live Universal Forwarder; only dedicated demo-index events forwarded by Logstash. Counts are a snapshot, not an exact-once, throughput, or soak claim. Credentials and local deployment state are kept outside the repository."
+}

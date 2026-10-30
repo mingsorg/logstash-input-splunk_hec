@@ -1,7 +1,7 @@
 {
   "artifact": {
     "file": "logstash-input-splunk_hec-0.1.0-java.gem",
-    "sha256": "de29277aef13783b5fdd87ba2190a953bafe457cd1818016ea95b706af73e34b"
+    "sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54"
   },
   "runtimes": {
     "minimum": {

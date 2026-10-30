@@ -122,6 +122,7 @@ Provided identity options:
 | `s2s_tcp_ssl_enabled` | TLS on the TCP listener; default **false** (plaintext) |
 | `ssl_client_authentication`, `s2s_tcp_ssl_client_authentication` | Client-certificate auth per listener |
 | `hec_metadata` | `full` (default), `id_only` or `none`: provenance under `@metadata.splunk_hec`. `@timestamp`/`@version` are unaffected |
+| `s2s_metadata_fields_json` | `{}` (default, disabled): exact wire-metadata key → simple name inside searchable `s2s_metadata`, for HTTP/TCP independently of `hec_metadata` |
 | `s2s_tcp_enabled`, `s2s_tcp_port` | Optional classic TCP listener; default off, port 9997 |
 | `s2s_tcp_default_index`, `s2s_tcp_indexes` | TCP default index (`main`) and optional comma-separated allowlist |
 | `s2s_tcp_max_event_bytes` | TCP logical-event cap; 0 (default) allows at least 8 MiB because real HFs send >1 MiB internal records |
@@ -137,6 +138,18 @@ An event envelope retains `event` as its original string, number, object or arra
 Numbers are parsed losslessly. Integers outside signed 64-bit use `BigInteger`; decimals such as `0.1` and values requiring more than double precision use `BigDecimal`. Both preserve their numeric JSON values through Logstash Event/PQ serialization. Exactly representable finite doubles can use the compact double representation. Supplied `time` is kept independently of `@timestamp`; string and numeric times preserve fractional precision. Seconds and 13/16/19-digit millisecond/microsecond/nanosecond forms are interpreted for internal time. Numeric literals are bounded to 1,024 characters, decimal precision/absolute scale to 1,024, and timestamps to representable epoch values with at most nanosecond nonzero fractional precision. Values beyond these limits fail validation before insertion rather than being rounded. Source time omitted by a sender stays omitted from the envelope.
 
 Unstructured S2S records terminate logical lines even if the sender stripped their delimiter. Indentation is not a merge instruction. Structured records produce one event even with embedded newlines. S2S indexed multivalues remain ordered arrays under `fields`, with literal keys. Metric measurements remain doubles and dimensions retain their wire types; there is no synthetic metrics JSON/ECS wrapper. Decoded source epoch time is represented as a decimal **string** to preserve its fractional digits; provenance includes date-part tags, timezone, CSV header, flags, channel and source coordinates under `@metadata.splunk_hec.s2s`. Unsigned stream identifiers above signed-64 range are preserved there as decimal strings.
+
+To retain selected per-record metadata in searchable output, set
+`s2s_metadata_fields_json => '{"_path":"path","crcSalt":"salt"}'`. A record carrying
+those exact keys gains `"s2s_metadata":{"path":"/var/log/app.log","salt":"<SOURCE>"}`.
+Missing keys are omitted, and an empty mapping or no matches produces no namespace.
+Values stay strings; destination names match `[A-Za-z_][A-Za-z0-9_]*`, never field paths.
+Indexed values stay in `fields`, handshake facts stay in provenance. The mapping works
+with `hec_metadata => "none"` and does not change native fields, timestamps or ID
+derivation: selected metadata does not participate in coordinate-based IDs. Copies
+and logical size are bounded before insertion/ACK. See the
+[mapping reference](docs/configuration.md#34b-searchable-s2s-metadata) and
+[example pipeline](examples/metadata-fields.conf).
 
 ## ACK, retry and delivery boundary
 
@@ -177,15 +190,18 @@ Shutdown stops admission, closes transport reads, interrupts the actual queue-wr
 ```sh
 ./gradlew test gem
 python3 -m unittest discover -s tests/build -v
+python3 tests/interop/metadata_fields.py
 python3 scripts/resolve-versions.py
 docker compose -f docker/compose.yml run --rm interop
 ```
 
-For a targeted rerun, append `--stage runtime`, `--stage senders`, `--stage tcp`, `--stage config` or `python3 tests/interop/install_check.py` (install flows)
+For a targeted rerun, append `--stage runtime`, `--stage senders`, `--stage tcp`,
+`--stage config`, `--stage install` or `--stage metadata`
 to the Compose command. `senders` starts an owned oracle and runs the real HTTP
 sender stage followed by the TCP stage; it does not recapture the complete HTTP
 oracle corpus. `config` validates every snippet in the configuration reference with `logstash -t` on both runtimes. `tcp` runs only the real UF/HF classic TCP matrix against an owned
-Logstash receiver.
+Logstash receiver. `metadata` runs the real UF/HF searchable-metadata checks over
+HTTPS and TLS TCP; the default full run includes this stage too.
 
 Run Compose from this plugin directory. It uses the host Docker socket and matching absolute bind paths; Docker Desktop needs host networking enabled. Auto networking uses bridge senders with Desktop's host gateway on Docker Desktop, and host-network senders accessing loopback on native Linux. Set `HEC_SENDER_NETWORK=host` or `bridge` explicitly to override detection. The native-Linux selection has unit coverage; the measured end-to-end environment is Docker Desktop, as recorded in compatibility evidence. Real Splunk/UF containers run amd64, with emulation on Apple Silicon. Test licenses/terms acceptance is explicit in the disposable setup. Each owned container has finite waits and ID-scoped cleanup; no package/image is published. The equivalent host orchestration is `python3 tests/interop/run.py`. It refuses to adopt an existing `hec-spec-oracle` container.
 

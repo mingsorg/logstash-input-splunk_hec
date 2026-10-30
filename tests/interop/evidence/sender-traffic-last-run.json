@@ -4,10 +4,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
-    "body_bytes": 12590,
-    "body_sha256": "8bebf8c685e50bf9281046585a4973503f0301bf5204c6f6f6c5c4172e57a5a2",
+    "body_bytes": 12577,
+    "body_sha256": "c8964eec1bd13b4157b4506dbfeae4b174394d511a1f76cc94f469a7f4887bfc",
     "channel": null,
-    "fixture": "8bebf8c685e50bf9281046585a4973503f0301bf5204c6f6f6c5c4172e57a5a2.bin",
+    "fixture": "c8964eec1bd13b4157b4506dbfeae4b174394d511a1f76cc94f469a7f4887bfc.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -23,10 +23,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
-    "body_bytes": 12590,
-    "body_sha256": "8bebf8c685e50bf9281046585a4973503f0301bf5204c6f6f6c5c4172e57a5a2",
+    "body_bytes": 12577,
+    "body_sha256": "c8964eec1bd13b4157b4506dbfeae4b174394d511a1f76cc94f469a7f4887bfc",
     "channel": null,
-    "fixture": "8bebf8c685e50bf9281046585a4973503f0301bf5204c6f6f6c5c4172e57a5a2.bin",
+    "fixture": "c8964eec1bd13b4157b4506dbfeae4b174394d511a1f76cc94f469a7f4887bfc.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -42,10 +42,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
-    "body_bytes": 12590,
-    "body_sha256": "8bebf8c685e50bf9281046585a4973503f0301bf5204c6f6f6c5c4172e57a5a2",
+    "body_bytes": 12577,
+    "body_sha256": "c8964eec1bd13b4157b4506dbfeae4b174394d511a1f76cc94f469a7f4887bfc",
     "channel": null,
-    "fixture": "8bebf8c685e50bf9281046585a4973503f0301bf5204c6f6f6c5c4172e57a5a2.bin",
+    "fixture": "c8964eec1bd13b4157b4506dbfeae4b174394d511a1f76cc94f469a7f4887bfc.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -59,11 +59,11 @@
     "method": "POST",
     "path": "/services/collector/s2s",
     "user_agent": null,
-    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
-    "body_bytes": 771,
-    "body_sha256": "9b8c6480389f6010698ca82487f13de2e1e047c9102cb8f13ccc64079458c1ae",
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 27712,
+    "body_sha256": "7088d26f9f672ff3849c0cd84baeaa773ee6af58f66ceb29010219bb77f104b7",
     "channel": null,
-    "fixture": "9b8c6480389f6010698ca82487f13de2e1e047c9102cb8f13ccc64079458c1ae.bin",
+    "fixture": "7088d26f9f672ff3849c0cd84baeaa773ee6af58f66ceb29010219bb77f104b7.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -77,11 +77,119 @@
     "method": "POST",
     "path": "/services/collector/s2s",
     "user_agent": null,
-    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
-    "body_bytes": 116187,
-    "body_sha256": "a58de1d65889e866dcece7d25ea8605773a008f1a43a4891b4b7afa13c87105c",
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 12874,
+    "body_sha256": "4e4123586a7611ee64a4ab63b50f191cd6ac19f2e168745a0c2ce007609a06c2",
     "channel": null,
-    "fixture": "a58de1d65889e866dcece7d25ea8605773a008f1a43a4891b4b7afa13c87105c.bin",
+    "fixture": "4e4123586a7611ee64a4ab63b50f191cd6ac19f2e168745a0c2ce007609a06c2.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 15834,
+    "body_sha256": "91cfa7880b3a3693df11d694b254a6a86f65b65211b8eba6efcc73e26912695b",
+    "channel": null,
+    "fixture": "91cfa7880b3a3693df11d694b254a6a86f65b65211b8eba6efcc73e26912695b.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 16357,
+    "body_sha256": "5206a0b9f239a6fe0ed8dc9e4207a9067c053207ffeced1d694d4a54d987de79",
+    "channel": null,
+    "fixture": "5206a0b9f239a6fe0ed8dc9e4207a9067c053207ffeced1d694d4a54d987de79.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 102413,
+    "body_sha256": "87911466e0b57a638cc472738f68d75bd2730f629fd3fb8f55d47b41b74c2de6",
+    "channel": null,
+    "fixture": "87911466e0b57a638cc472738f68d75bd2730f629fd3fb8f55d47b41b74c2de6.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 503,
+      "body": "{\"text\":\"Server is busy\",\"code\":9}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 102413,
+    "body_sha256": "87911466e0b57a638cc472738f68d75bd2730f629fd3fb8f55d47b41b74c2de6",
+    "channel": null,
+    "fixture": "87911466e0b57a638cc472738f68d75bd2730f629fd3fb8f55d47b41b74c2de6.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 503,
+      "body": "{\"text\":\"Server is busy\",\"code\":9}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+    "body_bytes": 102413,
+    "body_sha256": "87911466e0b57a638cc472738f68d75bd2730f629fd3fb8f55d47b41b74c2de6",
+    "channel": null,
+    "fixture": "87911466e0b57a638cc472738f68d75bd2730f629fd3fb8f55d47b41b74c2de6.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 503,
+      "body": "{\"text\":\"Server is busy\",\"code\":9}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+    "body_bytes": 116794,
+    "body_sha256": "b03e7ee2248a5627b23a760e1115cc3ae5d5b251ff351ae0d2357c56a8bddb1c",
+    "channel": null,
+    "fixture": "b03e7ee2248a5627b23a760e1115cc3ae5d5b251ff351ae0d2357c56a8bddb1c.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -97,9 +205,9 @@
     "user_agent": null,
     "agent_build": "splunk-10.6.1.1-b2ae2962645c",
     "body_bytes": 22455,
-    "body_sha256": "9d5de3dbc51b1a670eb47778a914541a60b5904598373252c9dcf6ac8b0a43f6",
+    "body_sha256": "21ea70f626ef49a14f6d1726bed1fe4adbb934afa97882e0a524c5510327b6c5",
     "channel": null,
-    "fixture": "9d5de3dbc51b1a670eb47778a914541a60b5904598373252c9dcf6ac8b0a43f6.bin",
+    "fixture": "21ea70f626ef49a14f6d1726bed1fe4adbb934afa97882e0a524c5510327b6c5.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -114,10 +222,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunk-10.6.1.1-b2ae2962645c",
-    "body_bytes": 14036,
-    "body_sha256": "5a101d155e25c594d741b9c5f99292167fea46aba58a225a7a31a6af7aa30424",
+    "body_bytes": 14038,
+    "body_sha256": "ea8eb2ba669c3c10f4c89d69467803b254b67eebfc3ad1d78db4cd218f72d761",
     "channel": null,
-    "fixture": "5a101d155e25c594d741b9c5f99292167fea46aba58a225a7a31a6af7aa30424.bin",
+    "fixture": "ea8eb2ba669c3c10f4c89d69467803b254b67eebfc3ad1d78db4cd218f72d761.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -132,10 +240,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunk-10.6.1.1-b2ae2962645c",
-    "body_bytes": 10439,
-    "body_sha256": "bb00800585796d3f06ffba388ff34c9ec9e94b850f5dd46f0bdcdc0f65cc7933",
+    "body_bytes": 10434,
+    "body_sha256": "cd8ce0250e9800f3863c57925386835f7c6a3e0ce3d4f967f346c0ba972b3ec4",
     "channel": null,
-    "fixture": "bb00800585796d3f06ffba388ff34c9ec9e94b850f5dd46f0bdcdc0f65cc7933.bin",
+    "fixture": "cd8ce0250e9800f3863c57925386835f7c6a3e0ce3d4f967f346c0ba972b3ec4.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -150,10 +258,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunk-10.6.1.1-b2ae2962645c",
-    "body_bytes": 4465,
-    "body_sha256": "17916d7549655b5b8e10a4c8028a920d1092bcf5e6c46e3b26caff03fb62f59b",
+    "body_bytes": 4464,
+    "body_sha256": "e2e09063dd3f0c22fe3503a9c9e831289a92566413a73cae6633bf95101047f0",
     "channel": null,
-    "fixture": "17916d7549655b5b8e10a4c8028a920d1092bcf5e6c46e3b26caff03fb62f59b.bin",
+    "fixture": "e2e09063dd3f0c22fe3503a9c9e831289a92566413a73cae6633bf95101047f0.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -168,10 +276,10 @@
     "path": "/services/collector/s2s",
     "user_agent": null,
     "agent_build": "splunk-10.6.1.1-b2ae2962645c",
-    "body_bytes": 15633,
-    "body_sha256": "17894d6a98b57921720102223ca93f60fd1da75606070ccf81a5be210b5903d5",
+    "body_bytes": 15628,
+    "body_sha256": "024340d8312876f75d333edf5e3b061104f23931eb26d67d0f11e55caf111f13",
     "channel": null,
-    "fixture": "17894d6a98b57921720102223ca93f60fd1da75606070ccf81a5be210b5903d5.bin",
+    "fixture": "024340d8312876f75d333edf5e3b061104f23931eb26d67d0f11e55caf111f13.bin",
     "oracle": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
@@ -179,6 +287,78 @@
     "plugin": {
       "status": 200,
       "body": "{\"text\":\"Success\",\"code\":0}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+    "body_bytes": 16480,
+    "body_sha256": "e7e795dd83f69422a7bc7e67cf5b8ca7479826770ff4ba69763649c3a113669b",
+    "channel": null,
+    "fixture": "e7e795dd83f69422a7bc7e67cf5b8ca7479826770ff4ba69763649c3a113669b.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+    "body_bytes": 3240,
+    "body_sha256": "69d6979b2bde6ff3771c11dc99f76edef14141cf1a5db4901020aa1fe89fa2d1",
+    "channel": null,
+    "fixture": "69d6979b2bde6ff3771c11dc99f76edef14141cf1a5db4901020aa1fe89fa2d1.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+    "body_bytes": 102373,
+    "body_sha256": "426a034e0aa2ce3ef874433e999c636a0d32d0eea172bc722704e7aaf77fc68a",
+    "channel": null,
+    "fixture": "426a034e0aa2ce3ef874433e999c636a0d32d0eea172bc722704e7aaf77fc68a.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 503,
+      "body": "{\"text\":\"Server is busy\",\"code\":9}"
+    }
+  },
+  {
+    "method": "POST",
+    "path": "/services/collector/s2s",
+    "user_agent": null,
+    "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+    "body_bytes": 102373,
+    "body_sha256": "426a034e0aa2ce3ef874433e999c636a0d32d0eea172bc722704e7aaf77fc68a",
+    "channel": null,
+    "fixture": "426a034e0aa2ce3ef874433e999c636a0d32d0eea172bc722704e7aaf77fc68a.bin",
+    "oracle": {
+      "status": 200,
+      "body": "{\"text\":\"Success\",\"code\":0}"
+    },
+    "plugin": {
+      "status": 503,
+      "body": "{\"text\":\"Server is busy\",\"code\":9}"
     }
   }
 ]

@@ -38,10 +38,13 @@ class S2STest {
     }
     Limits limits=Limits.defaults();
     List<Map<String,Object>> decode(byte[] bytes)throws Exception{
+        return decode(bytes,MetadataMode.FULL,S2SMetadataFields.EMPTY);
+    }
+    List<Map<String,Object>> decode(byte[] bytes,MetadataMode mode,S2SMetadataFields mapping)throws Exception{
         try(var memory=new MemoryBudget(limits.aggregate()).lease()){
             var records=new S2SDecoder(limits).decode(bytes,new Compression.Expansion(limits.expanded(),memory),memory);
             var token=new TokenStore(null,"[{\"token\":\""+ProtocolTest.SECRET+"\"}]",s->{}).authenticate("Splunk "+ProtocolTest.SECRET,null);
-            return new S2SEvents(limits,new HecProtocol(limits)).map(records,token,Map.of(),bytes,memory);
+            return new S2SEvents(limits,new HecProtocol(limits),mode,mapping).map(records,token,Map.of(),bytes,memory);
         }
     }
     @Test void textRecordsEndLinesWithoutIndentMergingOrCrossRequestState()throws Exception{
@@ -191,5 +194,84 @@ class S2STest {
             }
         }
         assertTrue(count>0,"no captured real sender events exercised");
+    }
+    @Test void selectedMetadataIsExactStringTypedNamespacedAndIndependentOfProvenance()throws Exception{
+        byte[] bytes=new Body().meta().event(0x23b,6)
+            .v(4).str("custom_tenant").str("acme")
+            .v(4).str("number").str("001")
+            .v(4).str("unselected").str("secret")
+            .v(7).str("host").str("indexed-host")
+            .v(3).str("number").v(42)
+            .v(11).str("boolean").v(62).str("first\nsecond").compressed();
+        var mapping=S2SMetadataFields.parse("{\"custom_tenant\":\"host\",\"number\":\"tenant\",\"missing\":\"absent\",\"CUSTOM_TENANT\":\"case_sensitive\",\"channel\":\"not_handshake\",\"boolean\":\"not_indexed\"}");
+        for(MetadataMode mode:MetadataMode.values()){
+            var original=decode(bytes,mode,S2SMetadataFields.EMPTY);
+            assertEquals(original,decode(bytes,mode,S2SMetadataFields.parse("{}")));
+            var mapped=decode(bytes,mode,mapping);assertEquals(2,mapped.size());
+            for(int i=0;i<2;i++){
+                var event=new LinkedHashMap<>(mapped.get(i));
+                assertEquals(Map.of("host","acme","tenant","001"),event.remove("s2s_metadata"));
+                assertEquals(original.get(i),event,"mapping must preserve payload/time/indexed fields and IDs");
+                assertEquals("host",event.get("host"));
+                assertEquals(Map.of("host","indexed-host","number",42L,"boolean",true),event.get("fields"));
+            }
+            assertNotSame(mapped.get(0).get("s2s_metadata"),mapped.get(1).get("s2s_metadata"));
+        }
+        assertFalse(decode(bytes,MetadataMode.NONE,S2SMetadataFields.parse("{\"absent\":\"missing\"}")).getFirst().containsKey("s2s_metadata"));
+        // Changing only per-record metadata does not enter coordinate-based IDs.
+        var changed=new Body().meta().event(0x4a,1).v(4).str("custom_tenant").str("changed").str("same").compressed();
+        var prior=new Body().meta().event(0x4a,1).v(4).str("custom_tenant").str("acme").str("same").compressed();
+        java.util.function.Function<Map<String,Object>,Object> id=e->((Map<?,?>)((Map<?,?>)e.get("@metadata")).get("splunk_hec")).get("id");
+        assertEquals(id.apply(decode(prior).getFirst()),id.apply(decode(changed).getFirst()));
+    }
+    @Test void selectedMetadataCountsTowardLogicalCapAndCopiesAreReservedBeforeAllocation()throws Exception{
+        limits=new Limits(1,4,8192,16384,1<<20,512,10,10,1000,100,1000);
+        var mapping=S2SMetadataFields.parse("{\"extra\":\"tenant\"}");
+        byte[] bytes=new Body().meta().event(0x4a,1).v(4).str("extra").str("x".repeat(512)).str("small").compressed();
+        assertEquals(1,decode(bytes,MetadataMode.NONE,S2SMetadataFields.EMPTY).size());
+        assertEquals(9,assertThrows(HecException.class,()->decode(bytes,MetadataMode.NONE,mapping)).code);
+        // Failed reservation cannot leave a partially materialized namespace.
+        Map<String,Object> envelope=new LinkedHashMap<>();MemoryBudget budget=new MemoryBudget(100);
+        try(var memory=budget.lease()){
+            assertEquals(9,assertThrows(HecException.class,()->mapping.select(Map.of("extra","value"),memory)).code);
+            assertTrue(envelope.isEmpty());assertEquals(0,budget.used());
+        }
+        try(var selectionMemory=new MemoryBudget(4096).lease()){
+            var selected=mapping.select(Map.of("extra","value"),selectionMemory);
+            try(var memory=budget.lease()){
+                assertEquals(9,assertThrows(HecException.class,()->selected.apply(envelope,memory)).code);
+                assertTrue(envelope.isEmpty());assertEquals(0,budget.used());
+            }
+        }
+        limits=new Limits(1,4,65536,65536,8<<20,16384,1000,10,1000,100,1000);
+        Body amplified=new Body().meta().event(0x23b,300);
+        StringBuilder policy=new StringBuilder("{");
+        for(int i=0;i<300;i++){
+            amplified.v(4).str("k"+i).str("v");
+            if(i>0)policy.append(',');policy.append('"').append("k").append(i).append("\":\"d").append(i).append('"');
+        }
+        var many=S2SMetadataFields.parse(policy.append('}').toString());
+        byte[] multiline=amplified.str("line\n".repeat(150)).compressed();
+        assertEquals(150,decode(multiline,MetadataMode.NONE,S2SMetadataFields.EMPTY).size());
+        assertEquals(9,assertThrows(HecException.class,()->decode(multiline,MetadataMode.NONE,many)).code);
+    }
+    @Test void selectedLogicalSizeAcceptsTheExactCapAndRejectsOneByteLess()throws Exception{
+        var mapping=S2SMetadataFields.parse("{\"extra\":\"tenant\"}");
+        byte[] bytes=new Body().meta().event(0x4a,1).v(4).str("extra").str("é\"\\".repeat(64)).str("small").compressed();
+        var event=new LinkedHashMap<>(decode(bytes,MetadataMode.NONE,mapping).getFirst());event.remove("@timestamp");
+        int size=HecProtocol.JSON.writeValueAsBytes(event).length;
+        limits=new Limits(1,4,8192,16384,1<<20,size,10,10,1000,100,1000);
+        assertEquals(1,decode(bytes,MetadataMode.NONE,mapping).size());
+        limits=new Limits(1,4,8192,16384,1<<20,size-1,10,10,1000,100,1000);
+        assertEquals(9,assertThrows(HecException.class,()->decode(bytes,MetadataMode.NONE,mapping)).code);
+    }
+    @Test void mappingAloneExceedsTheCapEvenWithFullProvenance()throws Exception{
+        var mapping=S2SMetadataFields.parse("{\"extra\":\"tenant\"}");
+        byte[] bytes=new Body().meta().event(0x4a,1).v(4).str("extra").str("x".repeat(2500)).str("small").compressed();
+        for(MetadataMode mode:MetadataMode.values()){
+            limits=new Limits(1,4,8192,16384,1<<20,mode==MetadataMode.FULL?4096:2048,10,10,1000,100,1000);
+            assertEquals(1,decode(bytes,mode,S2SMetadataFields.EMPTY).size(),"unmapped control must fit in "+mode);
+            assertEquals(9,assertThrows(HecException.class,()->decode(bytes,mode,mapping)).code);
+        }
     }
 }

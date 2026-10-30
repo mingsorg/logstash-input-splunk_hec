@@ -131,7 +131,7 @@ class TcpServerTest {
     }
     /** Real HF 10.6.1.1 retransmissions add tag 46: U(marker) S("resent") to the field list. */
     @Test void retransmittedRecordsWithTheObservedResentFieldAreDecodedAndUnknownDateTagsFailClosed()throws Exception{
-        try(var resources=new IngressResources(limits);var server=new S2STcpServer("127.0.0.1",0,plain(),limits,resources,events::add,"main",Set.of(),diagnostics::add)){
+        try(var resources=new IngressResources(limits,MetadataMode.FULL,S2SMetadataFields.parse("{\"resent\":\"retry\",\"resent_marker\":\"marker\"}"));var server=new S2STcpServer("127.0.0.1",0,plain(),limits,resources,events::add,"main",Set.of(),diagnostics::add)){
             server.start();
             try(Socket socket=connect(server.port(),null)){
                 greeting(socket,true);
@@ -143,6 +143,7 @@ class TcpServerTest {
             assertEquals("again",events.getFirst().get("event"));
             assertFalse(events.getFirst().containsKey("fields")&&((Map<?,?>)events.getFirst().get("fields")).containsKey("resent"));
             assertEquals("resent",((Map<?,?>)s2s.get("wire_metadata")).get("resent"));
+            assertEquals(Map.of("retry","resent","marker","69"),events.getFirst().get("s2s_metadata"));
             // A tag in the date-part range that has not been observed must not be guessed.
             events.clear();
             try(Socket socket=connect(server.port(),null)){

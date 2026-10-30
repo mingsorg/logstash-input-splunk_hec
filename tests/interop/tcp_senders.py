@@ -136,6 +136,16 @@ def check_matrix_events(events, hostname, compressed, ack, tls, mode='full'):
     return {'hec_metadata': mode, 'tcp_transport': events[0]['verification_metadata']['splunk_hec']['tcp'], 'ids': ids}
 
 
+def check_selected_metadata(events, mapping, mode):
+    """Observed monitor metadata, with exact wire/output comparison when provenance is enabled."""
+    for event in events:
+        assert event['s2s_metadata'] == {'path': event['source'], 'salt': '<SOURCE>', 'host': 'main'}, event
+        assert all(isinstance(v, str) for v in event['s2s_metadata'].values())
+        if mode == 'full':
+            wire = event['verification_metadata']['splunk_hec']['s2s']['wire_metadata']
+            assert event['s2s_metadata'] == {dest: wire[src] for src, dest in mapping.items() if src in wire}
+
+
 def run_one(role, rt, receiver_host, compressed, ack, tls, network_flags, keep=False, mode='full'):
     """One forwarder, one receiver: start the sender, wait for its data, verify, clean up.
 

@@ -24,12 +24,17 @@ final class IngressResources implements AutoCloseable{
     final Semaphore processing,connections,emergencyHealth=new Semaphore(1);
     /** How much provenance to attach under {@code @metadata.splunk_hec} (hec_metadata option). */
     final MetadataMode metadata;
+    /** Immutable startup mapping shared by HTTP and TCP, independent of provenance mode. */
+    final S2SMetadataFields metadataFields;
     /** Memory permanently set aside for the health endpoint so it works even when memory is exhausted. */
     private final MemoryBudget.Lease healthReservation;
     /** Create resources with the default, full provenance. */
     IngressResources(Limits limits){this(limits,MetadataMode.FULL);}
     IngressResources(Limits limits,MetadataMode metadata){
-        this.metadata=metadata;
+        this(limits,metadata,S2SMetadataFields.EMPTY);
+    }
+    IngressResources(Limits limits,MetadataMode metadata,S2SMetadataFields metadataFields){
+        this.metadata=metadata;this.metadataFields=metadataFields;
         memory=new MemoryBudget(limits.aggregate());
         // Fair semaphores hand out slots in arrival order, so no listener or client can be starved.
         processing=new Semaphore(limits.concurrency(),true);connections=new Semaphore(limits.connections(),true);

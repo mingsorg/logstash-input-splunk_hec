@@ -3,12 +3,12 @@
   "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
   "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
   "architecture": "linux/amd64",
-  "run_id": "1ea85c8f8547459791bcdfe8090c48a2",
+  "run_id": "417b0cd2415a45fda7febf77f2846636",
   "observations": [
     {
       "name": "route:POST:/services/collector",
       "method": "POST",
-      "path": "/services/collector?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-0",
+      "path": "/services/collector?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-0",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -20,7 +20,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -53,11 +53,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-0",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-0",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-0",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-0",
           "_raw": "route",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -67,7 +67,7 @@
     {
       "name": "route:GET:/services/collector",
       "method": "GET",
-      "path": "/services/collector?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-1",
+      "path": "/services/collector?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-1",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -79,7 +79,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -112,14 +112,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-1",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-1",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector",
       "method": "PUT",
-      "path": "/services/collector?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-2",
+      "path": "/services/collector?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-2",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -131,7 +131,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -164,14 +164,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-2",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-2",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/",
       "method": "POST",
-      "path": "/services/collector/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-3",
+      "path": "/services/collector/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-3",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -183,7 +183,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -212,14 +212,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-3",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-3",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/",
       "method": "GET",
-      "path": "/services/collector/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-4",
+      "path": "/services/collector/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-4",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -231,7 +231,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -260,14 +260,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-4",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-4",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/",
       "method": "PUT",
-      "path": "/services/collector/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-5",
+      "path": "/services/collector/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-5",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -279,7 +279,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -308,14 +308,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-5",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-5",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/1.0",
       "method": "POST",
-      "path": "/services/collector/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-6",
+      "path": "/services/collector/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-6",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -327,7 +327,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -356,14 +356,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-6",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-6",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/1.0",
       "method": "GET",
-      "path": "/services/collector/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-7",
+      "path": "/services/collector/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-7",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -375,7 +375,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -404,14 +404,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-7",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-7",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/1.0",
       "method": "PUT",
-      "path": "/services/collector/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-8",
+      "path": "/services/collector/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-8",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -423,7 +423,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -452,14 +452,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-8",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-8",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/1.0/",
       "method": "POST",
-      "path": "/services/collector/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-9",
+      "path": "/services/collector/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-9",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -471,7 +471,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -500,14 +500,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-9",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-9",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/1.0/",
       "method": "GET",
-      "path": "/services/collector/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-10",
+      "path": "/services/collector/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-10",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -519,7 +519,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -548,14 +548,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-10",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-10",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/1.0/",
       "method": "PUT",
-      "path": "/services/collector/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-11",
+      "path": "/services/collector/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-11",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -567,7 +567,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -596,14 +596,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-11",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-11",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/event",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-12",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-12",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -615,7 +615,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -648,11 +648,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-12",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-12",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-12",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-12",
           "_raw": "route",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -662,7 +662,7 @@
     {
       "name": "route:GET:/services/collector/event",
       "method": "GET",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-13",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-13",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -674,7 +674,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -707,14 +707,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-13",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-13",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/event",
       "method": "PUT",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-14",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-14",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -726,7 +726,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -759,14 +759,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-14",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-14",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/event/",
       "method": "POST",
-      "path": "/services/collector/event/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-15",
+      "path": "/services/collector/event/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-15",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -778,7 +778,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -807,14 +807,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-15",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-15",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/event/",
       "method": "GET",
-      "path": "/services/collector/event/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-16",
+      "path": "/services/collector/event/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-16",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -826,7 +826,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -855,14 +855,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-16",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-16",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/event/",
       "method": "PUT",
-      "path": "/services/collector/event/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-17",
+      "path": "/services/collector/event/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-17",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -874,7 +874,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -903,14 +903,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-17",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-17",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/event/1.0",
       "method": "POST",
-      "path": "/services/collector/event/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-18",
+      "path": "/services/collector/event/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-18",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -922,7 +922,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -955,11 +955,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-18",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-18",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-18",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-18",
           "_raw": "route",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -969,7 +969,7 @@
     {
       "name": "route:GET:/services/collector/event/1.0",
       "method": "GET",
-      "path": "/services/collector/event/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-19",
+      "path": "/services/collector/event/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-19",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -981,7 +981,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1014,14 +1014,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-19",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-19",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/event/1.0",
       "method": "PUT",
-      "path": "/services/collector/event/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-20",
+      "path": "/services/collector/event/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-20",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1033,7 +1033,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1066,14 +1066,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-20",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-20",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/event/1.0/",
       "method": "POST",
-      "path": "/services/collector/event/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-21",
+      "path": "/services/collector/event/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-21",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1085,7 +1085,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1114,14 +1114,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-21",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-21",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/event/1.0/",
       "method": "GET",
-      "path": "/services/collector/event/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-22",
+      "path": "/services/collector/event/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-22",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1133,7 +1133,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1162,14 +1162,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-22",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-22",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/event/1.0/",
       "method": "PUT",
-      "path": "/services/collector/event/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-23",
+      "path": "/services/collector/event/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-23",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1181,7 +1181,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1210,14 +1210,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-23",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-23",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/raw",
       "method": "POST",
-      "path": "/services/collector/raw?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-24",
+      "path": "/services/collector/raw?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-24",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1229,7 +1229,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1262,11 +1262,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-24",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-24",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-24",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-24",
           "_raw": "route",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -1276,7 +1276,7 @@
     {
       "name": "route:GET:/services/collector/raw",
       "method": "GET",
-      "path": "/services/collector/raw?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-25",
+      "path": "/services/collector/raw?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-25",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1288,7 +1288,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1321,14 +1321,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-25",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-25",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/raw",
       "method": "PUT",
-      "path": "/services/collector/raw?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-26",
+      "path": "/services/collector/raw?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-26",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1340,7 +1340,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1373,14 +1373,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-26",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-26",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/raw/",
       "method": "POST",
-      "path": "/services/collector/raw/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-27",
+      "path": "/services/collector/raw/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-27",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1392,7 +1392,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1421,14 +1421,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-27",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-27",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/raw/",
       "method": "GET",
-      "path": "/services/collector/raw/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-28",
+      "path": "/services/collector/raw/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-28",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1440,7 +1440,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1469,14 +1469,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-28",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-28",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/raw/",
       "method": "PUT",
-      "path": "/services/collector/raw/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-29",
+      "path": "/services/collector/raw/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-29",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1488,7 +1488,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1517,14 +1517,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-29",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-29",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/raw/1.0",
       "method": "POST",
-      "path": "/services/collector/raw/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-30",
+      "path": "/services/collector/raw/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-30",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1536,7 +1536,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1569,11 +1569,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-30",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-30",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-30",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-30",
           "_raw": "route",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -1583,7 +1583,7 @@
     {
       "name": "route:GET:/services/collector/raw/1.0",
       "method": "GET",
-      "path": "/services/collector/raw/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-31",
+      "path": "/services/collector/raw/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-31",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1595,7 +1595,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1628,14 +1628,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-31",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-31",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/raw/1.0",
       "method": "PUT",
-      "path": "/services/collector/raw/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-32",
+      "path": "/services/collector/raw/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-32",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1647,7 +1647,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1680,14 +1680,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-32",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-32",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/raw/1.0/",
       "method": "POST",
-      "path": "/services/collector/raw/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-33",
+      "path": "/services/collector/raw/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-33",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1699,7 +1699,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1728,14 +1728,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-33",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-33",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/raw/1.0/",
       "method": "GET",
-      "path": "/services/collector/raw/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-34",
+      "path": "/services/collector/raw/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-34",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1747,7 +1747,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1776,14 +1776,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-34",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-34",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/raw/1.0/",
       "method": "PUT",
-      "path": "/services/collector/raw/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-35",
+      "path": "/services/collector/raw/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-35",
       "request_body_base64": "cm91dGUK",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1795,7 +1795,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1824,14 +1824,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-35",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-35",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/s2s",
       "method": "POST",
-      "path": "/services/collector/s2s?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-36",
+      "path": "/services/collector/s2s?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-36",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1843,7 +1843,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -1876,14 +1876,14 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-36",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-36",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/s2s",
       "method": "GET",
-      "path": "/services/collector/s2s?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-37",
+      "path": "/services/collector/s2s?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-37",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1895,7 +1895,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1928,14 +1928,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-37",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-37",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/s2s",
       "method": "PUT",
-      "path": "/services/collector/s2s?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-38",
+      "path": "/services/collector/s2s?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-38",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1947,7 +1947,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -1980,14 +1980,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-38",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-38",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/s2s/",
       "method": "POST",
-      "path": "/services/collector/s2s/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-39",
+      "path": "/services/collector/s2s/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-39",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -1999,7 +1999,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2028,14 +2028,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-39",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-39",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/s2s/",
       "method": "GET",
-      "path": "/services/collector/s2s/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-40",
+      "path": "/services/collector/s2s/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-40",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2047,7 +2047,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2076,14 +2076,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-40",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-40",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/s2s/",
       "method": "PUT",
-      "path": "/services/collector/s2s/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-41",
+      "path": "/services/collector/s2s/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-41",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2095,7 +2095,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2124,14 +2124,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-41",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-41",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/s2s/1.0",
       "method": "POST",
-      "path": "/services/collector/s2s/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-42",
+      "path": "/services/collector/s2s/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-42",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2143,7 +2143,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2176,14 +2176,14 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-42",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-42",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/s2s/1.0",
       "method": "GET",
-      "path": "/services/collector/s2s/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-43",
+      "path": "/services/collector/s2s/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-43",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2195,7 +2195,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -2228,14 +2228,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-43",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-43",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/s2s/1.0",
       "method": "PUT",
-      "path": "/services/collector/s2s/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-44",
+      "path": "/services/collector/s2s/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-44",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2247,7 +2247,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -2280,14 +2280,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-44",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-44",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/s2s/1.0/",
       "method": "POST",
-      "path": "/services/collector/s2s/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-45",
+      "path": "/services/collector/s2s/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-45",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2299,7 +2299,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2328,14 +2328,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-45",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-45",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/s2s/1.0/",
       "method": "GET",
-      "path": "/services/collector/s2s/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-46",
+      "path": "/services/collector/s2s/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-46",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2347,7 +2347,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2376,14 +2376,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-46",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-46",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/s2s/1.0/",
       "method": "PUT",
-      "path": "/services/collector/s2s/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-47",
+      "path": "/services/collector/s2s/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-47",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2395,7 +2395,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2424,14 +2424,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-47",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-47",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/ack",
       "method": "POST",
-      "path": "/services/collector/ack?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-48",
+      "path": "/services/collector/ack?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-48",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2443,7 +2443,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Content-Type",
@@ -2476,14 +2476,14 @@
         ],
         "body": "{\"text\":\"ACK is disabled\",\"code\":14}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-48",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-48",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/ack",
       "method": "GET",
-      "path": "/services/collector/ack?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-49",
+      "path": "/services/collector/ack?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-49",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2495,7 +2495,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -2528,14 +2528,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-49",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-49",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/ack",
       "method": "PUT",
-      "path": "/services/collector/ack?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-50",
+      "path": "/services/collector/ack?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-50",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2547,7 +2547,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:24 GMT"
           ],
           [
             "Allow",
@@ -2580,14 +2580,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-50",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-50",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/ack/",
       "method": "POST",
-      "path": "/services/collector/ack/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-51",
+      "path": "/services/collector/ack/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-51",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2599,7 +2599,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -2628,14 +2628,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-51",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-51",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/ack/",
       "method": "GET",
-      "path": "/services/collector/ack/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-52",
+      "path": "/services/collector/ack/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-52",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2647,7 +2647,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -2676,14 +2676,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-52",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-52",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/ack/",
       "method": "PUT",
-      "path": "/services/collector/ack/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-53",
+      "path": "/services/collector/ack/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-53",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2695,7 +2695,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -2724,14 +2724,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-53",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-53",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/ack/1.0",
       "method": "POST",
-      "path": "/services/collector/ack/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-54",
+      "path": "/services/collector/ack/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-54",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2743,7 +2743,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -2776,14 +2776,14 @@
         ],
         "body": "{\"text\":\"ACK is disabled\",\"code\":14}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-54",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-54",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/ack/1.0",
       "method": "GET",
-      "path": "/services/collector/ack/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-55",
+      "path": "/services/collector/ack/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-55",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2795,7 +2795,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Allow",
@@ -2828,14 +2828,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-55",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-55",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/ack/1.0",
       "method": "PUT",
-      "path": "/services/collector/ack/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-56",
+      "path": "/services/collector/ack/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-56",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2847,7 +2847,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Allow",
@@ -2880,14 +2880,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-56",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-56",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/ack/1.0/",
       "method": "POST",
-      "path": "/services/collector/ack/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-57",
+      "path": "/services/collector/ack/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-57",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2899,7 +2899,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -2928,14 +2928,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-57",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-57",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/ack/1.0/",
       "method": "GET",
-      "path": "/services/collector/ack/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-58",
+      "path": "/services/collector/ack/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-58",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2947,7 +2947,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -2976,14 +2976,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-58",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-58",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/ack/1.0/",
       "method": "PUT",
-      "path": "/services/collector/ack/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-59",
+      "path": "/services/collector/ack/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-59",
       "request_body_base64": "eyJhY2tzIjpbMF19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -2995,7 +2995,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3024,14 +3024,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-59",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-59",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/health",
       "method": "POST",
-      "path": "/services/collector/health?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-60",
+      "path": "/services/collector/health?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-60",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3043,7 +3043,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Allow",
@@ -3076,14 +3076,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-60",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-60",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/health",
       "method": "GET",
-      "path": "/services/collector/health?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-61",
+      "path": "/services/collector/health?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-61",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3095,7 +3095,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3124,14 +3124,14 @@
         ],
         "body": "{\"text\":\"HEC is healthy\",\"code\":17}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-61",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-61",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/health",
       "method": "PUT",
-      "path": "/services/collector/health?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-62",
+      "path": "/services/collector/health?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-62",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3143,7 +3143,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Allow",
@@ -3176,14 +3176,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-62",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-62",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/health/",
       "method": "POST",
-      "path": "/services/collector/health/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-63",
+      "path": "/services/collector/health/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-63",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3195,7 +3195,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3224,14 +3224,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-63",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-63",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/health/",
       "method": "GET",
-      "path": "/services/collector/health/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-64",
+      "path": "/services/collector/health/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-64",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3243,7 +3243,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3272,14 +3272,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-64",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-64",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/health/",
       "method": "PUT",
-      "path": "/services/collector/health/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-65",
+      "path": "/services/collector/health/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-65",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3291,7 +3291,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3320,14 +3320,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-65",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-65",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/health/1.0",
       "method": "POST",
-      "path": "/services/collector/health/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-66",
+      "path": "/services/collector/health/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-66",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3339,7 +3339,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Allow",
@@ -3372,14 +3372,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-66",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-66",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/health/1.0",
       "method": "GET",
-      "path": "/services/collector/health/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-67",
+      "path": "/services/collector/health/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-67",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3391,7 +3391,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3420,14 +3420,14 @@
         ],
         "body": "{\"text\":\"HEC is healthy\",\"code\":17}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-67",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-67",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/health/1.0",
       "method": "PUT",
-      "path": "/services/collector/health/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-68",
+      "path": "/services/collector/health/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-68",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3439,7 +3439,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Allow",
@@ -3472,14 +3472,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-68",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-68",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/health/1.0/",
       "method": "POST",
-      "path": "/services/collector/health/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-69",
+      "path": "/services/collector/health/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-69",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3491,7 +3491,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3520,14 +3520,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-69",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-69",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/health/1.0/",
       "method": "GET",
-      "path": "/services/collector/health/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-70",
+      "path": "/services/collector/health/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-70",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3539,7 +3539,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3568,14 +3568,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-70",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-70",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/health/1.0/",
       "method": "PUT",
-      "path": "/services/collector/health/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-71",
+      "path": "/services/collector/health/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-71",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3587,7 +3587,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3616,14 +3616,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-71",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-71",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/unknown",
       "method": "POST",
-      "path": "/services/collector/unknown?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-72",
+      "path": "/services/collector/unknown?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-72",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3635,7 +3635,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3664,14 +3664,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-72",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-72",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/unknown",
       "method": "GET",
-      "path": "/services/collector/unknown?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-73",
+      "path": "/services/collector/unknown?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-73",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3683,7 +3683,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3712,14 +3712,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-73",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-73",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/unknown",
       "method": "PUT",
-      "path": "/services/collector/unknown?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-74",
+      "path": "/services/collector/unknown?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-74",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3731,7 +3731,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3760,14 +3760,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-74",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-74",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/unknown/",
       "method": "POST",
-      "path": "/services/collector/unknown/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-75",
+      "path": "/services/collector/unknown/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-75",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3779,7 +3779,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3808,14 +3808,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-75",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-75",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/unknown/",
       "method": "GET",
-      "path": "/services/collector/unknown/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-76",
+      "path": "/services/collector/unknown/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-76",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3827,7 +3827,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3856,14 +3856,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-76",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-76",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/unknown/",
       "method": "PUT",
-      "path": "/services/collector/unknown/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-77",
+      "path": "/services/collector/unknown/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-77",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3875,7 +3875,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3904,14 +3904,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-77",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-77",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/unknown/1.0",
       "method": "POST",
-      "path": "/services/collector/unknown/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-78",
+      "path": "/services/collector/unknown/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-78",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3923,7 +3923,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -3952,14 +3952,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-78",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-78",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/unknown/1.0",
       "method": "GET",
-      "path": "/services/collector/unknown/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-79",
+      "path": "/services/collector/unknown/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-79",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -3971,7 +3971,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4000,14 +4000,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-79",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-79",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/unknown/1.0",
       "method": "PUT",
-      "path": "/services/collector/unknown/1.0?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-80",
+      "path": "/services/collector/unknown/1.0?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-80",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4019,7 +4019,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4048,14 +4048,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-80",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-80",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:POST:/services/collector/unknown/1.0/",
       "method": "POST",
-      "path": "/services/collector/unknown/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-81",
+      "path": "/services/collector/unknown/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-81",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4067,7 +4067,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4096,14 +4096,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-81",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-81",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:GET:/services/collector/unknown/1.0/",
       "method": "GET",
-      "path": "/services/collector/unknown/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-82",
+      "path": "/services/collector/unknown/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-82",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4115,7 +4115,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4144,14 +4144,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-82",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-82",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "route:PUT:/services/collector/unknown/1.0/",
       "method": "PUT",
-      "path": "/services/collector/unknown/1.0/?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-83",
+      "path": "/services/collector/unknown/1.0/?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-83",
       "request_body_base64": "eyJldmVudCI6InJvdXRlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4163,7 +4163,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4192,14 +4192,14 @@
         ],
         "body": "{\"text\":\"The requested URL was not found on this server.\",\"code\":404}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-83",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-83",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "event:\"text\"",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-84",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-84",
       "request_body_base64": "eyJldmVudCI6InRleHQifQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4211,7 +4211,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4244,11 +4244,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-84",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-84",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-84",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-84",
           "_raw": "text",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -4258,7 +4258,7 @@
     {
       "name": "event:123",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-85",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-85",
       "request_body_base64": "eyJldmVudCI6MTIzfQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4270,7 +4270,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4303,11 +4303,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-85",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-85",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-85",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-85",
           "_raw": "123",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -4317,7 +4317,7 @@
     {
       "name": "event:123.45678901234567890123456789",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-86",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-86",
       "request_body_base64": "eyJldmVudCI6MTIzLjQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5fQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4329,7 +4329,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4362,11 +4362,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-86",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-86",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-86",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-86",
           "_raw": "123.45678901234567890123456789",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -4376,7 +4376,7 @@
     {
       "name": "event:9223372036854775808",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-87",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-87",
       "request_body_base64": "eyJldmVudCI6OTIyMzM3MjAzNjg1NDc3NTgwOH0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4388,7 +4388,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4421,11 +4421,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-87",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-87",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-87",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-87",
           "_raw": "9223372036854775808",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -4435,7 +4435,7 @@
     {
       "name": "event:{\"message\":\"native\",\"a.b\":1}",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-88",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-88",
       "request_body_base64": "eyJldmVudCI6eyJtZXNzYWdlIjoibmF0aXZlIiwiYS5iIjoxfX0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4447,7 +4447,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4480,11 +4480,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-88",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-88",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-88",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-88",
           "_raw": "{\"message\":\"native\",\"a.b\":1}",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -4494,7 +4494,7 @@
     {
       "name": "event:[1,\"x\"]",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-89",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-89",
       "request_body_base64": "eyJldmVudCI6WzEsIngiXX0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4506,7 +4506,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4539,11 +4539,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-89",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-89",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-89",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-89",
           "_raw": "[1,\"x\"]",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -4553,7 +4553,7 @@
     {
       "name": "event:true",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-90",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-90",
       "request_body_base64": "eyJldmVudCI6dHJ1ZX0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4565,7 +4565,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4598,14 +4598,14 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-90",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-90",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "event:false",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-91",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-91",
       "request_body_base64": "eyJldmVudCI6ZmFsc2V9",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4617,7 +4617,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4650,14 +4650,14 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-91",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-91",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "event:null",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-92",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-92",
       "request_body_base64": "eyJldmVudCI6bnVsbH0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4669,7 +4669,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4702,14 +4702,14 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-92",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-92",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "event:\"\"",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-93",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-93",
       "request_body_base64": "eyJldmVudCI6IiJ9",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4721,7 +4721,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4754,14 +4754,14 @@
         ],
         "body": "{\"text\":\"Event field cannot be blank\",\"code\":13,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-93",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-93",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "event:\"  \"",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-94",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-94",
       "request_body_base64": "eyJldmVudCI6IiAgIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4773,7 +4773,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4806,14 +4806,14 @@
         ],
         "body": "{\"text\":\"Event field cannot be blank\",\"code\":13,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-94",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-94",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "missing",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-95",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-95",
       "request_body_base64": "e30=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4825,7 +4825,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4858,14 +4858,14 @@
         ],
         "body": "{\"text\":\"Event field is required\",\"code\":12,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-95",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-95",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "blank",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-96",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-96",
       "request_body_base64": "IA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4877,7 +4877,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4910,14 +4910,14 @@
         ],
         "body": "{\"text\":\"No data\",\"code\":5}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-96",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-96",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "empty",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-97",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-97",
       "request_body_base64": "",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4929,7 +4929,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -4962,14 +4962,14 @@
         ],
         "body": "{\"text\":\"No data\",\"code\":5}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-97",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-97",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "fields_nested",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-98",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-98",
       "request_body_base64": "eyJldmVudCI6IngiLCJmaWVsZHMiOnsibiI6eyJrIjoxfX19",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -4981,7 +4981,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5014,14 +5014,14 @@
         ],
         "body": "{\"text\":\"Error in handling indexed fields\",\"code\":15,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-98",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-98",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "fields_array",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-99",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-99",
       "request_body_base64": "eyJldmVudCI6IngiLCJmaWVsZHMiOnsiYSI6WzEsMl19fQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5033,7 +5033,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5066,11 +5066,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-99",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-99",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-99",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-99",
           "_raw": "x",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5080,7 +5080,7 @@
     {
       "name": "concat",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-100",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-100",
       "request_body_base64": "eyJldmVudCI6Im9uZSJ9eyJldmVudCI6InR3byJ9",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5092,7 +5092,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5125,17 +5125,17 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-100",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-100",
       "accepted_event_count": 2,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-100",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-100",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-100",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-100",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5145,7 +5145,7 @@
     {
       "name": "array",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-101",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-101",
       "request_body_base64": "W3siZXZlbnQiOiJvbmUifSx7ImV2ZW50IjoidHdvIn1d",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5157,7 +5157,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5190,17 +5190,17 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-101",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-101",
       "accepted_event_count": 2,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-101",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-101",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-101",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-101",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5210,7 +5210,7 @@
     {
       "name": "bad_member_2",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-102",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-102",
       "request_body_base64": "eyJldmVudCI6Im9uZSJ9eyJob3N0IjoibWlzc2luZyJ9eyJldmVudCI6InRocmVlIn0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5222,7 +5222,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5255,11 +5255,11 @@
         ],
         "body": "{\"text\":\"Event field is required\",\"code\":12,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-102",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-102",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-102",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-102",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5269,7 +5269,7 @@
     {
       "name": "bad_json_2",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-103",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-103",
       "request_body_base64": "eyJldmVudCI6Im9uZSJ9eyJldmVudCI6",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5281,7 +5281,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5314,11 +5314,11 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-103",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-103",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-103",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-103",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5328,7 +5328,7 @@
     {
       "name": "array_bad_member_2",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-104",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-104",
       "request_body_base64": "W3siZXZlbnQiOiJvbmUifSx7Imhvc3QiOiJtaXNzaW5nIn0seyJldmVudCI6InRocmVlIn1d",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5340,7 +5340,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5373,11 +5373,11 @@
         ],
         "body": "{\"text\":\"Event field is required\",\"code\":12,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-104",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-104",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-104",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-104",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5387,7 +5387,7 @@
     {
       "name": "array_bad_json_2",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-105",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-105",
       "request_body_base64": "W3siZXZlbnQiOiJvbmUifSx7ImV2ZW50Ijo=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5399,7 +5399,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5432,11 +5432,11 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-105",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-105",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-105",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-105",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5446,7 +5446,7 @@
     {
       "name": "array_trailing",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-106",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-106",
       "request_body_base64": "W3siZXZlbnQiOiJvbmUifV1qdW5r",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5458,7 +5458,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5491,11 +5491,11 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-106",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-106",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-106",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-106",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5505,7 +5505,7 @@
     {
       "name": "empty_array_event",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-107",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-107",
       "request_body_base64": "eyJldmVudCI6W119",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5517,7 +5517,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5550,11 +5550,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-107",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-107",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-107",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-107",
           "_raw": "[]",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5564,7 +5564,7 @@
     {
       "name": "empty_object_event",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-108",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-108",
       "request_body_base64": "eyJldmVudCI6e319",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5576,7 +5576,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5609,11 +5609,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-108",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-108",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-108",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-108",
           "_raw": "{}",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5623,7 +5623,7 @@
     {
       "name": "trailing",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-109",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-109",
       "request_body_base64": "eyJldmVudCI6Im9uZSJ9anVuaw==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5635,7 +5635,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5668,11 +5668,11 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-109",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-109",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-109",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-109",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5682,7 +5682,7 @@
     {
       "name": "duplicate",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-110",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-110",
       "request_body_base64": "eyJldmVudCI6ImZpcnN0IiwiZXZlbnQiOiJzZWNvbmQifQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5694,7 +5694,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5727,11 +5727,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-110",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-110",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-110",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-110",
           "_raw": "second",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -5741,7 +5741,7 @@
     {
       "name": "index_null",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-111",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-111",
       "request_body_base64": "eyJldmVudCI6IngiLCJpbmRleCI6bnVsbH0=",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5753,7 +5753,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5786,14 +5786,14 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-111",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-111",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "index_empty",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-112",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-112",
       "request_body_base64": "eyJldmVudCI6IngiLCJpbmRleCI6IiJ9",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5805,7 +5805,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5838,14 +5838,14 @@
         ],
         "body": "{\"text\":\"Incorrect index\",\"code\":7,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-112",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-112",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "index_denied",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-113",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-113",
       "request_body_base64": "eyJldmVudCI6IngiLCJpbmRleCI6Il9pbnRlcm5hbCJ9",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5857,7 +5857,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5890,14 +5890,14 @@
         ],
         "body": "{\"text\":\"Incorrect index\",\"code\":7,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-113",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-113",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "host_null",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-114",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-114",
       "request_body_base64": "eyJldmVudCI6IngiLCJob3N0IjpudWxsfQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5909,7 +5909,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5942,14 +5942,14 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-114",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-114",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "host_number",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-115",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-115",
       "request_body_base64": "eyJldmVudCI6IngiLCJob3N0IjoyfQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -5961,7 +5961,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -5994,14 +5994,14 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-115",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-115",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "time_string",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-116",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-116",
       "request_body_base64": "eyJldmVudCI6IngiLCJ0aW1lIjoiMTcwMDAwMDAwMC4xMjM0NTY3ODkifQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6013,7 +6013,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6046,11 +6046,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-116",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-116",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-116",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-116",
           "_raw": "x",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -6060,7 +6060,7 @@
     {
       "name": "time_nanos",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-117",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-117",
       "request_body_base64": "eyJldmVudCI6IngiLCJ0aW1lIjoxNzAwMDAwMDAwMTIzNDU2Nzg5fQ==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6072,7 +6072,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6105,11 +6105,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-117",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-117",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-117",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-117",
           "_raw": "x",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -6119,7 +6119,7 @@
     {
       "name": "auth:missing",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-118",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-118",
       "request_body_base64": "eyJldmVudCI6ImF1dGgifQ==",
       "request_headers": {
         "Content-Type": "application/json",
@@ -6130,7 +6130,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6163,14 +6163,14 @@
         ],
         "body": "{\"text\":\"Token is required\",\"code\":2}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-118",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-118",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "auth:bad",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-119",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-119",
       "request_body_base64": "eyJldmVudCI6ImF1dGgifQ==",
       "request_headers": {
         "Authorization": "Splunk bogus",
@@ -6182,7 +6182,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6215,14 +6215,14 @@
         ],
         "body": "{\"text\":\"Invalid token\",\"code\":4}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-119",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-119",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "auth:malformed",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-120",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-120",
       "request_body_base64": "eyJldmVudCI6ImF1dGgifQ==",
       "request_headers": {
         "Authorization": "Basic @@@",
@@ -6234,7 +6234,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6267,14 +6267,14 @@
         ],
         "body": "{\"text\":\"Invalid authorization\",\"code\":3}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-120",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-120",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "auth:disabled",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-121",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-121",
       "request_body_base64": "eyJldmVudCI6ImF1dGgifQ==",
       "request_headers": {
         "Authorization": "Splunk 44444444-4444-4444-8444-444444444444",
@@ -6286,7 +6286,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6319,14 +6319,14 @@
         ],
         "body": "{\"text\":\"Token disabled\",\"code\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-121",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-121",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "auth:basic_password",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-122",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-122",
       "request_body_base64": "eyJldmVudCI6ImF1dGgifQ==",
       "request_headers": {
         "Authorization": "Basic dXNlcjoxMTExMTExMS0xMTExLTQxMTEtODExMS0xMTExMTExMTExMTE=",
@@ -6338,7 +6338,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6371,11 +6371,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-122",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-122",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-122",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-122",
           "_raw": "auth",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -6385,7 +6385,7 @@
     {
       "name": "query:1",
       "method": "POST",
-      "path": "/services/collector/event?token=11111111-1111-4111-8111-111111111111&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-123",
+      "path": "/services/collector/event?token=11111111-1111-4111-8111-111111111111&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-123",
       "request_body_base64": "eyJldmVudCI6InF1ZXJ5In0=",
       "request_headers": {
         "Content-Type": "application/json",
@@ -6396,7 +6396,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6425,14 +6425,14 @@
         ],
         "body": "{\"text\":\"Query string authorization is not enabled\",\"code\":16}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-123",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-123",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "query:2",
       "method": "POST",
-      "path": "/services/collector/event?token=22222222-2222-4222-8222-222222222222&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-124",
+      "path": "/services/collector/event?token=22222222-2222-4222-8222-222222222222&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-124",
       "request_body_base64": "eyJldmVudCI6InF1ZXJ5In0=",
       "request_headers": {
         "Content-Type": "application/json",
@@ -6443,7 +6443,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6472,14 +6472,14 @@
         ],
         "body": "{\"text\":\"Query string authorization is not enabled\",\"code\":16}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-124",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-124",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "query:3",
       "method": "POST",
-      "path": "/services/collector/event?token=33333333-3333-4333-8333-333333333333&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-125",
+      "path": "/services/collector/event?token=33333333-3333-4333-8333-333333333333&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-125",
       "request_body_base64": "eyJldmVudCI6InF1ZXJ5In0=",
       "request_headers": {
         "Content-Type": "application/json",
@@ -6490,7 +6490,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6519,11 +6519,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-125",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-125",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-125",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-125",
           "_raw": "query",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -6533,7 +6533,7 @@
     {
       "name": "header_query_conflict",
       "method": "POST",
-      "path": "/services/collector/event?token=33333333-3333-4333-8333-333333333333&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-126",
+      "path": "/services/collector/event?token=33333333-3333-4333-8333-333333333333&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-126",
       "request_body_base64": "eyJldmVudCI6ImNvbmZsaWN0In0=",
       "request_headers": {
         "Authorization": "Splunk bogus",
@@ -6545,7 +6545,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6574,11 +6574,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-126",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-126",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-126",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-126",
           "_raw": "conflict",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -6588,7 +6588,7 @@
     {
       "name": "raw:1::header",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-127",
+      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-127",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6600,7 +6600,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6633,23 +6633,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-127",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-127",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-127",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-127",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-127",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-127",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-127",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-127",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -6659,7 +6659,7 @@
     {
       "name": "raw:1::query",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&channel=&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-128",
+      "path": "/services/collector/raw?sourcetype=hec_newline&channel=&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-128",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6670,7 +6670,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6703,23 +6703,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-128",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-128",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-128",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-128",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-128",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-128",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-128",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-128",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -6729,7 +6729,7 @@
     {
       "name": "raw:1:invalid:header",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-129",
+      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-129",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6741,7 +6741,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6774,23 +6774,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-129",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-129",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-129",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-129",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-129",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-129",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-129",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-129",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -6800,7 +6800,7 @@
     {
       "name": "raw:1:invalid:query",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&channel=invalid&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-130",
+      "path": "/services/collector/raw?sourcetype=hec_newline&channel=invalid&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-130",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6811,7 +6811,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6844,23 +6844,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-130",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-130",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-130",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-130",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-130",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-130",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-130",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-130",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -6870,7 +6870,7 @@
     {
       "name": "raw:1:12345678-1234-4234-8234-123456789abc:header",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-131",
+      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-131",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6882,7 +6882,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6915,23 +6915,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-131",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-131",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-131",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-131",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-131",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-131",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-131",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-131",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -6941,7 +6941,7 @@
     {
       "name": "raw:1:12345678-1234-4234-8234-123456789abc:query",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-132",
+      "path": "/services/collector/raw?sourcetype=hec_newline&channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-132",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -6952,7 +6952,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -6985,23 +6985,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-132",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-132",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-132",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-132",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-132",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-132",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-132",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-132",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -7011,7 +7011,7 @@
     {
       "name": "raw:2::header",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-133",
+      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-133",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7023,7 +7023,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7056,14 +7056,14 @@
         ],
         "body": "{\"text\":\"Data channel is missing\",\"code\":10}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-133",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-133",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "raw:2::query",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&channel=&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-134",
+      "path": "/services/collector/raw?sourcetype=hec_newline&channel=&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-134",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7074,7 +7074,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7107,14 +7107,14 @@
         ],
         "body": "{\"text\":\"Data channel is missing\",\"code\":10}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-134",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-134",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "raw:2:invalid:header",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-135",
+      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-135",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7126,7 +7126,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7159,14 +7159,14 @@
         ],
         "body": "{\"text\":\"Invalid data channel\",\"code\":11}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-135",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-135",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "raw:2:invalid:query",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&channel=invalid&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-136",
+      "path": "/services/collector/raw?sourcetype=hec_newline&channel=invalid&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-136",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7177,7 +7177,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7210,14 +7210,14 @@
         ],
         "body": "{\"text\":\"Invalid data channel\",\"code\":11}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-136",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-136",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "raw:2:12345678-1234-4234-8234-123456789abc:header",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-137",
+      "path": "/services/collector/raw?sourcetype=hec_newline&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-137",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7229,7 +7229,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7262,23 +7262,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0,\"ackId\":0}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-137",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-137",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-137",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-137",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-137",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-137",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-137",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-137",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -7288,7 +7288,7 @@
     {
       "name": "raw:2:12345678-1234-4234-8234-123456789abc:query",
       "method": "POST",
-      "path": "/services/collector/raw?sourcetype=hec_newline&channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-138",
+      "path": "/services/collector/raw?sourcetype=hec_newline&channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-138",
       "request_body_base64": "b25lDQoKdHdvCiAKdGFpbA==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7299,7 +7299,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7332,23 +7332,23 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0,\"ackId\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-138",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-138",
       "accepted_event_count": 3,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-138",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-138",
           "_raw": "tail",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-138",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-138",
           "_raw": "two",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
         },
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-138",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-138",
           "_raw": "one",
           "host": "127.0.0.1:18088",
           "sourcetype": "hec_newline"
@@ -7358,7 +7358,7 @@
     {
       "name": "channel-precedence:12345678-1234-4234-8234-123456789abc:invalid",
       "method": "POST",
-      "path": "/services/collector/raw?channel=invalid&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-139",
+      "path": "/services/collector/raw?channel=invalid&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-139",
       "request_body_base64": "bGluZQ==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7370,7 +7370,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7403,11 +7403,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0,\"ackId\":2}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-139",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-139",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-139",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-139",
           "_raw": "line",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -7417,7 +7417,7 @@
     {
       "name": "channel-precedence:invalid:12345678-1234-4234-8234-123456789abc",
       "method": "POST",
-      "path": "/services/collector/raw?channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-140",
+      "path": "/services/collector/raw?channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-140",
       "request_body_base64": "bGluZQ==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7429,7 +7429,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7462,14 +7462,14 @@
         ],
         "body": "{\"text\":\"Invalid data channel\",\"code\":11}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-140",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-140",
       "accepted_event_count": 0,
       "indexed_values": []
     },
     {
       "name": "channel-precedence::12345678-1234-4234-8234-123456789abc",
       "method": "POST",
-      "path": "/services/collector/raw?channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-141",
+      "path": "/services/collector/raw?channel=12345678-1234-4234-8234-123456789abc&source=hec-oracle-417b0cd2415a45fda7febf77f2846636-141",
       "request_body_base64": "bGluZQ==",
       "request_headers": {
         "Authorization": "Splunk 22222222-2222-4222-8222-222222222222",
@@ -7481,7 +7481,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7514,11 +7514,11 @@
         ],
         "body": "{\"text\":\"Success\",\"code\":0,\"ackId\":3}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-141",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-141",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-141",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-141",
           "_raw": "line",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -7528,7 +7528,7 @@
     {
       "name": "utf8_bad_prefix",
       "method": "POST",
-      "path": "/services/collector/event?source=hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-142",
+      "path": "/services/collector/event?source=hec-oracle-417b0cd2415a45fda7febf77f2846636-142",
       "request_body_base64": "eyJldmVudCI6InZhbGlkIn3/",
       "request_headers": {
         "Authorization": "Splunk 11111111-1111-4111-8111-111111111111",
@@ -7540,7 +7540,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:54:58 GMT"
+            "Fri, 30 Oct 2026 09:48:25 GMT"
           ],
           [
             "Content-Type",
@@ -7573,11 +7573,11 @@
         ],
         "body": "{\"text\":\"Invalid data format\",\"code\":6,\"invalid-event-number\":1}"
       },
-      "expected_source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-142",
+      "expected_source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-142",
       "accepted_event_count": 1,
       "indexed_values": [
         {
-          "source": "hec-oracle-1ea85c8f8547459791bcdfe8090c48a2-142",
+          "source": "hec-oracle-417b0cd2415a45fda7febf77f2846636-142",
           "_raw": "valid",
           "host": "127.0.0.1:18088",
           "sourcetype": "httpevent"
@@ -7598,7 +7598,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",
@@ -7646,7 +7646,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",
@@ -7694,7 +7694,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",
@@ -7742,7 +7742,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",
@@ -7790,7 +7790,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",
@@ -7838,7 +7838,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",
@@ -7886,7 +7886,7 @@
         "headers": [
           [
             "Date",
-            "Tue, 27 Oct 2026 01:55:08 GMT"
+            "Fri, 30 Oct 2026 09:48:35 GMT"
           ],
           [
             "Content-Type",

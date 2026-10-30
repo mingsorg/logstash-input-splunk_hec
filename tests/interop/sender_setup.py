@@ -81,6 +81,9 @@ with (app/'server.conf').open('a') as configuration:
 for name,content in [('log','alpha\n  indented remains separate\n重复\nrepeat\nrepeat\n'),
                      ('json','{"time":"1790000000.123456789","message":"native","a.b":["first","second"],"host":"payload-host"}\n')]:
     Path('/tmp/hec-source.'+name).write_text(content)
+# Metadata qualification selects the observed per-record _path and crcSalt
+# keys emitted by these monitors. Do not confuse inputs.conf _meta indexed
+# extractions with wire-metadata keys: the receiver must keep those in fields.
 subprocess.run(['chown','-R','splunk:splunk',str(app.parent)],check=True)
 print('sender setup: app configured',flush=True)
 if os.environ.get('HEC_STARTUP_MODE')=='direct':

@@ -9,7 +9,7 @@ only the TCP listener.
 
 ```mermaid
 flowchart LR
-    UF[UF / HF tcpout cooked mode] -->|TLS by default, port 9997| T[S2S TCP listener]
+    UF[UF / HF tcpout cooked mode] -->|Plaintext default or TLS, port 9997| T[S2S TCP listener]
     H[HEC event / raw / S2S HTTP] -->|HTTPS 8088| L[HTTP listener]
     T --> R[Shared limits, memory budget and queue admission]
     L --> R
@@ -144,6 +144,17 @@ Events use the same native envelope as S2S over HTTP (`event`, `time`, `host`,
 multiline handling. Per-record `MetaData:Host/Source/Sourcetype` values override
 the channel defaults; `host::$decideOnStartup` falls back to the sender hostname
 from the greeting. An indexed field literally named `host` stays inside `fields`.
+
+`s2s_metadata_fields_json` (default `{}`) selects exact decoded per-record keys
+into a separate searchable `s2s_metadata` object, identically on TCP and HTTP.
+For example `'{"_path":"path","crcSalt":"salt"}'` retains those values when present,
+even with `hec_metadata => "none"`. Missing keys and empty namespaces are omitted;
+values remain strings. Destination names are simple identifiers, never field paths.
+Root `host`, indexed `fields.host`, and `s2s_metadata.host` are independent.
+Handshake/ForwarderInfo facts below are not mapping sources. Selected copies count
+toward shared memory and the logical-event cap before insertion/ACK. Mapping does
+not change ID derivation or add selected metadata to coordinate-based IDs; unknown
+tags still fail closed. See the [full mapping contract](configuration.md#34b-searchable-s2s-metadata).
 
 TCP-specific provenance in `@metadata.splunk_hec.tcp`:
 

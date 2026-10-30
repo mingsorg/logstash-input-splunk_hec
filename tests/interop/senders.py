@@ -79,8 +79,11 @@ def main():
                 (CAPTURES/filename).write_bytes(body);entry['fixture']=filename
             responses={}
             for target in ('oracle','plugin'):
-                c=(http.client.HTTPConnection('127.0.0.1',18088,timeout=15) if target=='oracle' else
-                   http.client.HTTPSConnection('localhost',port,context=context,timeout=15))
+                # Outlast the receiver's 30-second IO deadline. A shorter relay
+                # deadline can lose its response after queue acceptance and turn
+                # ordinary host scheduling delays into an ambiguous retry.
+                c=(http.client.HTTPConnection('127.0.0.1',18088,timeout=60) if target=='oracle' else
+                   http.client.HTTPSConnection('localhost',port,context=context,timeout=60))
                 try:
                     forwarded=dict(headers)
                     if target=='oracle':forwarded['Authorization']='Splunk '+runtime.TOKEN
@@ -133,7 +136,9 @@ def main():
                 with mutex:
                     product='splunkforwarder-' if role=='uf' else 'splunk-'
                     data=[r for r in records[before:] if r.get('fixture') and (r.get('agent_build') or '').startswith(product)]
-                if data:break
+                # The first requests can be deliberately rejected. Do not stop
+                # a real forwarder until an unmodified batch has been accepted.
+                if any(r['plugin'].get('status')==200 and not r.get('injected_invalid_opcode') for r in data):break
                 if runtime.docker('inspect',sender,'--format','{{.State.Running}}')!='true':
                     raise RuntimeError(runtime.docker('inspect',sender,'--format','{{json .State}}')+'\n'+runtime.docker('logs',sender))
                 time.sleep(1)
@@ -156,6 +161,7 @@ def main():
         repeated=[e['verification_metadata']['splunk_hec']['id'] for e in observed if e['event']=='repeat']
         assert len(set(repeated))==4,'distinct repeated source occurrences collapsed'
         rejected=[r for r in records if r.get('injected_invalid_opcode')]
+        assert all('error' not in r[target] for r in records for target in ('oracle','plugin')),('relay failed',records)
         assert len(rejected)==2 and all(r['plugin']['status']==400 and json.loads(r['plugin']['body'])['code']==6 for r in rejected)
         assert len({r['body_sha256'] for r in rejected})==1,'expected identical-batch sender retry after rejection'
         assert any(r['body_sha256']==rejected[0]['body_sha256'] and r['plugin']['status']==200 for r in records if not r.get('injected_invalid_opcode'))

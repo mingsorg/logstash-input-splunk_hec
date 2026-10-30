@@ -155,7 +155,8 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
     finally:
         if not keep or not success: subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
 
-def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998, name=None, hec_metadata=None):
+def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998, name=None, hec_metadata=None,
+                      s2s_metadata_fields=None):
     """Start an owned Logstash container running the packaged gem with the classic TCP listener on.
 
     * ``tls=True``  sets ``s2s_tcp_ssl_enabled => true`` (the TCP listener then uses the generated
@@ -164,6 +165,7 @@ def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998
     * The HTTP listener is never configured here and therefore keeps its default (TLS on); ``ready()``
       waits for it over verified HTTPS using the generated certificate.
     * ``hec_metadata`` (None, ``full``, ``id_only`` or ``none``) selects how much provenance is attached.
+    * ``s2s_metadata_fields`` optionally supplies the explicit searchable per-record mapping to BOTH listeners.
     * The pipeline's ``ruby`` filter copies ``@metadata`` into a visible ``verification_metadata`` field
       ONLY so the ``file`` output (which never writes ``@metadata``) records it for the assertions.
     * The persistent queue uses 16 MB pages: a persistent queue rejects any single event larger than its
@@ -184,9 +186,10 @@ def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998
   host => "0.0.0.0" port => 8088 state_directory => "/run-hec/state"
   '''+('s2s_tcp_ssl_enabled => true' if tls else '# s2s_tcp_ssl_enabled omitted: the TCP default (plaintext) is exercised')+'''
   '''+('hec_metadata => "'+hec_metadata+'"' if hec_metadata else '')+'''
+  '''+('s2s_metadata_fields_json => \''+json.dumps(s2s_metadata_fields).replace("'", "\\'")+'\'' if s2s_metadata_fields is not None else '')+'''
   ssl_self_signed_sans => "dns:localhost,dns:host.docker.internal,ip:127.0.0.1,ip:::1"
   s2s_tcp_enabled => true s2s_tcp_port => 9997
-  tokens_json => '[{"token":"'''+TOKEN+'''","useACK":true}]'
+  tokens_json => '[{"token":"'''+TOKEN+'''","useACK":true},{"token":"55555555-5555-4555-8555-555555555555","useACK":false}]'
 } }
 filter { ruby { code => 'event.set("verification_metadata", event.get("@metadata"))' } }
 output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_interval => 0 } }

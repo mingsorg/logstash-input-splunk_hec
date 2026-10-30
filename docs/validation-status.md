@@ -2,26 +2,69 @@
 
 The plugin is packaged as `logstash-input-splunk_hec-0.1.0-java.gem`. It is a
 preview with finite compatibility coverage, not complete Splunk equivalence.
-Each evidence file below records the SHA-256 of the gem it exercised; compare it
+Artifact-specific evidence below records the SHA-256 of the gem it exercised; compare it
 with `sha256sum logstash-input-splunk_hec-0.1.0-java.gem` before relying on it.
 
-## Passing on the reviewed implementation
+`tests/interop/evidence/final-verification.json` records the qualified gem's SHA-256
+and summarizes the checks. Runtime, configuration, installation flow, metadata
+mapping, HTTP sender, TCP sender and reproducibility evidence match that digest.
+The digest lives in external evidence because this document is itself packaged in the gem.
 
-- 66 Java tests (counted from the Gradle test reports): saved real-Splunk HTTP corpus replay, captured UF/HF HTTP bodies,
+## Explicit searchable per-record metadata
+
+`python3 tests/interop/metadata_fields.py` qualifies the final gem on persisted queues:
+UF/HF 10.6.1.1 over verified HTTPS and compressed, ACK-enabled TLS TCP, on Logstash
+9.5.0 (`hec_metadata=none`) and 9.5.5 (`full`, `id_only`, `none`). Assertions compare
+selected `_path`, `crcSalt` and `_MetaData:Index` strings with source expectations;
+`full` also compares them directly with decoded `wire_metadata`. Native payloads,
+indexed values, standard metadata, `@timestamp` and `@version` are checked.
+`tests/interop/evidence/metadata-fields.json` records the exact artifact digest,
+per-scenario output, receiver image digest, queue type, status and any failure.
+Startup, diagnostics and cleanup failures are retained; cleanup uncertainty fails
+qualification. The Compose `--stage metadata` and default full run include these checks.
+Require `status: pass` and a matching
+digest before treating that run as qualification. This narrow run does not repeat
+the larger compression/plaintext/restart matrix below.
+
+Java regression tests additionally cover malformed-policy startup, default/no-match
+output, exact case-sensitive selection, typed indexed-field coexistence, namespace
+collisions, multiline memory amplification, HTTP/TCP parity in all provenance modes,
+unchanged IDs, once-per-record selection with independently charged per-line maps,
+and mapped-size rejection before queue insertion with no success ACK. A fitting
+HTTP batch prefix followed by an oversized mapped record inserts nothing; unmapped
+controls establish that full-provenance rejection is caused by the mapping itself.
+No unknown wire-tag support, large-scale throughput or soak coverage is implied.
+
+## Broader checks verified for the current gem
+
+- 72 Java tests passed with no failures, errors or skips (counted from the Gradle
+  test reports): saved real-Splunk HTTP corpus replay, captured UF/HF HTTP bodies,
   native value precision, S2S HTTP framing/identity, TLS/mTLS, queue-failure ACK
   behavior, `100-continue`, write deadlines, lifecycle regressions, and the
   classic-TCP protocol/server tests that replay eight real captured UF/HF streams
   (plain and verified TLS, compressed and uncompressed).
-- 14 Python build/fixture regression tests, including a check that every plugin option and policy key is documented in `configuration.md` with its source default.
-- `install-check.json`: on the pinned 9.5.0 and 9.5.5 images the gem installs, is listed, validates, serves verified TLS
-  and accepts an event with a token, rejects a request without one, reinstalls, and removes cleanly; the documented
-  Dockerfile builds (named state volume writable); Logstash 9.4.0 rejects the install.
-- `config-check.json`: every `splunk_hec` snippet in the configuration reference passes `logstash -t` with the packaged gem on Logstash 9.5.0 and 9.5.5, and 12 documented startup errors (unknown option, `codec`, port clash, inconsistent limits, TLS misuse, token JSON, shared state directory, ...) are rejected with the documented messages.
+- 21 Python build/fixture regression tests passed, including failure-path checks for
+  metadata sender ownership, diagnostic/cleanup failures and stage orchestration, and a check that every
+  plugin option and policy key is documented in `configuration.md` with its source default.
+- `config-check.json`: 8 configuration-reference snippets and 4 example pipelines
+  pass `logstash -t` with the packaged gem on each of Logstash 9.5.0 and 9.5.5
+  (24 positive checks). On each version, 17 documented startup errors (unknown
+  option, `codec`, port clash, inconsistent limits, TLS misuse, token JSON,
+  metadata mapping, shared state directory, ...) are rejected with the documented
+  messages (34 negative checks).
 - Packaged installation and trusted HTTPS on Logstash 9.5.0 and 9.5.5 with
   memory and persistent queues (`runtime.json`), actual Event/PQ recovery of exact
   numerics and timestamps, ACK reset and TLS identity reuse after a crash.
 - Two clean builds of the reviewed source produced byte-identical gems
   (`reproducibility.json`).
+
+## Installation-flow checks
+
+`install-check.json` records a passing run for the current gem.
+On the pinned 9.5.0 and 9.5.5 images the gem installs, is listed,
+validates, serves verified TLS and accepts an event with a token, rejects a
+request without one, reinstalls, and removes cleanly. The documented Dockerfile
+builds with a writable named state volume; Logstash 9.4.0 rejects the install.
 
 ## Per-listener TLS and provenance control
 
@@ -70,7 +113,7 @@ remains deliberately unsupported.
   `SIGKILL` and restart on the same persistent queue/TLS identity while an
   ACK-enabled compressed TLS UF stayed running (all events written during the
   outage arrived with stable IDs), and a reduced TLS set on Logstash 9.5.0.
-  `python3 tests/tcp/check.py` verifies completeness and the gem digest.
+  `python3 tests/tcp/check.py` passes, verifying completeness and the current gem digest.
 - Wire facts were captured from the same senders against a real Splunk indexer
   (`tests/tcp/evidence/decoded-capture*.json`): source values match the oracle and
   every positive event ID is covered by a real reverse ACK.

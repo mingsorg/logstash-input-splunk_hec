@@ -52,6 +52,8 @@ NEGATIVE = {
     'http client auth without http tls': ('splunk_hec { state_directory => "/tmp/n5b" ssl_enabled => false ssl_client_authentication => true }', 'ssl_client_authentication requires ssl_enabled'),
     'tcp client auth without tcp tls': ('splunk_hec { state_directory => "/tmp/n5c" s2s_tcp_enabled => true s2s_tcp_ssl_client_authentication => true }', 's2s_tcp_ssl_client_authentication requires s2s_tcp_ssl_enabled'),
     'bad hec_metadata': ('splunk_hec { state_directory => "/tmp/n5d" hec_metadata => "everything" }', 'hec_metadata must be full, id_only or none'),
+    'duplicate s2s metadata source': ('splunk_hec { state_directory => "/tmp/n5e" s2s_metadata_fields_json => \'{"extra":"first","extra":"second"}\' }', 's2s_metadata_fields_json requires a JSON object'),
+    's2s metadata path destination': ('splunk_hec { state_directory => "/tmp/n5f" s2s_metadata_fields_json => \'{"extra":"a.b"}\' }', 's2s_metadata_fields_json requires a JSON object'),
     'mtls without ca': ('splunk_hec { state_directory => "/tmp/n6" ssl_client_authentication => true }', 'mTLS requires an explicit client CA'),
     'keystore and pem': ('splunk_hec { state_directory => "/tmp/n7" ssl_keystore => "/tmp/files/hec.p12" ssl_keystore_password => "changeit" ssl_certificate => "/tmp/files/hec.crt" ssl_key => "/tmp/files/hec.pkcs8.key" }', 'choose keystore or PEM'),
     'tcp cap above expanded': ('splunk_hec { state_directory => "/tmp/n8" s2s_tcp_max_event_bytes => 1073741824 }', 'must not exceed max_expanded_bytes'),

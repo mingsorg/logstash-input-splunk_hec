@@ -1,17 +1,17 @@
 {
   "summary_type": "recorded verification outcomes",
   "artifact": "logstash-input-splunk_hec-0.1.0-java.gem",
-  "artifact_sha256": "de29277aef13783b5fdd87ba2190a953bafe457cd1818016ea95b706af73e34b",
+  "artifact_sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54",
   "overall": "http-and-optional-tcp-qualified-for-tested-scope",
   "java_tests": {
     "status": "pass",
-    "tests": 66,
-    "command": "./gradlew test",
+    "tests": 72,
+    "command": "./gradlew test --rerun-tasks",
     "source": "Gradle test reports"
   },
   "helper_tests": {
     "status": "pass",
-    "tests": 14,
+    "tests": 21,
     "command": "python3 -m unittest discover -s tests/build -v"
   },
   "reproducibility": {
@@ -28,12 +28,20 @@
       "9.5.0 persisted",
       "9.5.5 memory",
       "9.5.5 persisted"
-    ]
+    ],
+    "end_to_end_demo": {
+      "status": "pass",
+      "evidence": "hec-chain-demo.json",
+      "scope": "live UF -> HTTPS HEC S2S -> Logstash 9.5.5 -> HTTPS HEC -> Splunk 10.6.1.1 indexer; text and JSON searchable in hec_demo"
+    }
   },
   "live_http_senders": {
     "status": "pass",
     "evidence": "senders.json",
-    "scope": "UF/HF 10.6.1.1 httpout, malformed-batch retries, identical-body replay, direct verified HTTPS"
+    "scope": "UF/HF 10.6.1.1 httpout, malformed-batch retries, identical-body replay, direct verified HTTPS",
+    "metadata_fields_evidence": "metadata-fields.json",
+    "metadata_fields_scope": "16 real UF/HF scenarios on persisted queues: HTTPS and compressed ACK-enabled TLS TCP; Logstash 9.5.0 none and 9.5.5 full/id_only/none; receiver image digests and scenario/cleanup failures retained",
+    "prior_attempt_failure": "The first full-suite attempt passed metadata/runtime/config/install but its HTTP relay timed out and the retry assertion raised KeyError for the missing response status. The relay now outlasts receiver IO deadlines and waits for an accepted unmodified batch; the senders stage rerun passed HTTP and TCP on the same gem."
   },
   "live_tcp_senders": {
     "status": "pass",
@@ -54,7 +62,7 @@
     "status": "pass",
     "evidence": "config-check.json",
     "document": "docs/configuration.md",
-    "scope": "7 documented snippets and 3 example pipelines pass logstash -t on 9.5.0 and 9.5.5; 15 documented startup errors rejected with the documented message; a unit test requires every option and policy key to be documented"
+    "scope": "8 documented snippets and 4 example pipelines pass logstash -t on 9.5.0 and 9.5.5; 17 documented startup errors rejected with the documented message on each version; a unit test requires every option and policy key to be documented"
   },
   "defects_found_by_documenting": [
     "standard id/enable_metric/add_field/tags/type options were rejected; fixed",
@@ -65,6 +73,7 @@
   "installation_guide": {
     "status": "pass",
     "evidence": "install-check.json",
+    "artifact_sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54",
     "document": "docs/installation.md",
     "scope": "install/list/validate/run with verified TLS/event accepted/no-token refused/reinstall/remove on 9.5.0 and 9.5.5; Docker image build with writable named state volume; Logstash 9.4.0 install rejected"
   }
