@@ -304,6 +304,12 @@ TLS) are in the [configuration reference, section 9](configuration.md#9-sender-c
 [`examples/`](../examples/). Remember that the sender's TLS setting must match the listener:
 HEC defaults to TLS, the TCP listener defaults to plaintext.
 
+For a complete forwarding chain into a Splunk indexer, see the
+[UF → Logstash → Splunk reference configuration](uf-logstash-splunk-reference.md).
+It documents the UF and indexer apps, Logstash pipeline and persistent queue,
+both TLS/token boundaries, and the settings required to retain `_internal` and
+`_audit` through the destination HEC input.
+
 To retain selected forwarder per-record metadata in output, add
 `s2s_metadata_fields_json => '{"_path":"path","crcSalt":"salt"}'` to the input.
 It applies to both transports and works even with `hec_metadata => "none"`.

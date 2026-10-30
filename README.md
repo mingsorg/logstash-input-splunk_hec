@@ -19,6 +19,11 @@ The build needs Python 3, a JDK capable of `--release 21`, Docker and network ac
 
 **Installation:** [docs/installation.md](docs/installation.md). **All configuration options, token policy, TLS, TCP, limits, sender settings and troubleshooting are in the [configuration reference](docs/configuration.md).**
 
+For the complete **UF → HTTPS HEC S2S → Logstash → HTTPS HEC → Splunk indexer**
+setup, use the [end-to-end reference configuration](docs/uf-logstash-splunk-reference.md).
+It includes all companion files, `_internal`/`_audit` forwarding, the indexer
+audit-source override, TLS/token wiring, persistent queues and verification searches.
+
 See [compatibility and evidence](docs/compatibility.md) for the exact tested scope and outstanding qualification work. This is not a claim of complete Splunk parsing-engine equivalence.
 The [current validation status](docs/validation-status.md) lists the passing
 final-artifact checks and live UF/HF qualification. Classic S2S TCP is optional,

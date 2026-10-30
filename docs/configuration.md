@@ -5,6 +5,10 @@ token-policy file, TLS, the optional classic TCP listener, resource limits, and
 the matching UF/HF sender settings. Defaults below are the plugin's own, not
 Splunk's. Requires **Logstash 9.5.0+ (Java 21)**.
 
+For the complete UF → HEC S2S → Logstash → HEC → Splunk indexer chain, including
+all companion files and internal/audit forwarding, see the
+[end-to-end reference configuration](uf-logstash-splunk-reference.md).
+
 Contents: [1 Quick start](#1-quick-start) · [2 What is configured where](#2-what-is-configured-where) ·
 [3 Option reference](#3-option-reference) · [4 Tokens and policy](#4-tokens-and-policy) ·
 [5 TLS](#5-tls) · [6 TCP listener](#6-optional-classic-tcp-listener) ·
