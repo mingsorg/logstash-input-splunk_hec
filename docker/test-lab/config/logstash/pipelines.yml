@@ -1,0 +1,2 @@
+- pipeline.id: uf_hec_s2s_to_splunk
+  path.config: /run-hec/config/pipeline.conf

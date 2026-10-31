@@ -1,0 +1,8 @@
+.env*
+!.env.example
+reports/
+__pycache__/
+*.pyc
+tls/
+data/
+connection.json

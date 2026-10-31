@@ -10,6 +10,11 @@ The live reference uses UF/Splunk **10.6.1.1** and Logstash **9.5.5 / Java 21**.
 Install the plugin using the [installation guide](installation.md). For individual
 plugin options, see the [configuration reference](configuration.md).
 
+The [existing Docker test lab folder](https://github.com/mingsorg/logstash-input-splunk_hec/tree/main/docker/test-lab) stores the
+configuration files, a Compose topology reference, equivalent bootstrap sources
+and read-only inspection/validation commands. It documents the current manually
+created environment; it does not require building or starting a replacement lab.
+
 ## 1. Topology, identities and file locations
 
 ```mermaid

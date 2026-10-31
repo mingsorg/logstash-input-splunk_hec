@@ -1,0 +1,11 @@
+pipeline.workers: 1
+pipeline.batch.size: 1
+api.enabled: false
+xpack.monitoring.enabled: false
+path.data: /run-hec/data
+path.logs: /run-hec/logs
+queue.type: persisted
+queue.max_bytes: 256mb
+queue.page_capacity: 16mb
+queue.checkpoint.writes: 1
+queue.checkpoint.acks: 1

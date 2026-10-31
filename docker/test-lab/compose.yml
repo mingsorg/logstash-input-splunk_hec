@@ -1,0 +1,97 @@
+# Topology/reference definition for the EXISTING, manually created test lab.
+# Do not run up/down against the current containers: Compose did not create them.
+# See README.md for read-only inspection, configuration rendering and validation.
+name: test-lab
+
+services:
+  indexer:
+    image: ${SPLUNK_IMAGE:?Set SPLUNK_IMAGE in .env.local}
+    platform: linux/amd64
+    container_name: hec-demo-indexer
+    user: root
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      HEC_FIXTURE_OWNED: ${DEMO_RUN_ID:?Set the existing run identity}
+      SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
+      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD:?Set the existing admin password}
+      SPLUNK_HEC_TOKEN: ${SPLUNK_HEC_TOKEN:?Set the destination HEC token}
+    entrypoint: ["/usr/bin/python3"]
+    command: ["/reference/scripts/bootstrap/indexer.py"]
+    ports:
+      - "127.0.0.1:${SPLUNK_WEB_PORT:-18000}:8000"
+      - "127.0.0.1:${SPLUNK_HEC_PORT:-19088}:8088"
+      - "127.0.0.1:${SPLUNK_MANAGEMENT_PORT:-19089}:8089"
+    volumes:
+      - ${TEST_LAB_STATE:?Set the existing state directory}/tls/indexer.pem:/demo/tls/indexer.pem:ro
+      - ./scripts/bootstrap:/reference/scripts/bootstrap:ro
+      - ./config:/reference/config:ro
+      - indexer-etc:/opt/splunk/etc
+      - indexer-var:/opt/splunk/var
+    networks: [existing-lab]
+
+  logstash:
+    image: ${LOGSTASH_IMAGE:?Set LOGSTASH_IMAGE in .env.local}
+    container_name: hec-demo-logstash
+    restart: unless-stopped
+    environment:
+      JAVA_HOME: /usr/share/logstash/jdk
+      SPLUNK_HEC_TOKEN: ${SPLUNK_HEC_TOKEN:?Set the destination HEC token}
+    entrypoint: ["/usr/share/logstash/vendor/jruby/bin/jruby"]
+    command: ["/reference/scripts/bootstrap/logstash.rb"]
+    ports:
+      - "127.0.0.1:${LOGSTASH_HEC_PORT:-18888}:8088"
+    volumes:
+      - ${TEST_LAB_STATE:?Set the existing state directory}/hec-inputs.conf:/demo/hec-inputs.conf:ro
+      - ${TEST_LAB_STATE:?Set the existing state directory}/tls/indexer.crt:/demo/tls/indexer.crt:ro
+      - ${TEST_LAB_STATE:?Set the existing state directory}/logstash:/run-hec
+      - ${PLUGIN_REPOSITORY:?Set the plugin repository path}/logstash-input-splunk_hec-0.1.0-java.gem:/work/logstash-input-splunk_hec-0.1.0-java.gem:ro
+      - ./scripts/bootstrap/logstash.rb:/reference/scripts/bootstrap/logstash.rb:ro
+      - ./config/logstash:/run-hec/config:ro
+    networks: [existing-lab]
+
+  uf:
+    image: ${UF_IMAGE:?Set UF_IMAGE in .env.local}
+    platform: linux/amd64
+    container_name: hec-demo-uf
+    user: root
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    environment:
+      HEC_FIXTURE_OWNED: ${DEMO_RUN_ID:?Set the existing run identity}
+      DEMO_RUN_ID: ${DEMO_RUN_ID:?Set the existing run identity}
+      SPLUNK_GENERAL_TERMS: --accept-sgt-current-at-splunk-com
+      SPLUNK_PASSWORD: ${SPLUNK_PASSWORD:?Set the existing admin password}
+      HEC_INPUT_TOKEN: ${HEC_INPUT_TOKEN:?Set the UF to Logstash token}
+    entrypoint: ["/usr/bin/python3"]
+    command: ["/reference/scripts/bootstrap/uf.py"]
+    volumes:
+      - ${TEST_LAB_STATE:?Set the existing state directory}/logstash/state/identity/server.crt:/demo/logstash/state/identity/server.crt:ro
+      - ./scripts/bootstrap:/reference/scripts/bootstrap:ro
+      - ./config:/reference/config:ro
+      - uf-etc:/opt/splunkforwarder/etc
+      - uf-var:/opt/splunkforwarder/var
+    networks: [existing-lab]
+
+networks:
+  existing-lab:
+    external: true
+    name: ${TEST_LAB_NETWORK:?Set the existing network name}
+
+volumes:
+  indexer-etc:
+    external: true
+    name: ${INDEXER_ETC_VOLUME:?Set the existing indexer etc volume}
+  indexer-var:
+    external: true
+    name: ${INDEXER_VAR_VOLUME:?Set the existing indexer var volume}
+  uf-etc:
+    external: true
+    name: ${UF_ETC_VOLUME:?Set the existing UF etc volume}
+  uf-var:
+    external: true
+    name: ${UF_VAR_VOLUME:?Set the existing UF var volume}

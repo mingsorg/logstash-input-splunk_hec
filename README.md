@@ -23,6 +23,9 @@ For the complete **UF → HTTPS HEC S2S → Logstash → HTTPS HEC → Splunk in
 setup, use the [end-to-end reference configuration](docs/uf-logstash-splunk-reference.md).
 It includes all companion files, `_internal`/`_audit` forwarding, the indexer
 audit-source override, TLS/token wiring, persistent queues and verification searches.
+The existing Docker environment is also packaged as a
+[documented test lab](https://github.com/mingsorg/logstash-input-splunk_hec/tree/main/docker/test-lab), with configuration files,
+a Compose reference, bootstrap sources and read-only validation scripts.
 
 See [compatibility and evidence](docs/compatibility.md) for the exact tested scope and outstanding qualification work. This is not a claim of complete Splunk parsing-engine equivalence.
 The [current validation status](docs/validation-status.md) lists the passing
