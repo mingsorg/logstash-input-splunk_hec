@@ -323,7 +323,7 @@ envelope. Diagnostic protocol provenance stays in Logstash `@metadata`.
 <!-- reference-config: logstash/logstash.yml -->
 ```yaml
 pipeline.workers: 1
-pipeline.batch.size: 1
+pipeline.batch.size: 100
 api.enabled: false
 xpack.monitoring.enabled: false
 path.data: /run-hec/data
@@ -338,6 +338,11 @@ queue.checkpoint.acks: 1
 The queue page must accommodate the serialized Logstash event, including its
 overhead. The 16 MiB page above handled the observed internal records; retain
 both the queue data and plugin state directories across restarts.
+
+`pipeline.batch.size: 100` allows a worker to process up to 100 events per
+pipeline batch. The HTTP output still uses `format => "message"`, so it sends
+one HEC envelope per request; this setting does not combine events into an
+outbound HTTP batch.
 
 ### `/run-hec/config/pipelines.yml`
 
@@ -588,7 +593,7 @@ still to make before adopting it as a production standard:
 | Index authorization | All configured indexes allowed, as requested; retain or constrain deliberately for the intended sources |
 | Delivery | `useACK=false` on the UF → Logstash token; ordinary HTTP output with retries, no downstream HEC ACK polling or exactly-once guarantee |
 | Queue/disk | Persistent queue with small-demo sizing; local inspection output has no rotation configured |
-| Performance | One worker, batch size one, frequent checkpoints; throughput, long-duration soak and HA are not qualified by this demo |
+| Performance | One worker, pipeline batch size 100, frequent checkpoints; HTTP output remains per-event; throughput, long-duration soak and HA are not qualified by this demo |
 | UI/management | Loopback-published local UI/API; Web uses HTTP and KV Store is disabled |
 | Credentials | Supply per-deployment secrets; do not distribute the live demo login, tokens or private keys as configuration examples |
 

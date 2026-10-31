@@ -119,6 +119,13 @@ output only. They are not automatically part of the outbound HEC envelope.
 Simply adding a root Logstash `tags` field would not pass this envelope whitelist;
 that is why the route proof uses HEC indexed fields.
 
+The current pipeline uses `pipeline.batch.size: 100` and one worker. That is up
+to 100 events per pipeline batch, not 100 HEC envelopes per HTTP request. The
+HTTP output's `format => "message"` still sends one event per request.
+This setting was changed from 1 to 100 on 2026-10-31 by restarting only the
+existing Logstash container; its startup log confirmed batch size 100 and the
+HTTPS health check passed. No replacement environment was built for that tuning.
+
 ### Indexer app: `/opt/splunk/etc/apps/hec_chain_demo/local/`
 
 | File | Purpose |
@@ -451,7 +458,7 @@ bootstrap-secret writes. They were run on the macOS host; the bootstrap itself
 targets the Linux containers and was not started for this task.
 
 The functional reference is not a production sizing/HA prescription: one worker,
-batch size one, a small persistent queue, self-signed local certificates, no
+pipeline batch size 100, a small persistent queue, self-signed local certificates, no
 downstream HEC ACK polling, UF token `useACK=false`, an unrotated inspection file,
 HTTP loopback Web UI and disabled KV Store are deliberate lab choices.
 Throughput, soak and exactly-once delivery are not established. See

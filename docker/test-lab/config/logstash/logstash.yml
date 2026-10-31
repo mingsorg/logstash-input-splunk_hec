@@ -1,5 +1,5 @@
 pipeline.workers: 1
-pipeline.batch.size: 1
+pipeline.batch.size: 100
 api.enabled: false
 xpack.monitoring.enabled: false
 path.data: /run-hec/data
