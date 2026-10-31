@@ -20,8 +20,9 @@ created environment; it does not require building or starting a replacement lab.
 ```mermaid
 flowchart LR
     UF[Universal Forwarder] -->|HTTPS /services/collector/s2s| LS[Logstash splunk_hec input]
-    LS --> PQ[Persistent queue and envelope filter]
-    PQ -->|HTTPS /services/collector/event| IDX[Splunk indexer]
+    LS --> PQ[Ingress queue and route markers]
+    PQ --> OUT[Copied event / batched HEC output pipeline]
+    OUT -->|HTTPS /services/collector/event| IDX[Splunk indexer]
 ```
 
 The local Docker network is `hec-demo-chain`. These are its service names and
@@ -252,44 +253,20 @@ input {
 }
 filter {
   # Forward every received index, including _internal and _audit. Preserve
-  # the UF's original index in the outbound HEC envelope.
-  # Construct a valid outbound HEC envelope from the native input fields.
-  # The original raw text/JSON and source metadata pass through unchanged.
+  # the UF's original index. Retain the original event for the local trace;
+  # the downstream pipeline serializes a separate copy for batched HEC output.
   ruby {
     code => '
-      body = {}
-      ["event", "time", "host", "source", "sourcetype", "index", "fields"].each do |key|
-        value = event.get(key)
-        body[key] = value unless value.nil?
-      end
-      # HEC indexed fields survive into Splunk; a root Logstash tags/demo_path
-      # field would be omitted from this explicitly constructed HEC envelope.
-      indexed = (body["fields"] || {}).dup
+      indexed = (event.get("[fields]") || {}).dup
       indexed["ingest_via"] = "logstash"
       indexed["logstash_pipeline"] = "uf_hec_s2s_to_splunk"
-      body["fields"] = indexed
       event.set("[fields]", indexed)
-      event.set("[@metadata][hec_body]", LogStash::Json.dump(body))
       event.set("demo_path", "UF -> HEC S2S -> Logstash -> HEC -> Splunk")
     '
   }
 }
 output {
-  http {
-    id => "splunk-indexer-hec-output"
-    url => "https://hec-demo-indexer:8088/services/collector/event"
-    http_method => "post"
-    format => "message"
-    message => "%{[@metadata][hec_body]}"
-    content_type => "application/json"
-    headers => { "Authorization" => "Splunk ${SPLUNK_HEC_TOKEN}" }
-    ssl_enabled => true
-    ssl_certificate_authorities => ["/demo/tls/indexer.crt"]
-    connect_timeout => 10
-    socket_timeout => 30
-    request_timeout => 60
-    retry_failed => true
-  }
+  pipeline { send_to => ["splunk_hec_batch"] }
   file {
     path => "/run-hec/received.ndjson"
     codec => json_lines
@@ -298,9 +275,10 @@ output {
 }
 ```
 
-Set `SPLUNK_HEC_TOKEN` in the Logstash process/container environment to
-`<LOGSTASH_TO_SPLUNK_TOKEN>`. The output uses standard HEC JSON envelopes; the
-forwarder-to-input hop uses binary HEC S2S. No index-dropping filter is present.
+The ingress pipeline keeps the original event in the file trace and sends a
+copy to the output pipeline below. Its `@timestamp`, `@version`, selected
+metadata and indexed value types remain intact in the original trace. No
+index-dropping filter is present.
 
 The input's 8 MiB logical-event cap and 512 MiB allocation-accounting budget admit
 large UF internal records alongside application data. These are explicit demo
@@ -317,6 +295,62 @@ names are overwritten deliberately. Splunk exposes them as searchable fields
 `s2s_metadata` and `demo_path` are
 visible in the local file output, but are **not** added to the outbound HEC
 envelope. Diagnostic protocol provenance stays in Logstash `@metadata`.
+
+### `/run-hec/config/hec-output.conf`: real HEC HTTP batching
+
+<!-- reference-config: logstash/hec-output.conf -->
+```logstash
+input { pipeline { address => "splunk_hec_batch" } }
+filter {
+  # Pipeline-to-pipeline delivery copies the event. Strip runtime/local fields
+  # only from this output copy; preserve the original event in the ingress trace.
+  ruby {
+    code => '
+      body = {}
+      ["event", "time", "host", "source", "sourcetype", "index", "fields"].each do |key|
+        value = event.get(key)
+        body[key] = value unless value.nil?
+      end
+      event.to_hash.keys.each { |key| event.remove(key) }
+      body.each { |key, value| event.set(key, value) }
+    '
+  }
+}
+output {
+  http {
+    id => "splunk-indexer-hec-output"
+    url => "https://hec-demo-indexer:8088/services/collector/event"
+    http_method => "post"
+    format => "json_batch"
+    content_type => "application/json"
+    headers => { "Authorization" => "Splunk ${SPLUNK_HEC_TOKEN}" }
+    ssl_enabled => true
+    ssl_certificate_authorities => ["/demo/tls/indexer.crt"]
+    connect_timeout => 10
+    socket_timeout => 30
+    request_timeout => 60
+    retry_failed => true
+  }
+}
+```
+
+Set `SPLUNK_HEC_TOKEN` in the Logstash environment to
+`<LOGSTASH_TO_SPLUNK_TOKEN>`. `json_batch` sends one JSON array of complete HEC
+envelopes for each nonempty output batch, with **up to 100 events per request**.
+Smaller batches are normal, especially when traffic is sparse; this does not
+wait indefinitely to accumulate exactly 100 events and is not a request-rate limit.
+
+The output copy must contain only HEC envelope keys. A compatibility probe
+against the tested indexer accepted clean arrays but rejected arrays containing
+extra runtime/local fields. Do not switch the original full event directly to
+`json_batch`, and do not use string-interpolating `mapping` for typed indexed
+values. The dedicated serialization pipeline preserves those values without
+removing runtime fields from the original ingress event.
+
+Retryable responses/network failures can replay a complete batch and therefore
+duplicate events; there is no per-event HEC ACK polling or automatic recovery of
+individual failures from a rejected batch. The count limit does not change the
+input's queue-acceptance acknowledgement boundary.
 
 ### `/run-hec/config/logstash.yml`
 
@@ -337,12 +371,15 @@ queue.checkpoint.acks: 1
 
 The queue page must accommodate the serialized Logstash event, including its
 overhead. The 16 MiB page above handled the observed internal records; retain
-both the queue data and plugin state directories across restarts.
+both the queue data and plugin state directories across restarts. Global queue
+settings apply to each pipeline: the two persisted queues have separate 256 MiB
+caps, not one shared 256 MiB cap.
 
 `pipeline.batch.size: 100` allows a worker to process up to 100 events per
-pipeline batch. The HTTP output still uses `format => "message"`, so it sends
-one HEC envelope per request; this setting does not combine events into an
-outbound HTTP batch.
+pipeline batch. Combined with `format => "json_batch"` in the output pipeline,
+it now enables HTTP batching too. The event-count bound is not a byte-size bound;
+large events and pipeline-to-pipeline copies must still fit the available memory
+and receiver limits.
 
 ### `/run-hec/config/pipelines.yml`
 
@@ -350,6 +387,10 @@ outbound HTTP batch.
 ```yaml
 - pipeline.id: uf_hec_s2s_to_splunk
   path.config: /run-hec/config/pipeline.conf
+- pipeline.id: splunk_hec_batch_output
+  path.config: /run-hec/config/hec-output.conf
+  pipeline.workers: 1
+  pipeline.batch.size: 100
 ```
 
 ## 4. Splunk indexer configuration
@@ -593,7 +634,7 @@ still to make before adopting it as a production standard:
 | Index authorization | All configured indexes allowed, as requested; retain or constrain deliberately for the intended sources |
 | Delivery | `useACK=false` on the UF → Logstash token; ordinary HTTP output with retries, no downstream HEC ACK polling or exactly-once guarantee |
 | Queue/disk | Persistent queue with small-demo sizing; local inspection output has no rotation configured |
-| Performance | One worker, pipeline batch size 100, frequent checkpoints; HTTP output remains per-event; throughput, long-duration soak and HA are not qualified by this demo |
+| Performance | One worker per pipeline, pipeline batch size 100 and HTTP `json_batch` (up to 100 HEC events/request); throughput, long-duration soak and HA are not qualified by this demo |
 | UI/management | Loopback-published local UI/API; Web uses HTTP and KV Store is disabled |
 | Credentials | Supply per-deployment secrets; do not distribute the live demo login, tokens or private keys as configuration examples |
 

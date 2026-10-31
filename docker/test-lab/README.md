@@ -19,9 +19,10 @@ flowchart LR
     Files[Application logs and UF internal/audit logs] --> UF[Universal Forwarder]
     UF -->|HTTPS native HEC S2S| LS[Logstash splunk_hec input]
     LS --> PQ[Persistent queue]
-    PQ --> Filter[Native HEC envelope plus indexed route markers]
-    Filter -->|HTTPS HEC event| IDX[Splunk indexer]
+    PQ --> Filter[Indexed route markers on original event]
     Filter --> Local[Local JSON-lines inspection output]
+    Filter --> Copy[Copied event / clean HEC output pipeline]
+    Copy -->|HTTPS JSON batch / up to 100 events| IDX[Splunk indexer]
 ```
 
 The folder is named `test-lab`. Existing container/network names are retained
@@ -91,18 +92,18 @@ means all events emitted by configured inputs, not every file on the filesystem.
 
 | File | Container path / purpose |
 |---|---|
-| [pipeline.conf](config/logstash/pipeline.conf) | `/run-hec/config/pipeline.conf`: receive, queue, preserve the envelope, add route markers and send HTTPS HEC |
+| [pipeline.conf](config/logstash/pipeline.conf) | `/run-hec/config/pipeline.conf`: receive, queue, add route markers, retain the original local trace and send a copy downstream |
+| [hec-output.conf](config/logstash/hec-output.conf) | `/run-hec/config/hec-output.conf`: serialize only HEC envelope keys and send JSON arrays over HTTPS |
 | [logstash.yml](config/logstash/logstash.yml) | `/run-hec/config/logstash.yml`: persistent queue and deliberately small test pipeline |
-| [pipelines.yml](config/logstash/pipelines.yml) | `/run-hec/config/pipelines.yml`: load `uf_hec_s2s_to_splunk` |
+| [pipelines.yml](config/logstash/pipelines.yml) | `/run-hec/config/pipelines.yml`: load `uf_hec_s2s_to_splunk` and `splunk_hec_batch_output` |
 | [hec-inputs.conf](config/logstash/hec-inputs.conf) | Template for `/demo/hec-inputs.conf`: UF → Logstash token and fallback index |
 
 The input accepts HTTPS on port 8088. Its 8 MiB logical-event cap and 512 MiB
 allocation-accounting budget accommodate the observed large UF internal records.
 They are explicit test settings, not plugin defaults or a JVM heap-size guarantee.
 
-The filter copies `event`, `time`, `host`, `source`, `sourcetype`, `index` and
-existing `fields` into the outbound HEC envelope. It adds two HEC **indexed**
-fields:
+The ingress filter preserves the original event and adds two HEC **indexed**
+fields before sending a copy to the output pipeline:
 
 ```text
 ingest_via = logstash
@@ -119,12 +120,28 @@ output only. They are not automatically part of the outbound HEC envelope.
 Simply adding a root Logstash `tags` field would not pass this envelope whitelist;
 that is why the route proof uses HEC indexed fields.
 
-The current pipeline uses `pipeline.batch.size: 100` and one worker. That is up
-to 100 events per pipeline batch, not 100 HEC envelopes per HTTP request. The
-HTTP output's `format => "message"` still sends one event per request.
-This setting was changed from 1 to 100 on 2026-10-31 by restarting only the
-existing Logstash container; its startup log confirmed batch size 100 and the
-HTTPS health check passed. No replacement environment was built for that tuning.
+The output copy contains only `event`, `time`, `host`, `source`, `sourcetype`,
+`index` and `fields`. Its HTTP output uses `format => "json_batch"`, with
+`pipeline.batch.size: 100` and one worker. This sends **up to 100 HEC envelopes
+per HTTP request**, not 100 separate requests. Partial batches are allowed; low
+traffic may still produce a request with one event. It is not a rate limit.
+
+The dedicated serialization copy is important: the tested Splunk indexer rejects
+JSON arrays containing extra Logstash runtime/local fields. Removing those keys
+only from the output copy leaves `@timestamp`, `@version`, metadata and native
+types intact in the original local trace. The route markers are included in
+each outbound envelope's `fields` map.
+
+Both pipelines use the global persisted-queue settings: each has its own 256 MiB
+queue cap. Pipeline-to-pipeline copying and a 100-event batch add memory demand;
+100 is an event-count ceiling, not a serialized-byte ceiling or throughput claim.
+The existing Logstash container was restarted to apply the correction on
+2026-10-31; both pipelines and HTTPS input health were verified. No replacement
+environment was built.
+
+HTTP retries replay a whole batch and may duplicate events. This setup does not
+poll downstream HEC ACKs or recover individual failed members of a rejected batch;
+batching does not change the input's queue-acceptance acknowledgement boundary.
 
 ### Indexer app: `/opt/splunk/etc/apps/hec_chain_demo/local/`
 
@@ -193,7 +210,7 @@ Certificates and data live in the existing state/volumes:
 | UF app `trusted-logstash.crt` | Copy of Logstash's public certificate; trust and hostname checks are enabled |
 | `tls/indexer.pem` | Existing indexer certificate plus private key; SANs include `hec-demo-indexer` and `localhost` |
 | `tls/indexer.crt` | Public indexer certificate trusted by the Logstash HTTP output |
-| `logstash/data/` | Persistent queue/data, 16 MiB pages and 256 MiB queue cap |
+| `logstash/data/` | Persistent queue/data, 16 MiB pages and a separate 256 MiB queue cap per pipeline |
 | `logstash/received.ndjson` | Decoded/filter-tagged local inspection output |
 | Indexer and UF Docker `etc`/`var` volumes | Splunk configuration, credentials, fishbucket/index state |
 
@@ -292,6 +309,32 @@ container would generate new source data; it is not a bit-identical continuation
 of those source files. No recreation was executed or qualified for this change.
 
 ## 6. Validate the outcome
+
+### Optional batch-output probe (writes synthetic test events)
+
+Unlike the read-only validator below, this explicit probe writes 100 labeled
+synthetic events to `hec_demo` using the installed HTTP output plugin:
+
+```sh
+docker exec hec-demo-logstash /usr/share/logstash/vendor/jruby/bin/jruby \
+  /work/docker/test-lab/scripts/check_batch_output.rb
+```
+
+The existing container mounts the repository at `/work`. The probe runs a
+separate HTTP-output instance and wraps its client calls to count envelopes and
+requests without logging headers/tokens. It requires one actual HTTPS request
+with 100 clean HEC envelopes and HTTP 200/HEC code 0. Its synthetic events use
+host `http-output-plugin-probe`, source `http-output-json-batch-probe` and **no
+production route markers**. It verifies the installed output's request behavior,
+not UF delivery or the live ingress path. Retries are disabled for this probe so
+a failed probe cannot retry indefinitely.
+
+Batch correction verification also sent 100 synthetic events through the live
+HTTPS input and both pipelines, then found all 100 in Splunk with matching raw
+content/source/index and route markers. The ingress trace retained timestamp,
+version, integer and multivalue field types. This second test proves the live
+pipeline path; the request-observer probe proves the one-request/100-envelope
+serialization. Neither is a throughput or exactly-once qualification.
 
 ### Automated read-only validation
 
@@ -440,11 +483,14 @@ docker logs --tail 100 hec-demo-logstash
 
 ## 8. Scope and qualification
 
-This task captured the existing environment, checked the stored configuration
+The original packaging task captured the existing environment, checked the stored configuration
 against its live files, rendered Compose and ran read-only validation. It did
 not build a new package/image, redeploy containers, migrate storage or test a
 fresh Compose startup. Bootstrap sources are documented equivalents and were
-statically checked; no new bootstrap execution is claimed.
+statically checked; no new bootstrap execution is claimed. The later batch-output
+correction restarted only the existing Logstash container and ran the explicit
+output-plugin/ingress probes described above. It did not qualify a new Compose
+deployment or a different environment.
 
 Offline tool regression checks can be run without Docker or credentials:
 
@@ -457,8 +503,8 @@ reverse trace reading, separate text/JSON freshness, worker timeouts and private
 bootstrap-secret writes. They were run on the macOS host; the bootstrap itself
 targets the Linux containers and was not started for this task.
 
-The functional reference is not a production sizing/HA prescription: one worker,
-pipeline batch size 100, a small persistent queue, self-signed local certificates, no
+The functional reference is not a production sizing/HA prescription: one worker
+per pipeline, batch size 100 with JSON-batched HEC output, small persistent queues, self-signed local certificates, no
 downstream HEC ACK polling, UF token `useACK=false`, an unrotated inspection file,
 HTTP loopback Web UI and disabled KV Store are deliberate lab choices.
 Throughput, soak and exactly-once delivery are not established. See

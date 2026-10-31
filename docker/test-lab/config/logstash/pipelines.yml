@@ -1,2 +1,6 @@
 - pipeline.id: uf_hec_s2s_to_splunk
   path.config: /run-hec/config/pipeline.conf
+- pipeline.id: splunk_hec_batch_output
+  path.config: /run-hec/config/hec-output.conf
+  pipeline.workers: 1
+  pipeline.batch.size: 100
