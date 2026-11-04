@@ -25,7 +25,7 @@ def main():
                 results.append(result);print(json.dumps(result,indent=2),flush=True)
                 if run.returncode:break
             finally:subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
-    (runtime.ROOT/'tests/interop/evidence/pq-recovery.json').write_text(json.dumps(results,indent=2)+'\n')
+    (runtime.EVIDENCE/'pq-recovery.json').write_text(json.dumps(results,indent=2)+'\n')
     return int(any(r['exit_code'] for r in results))
 
 if __name__=='__main__':sys.exit(main())

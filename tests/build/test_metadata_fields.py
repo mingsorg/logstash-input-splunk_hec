@@ -68,6 +68,7 @@ class MetadataQualificationTest(unittest.TestCase):
         (root / 'tests/interop/evidence').mkdir(parents=True)
         rt = self.receiver(directory)
         with patch.object(metadata_fields.runtime, 'ROOT', root), \
+                patch.object(metadata_fields.runtime, 'EVIDENCE', root / 'tests/interop/evidence'), \
                 patch.object(metadata_fields.runtime, 'artifact_info', return_value=rt['artifact']), \
                 patch.object(metadata_fields.runtime, 'start_tcp_runtime', return_value=rt), \
                 patch.object(metadata_fields, 'sender_network', return_value=([], 'localhost')), \

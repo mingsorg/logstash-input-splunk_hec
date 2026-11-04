@@ -42,6 +42,9 @@ def prepare(block):
     return block + '\noutput { stdout { } }\n'
 
 NEGATIVE = {
+    'invalid assembly regex': ('splunk_hec { state_directory => "/tmp/assembly1" s2s_line_breaker_rules_json => \'[{"match":"exact","sourcetype":"x","event_start_pattern":"(?<=x)y","flush_timeout_ms":1}]\' }', 'invalid s2s_line_breaker_rules_json'),
+    'duplicate assembly key': ('splunk_hec { state_directory => "/tmp/assembly2" s2s_line_breaker_rules_json => \'[{"match":"exact","match":"glob","sourcetype":"x","event_start_pattern":"x","flush_timeout_ms":1}]\' }', 'invalid s2s_line_breaker_rules_json'),
+    'nonpositive assembly timeout': ('splunk_hec { state_directory => "/tmp/assembly3" s2s_line_breaker_rules_json => \'[{"match":"exact","sourcetype":"x","event_start_pattern":"x","flush_timeout_ms":0}]\' }', 'invalid s2s_line_breaker_rules_json'),
     'unknown option': ('splunk_hec { state_directory => "/tmp/n1" nonsense => 1 }', "Unknown setting 'nonsense'"),
     'codec rejected': ('splunk_hec { state_directory => "/tmp/n2" codec => "json" }', "Unknown setting 'codec'"),
     'tcp port equals http': ('splunk_hec { state_directory => "/tmp/n3" port => 9000 s2s_tcp_enabled => true s2s_tcp_port => 9000 }', 'S2S TCP port must be distinct'),
@@ -74,7 +77,7 @@ cp /tmp/files/hec.crt /tmp/files/clients-ca.pem
 openssl req -x509 -newkey rsa:2048 -nodes -keyout /tmp/files/k.pem -out /tmp/files/hec.crt -subj /CN=test \
   -addext subjectAltName=DNS:localhost -days 30 >/dev/null 2>&1
 openssl pkcs8 -topk8 -nocrypt -in /tmp/files/k.pem -out /tmp/files/hec.pkcs8.key
-/usr/share/logstash/bin/logstash-plugin install --local --no-verify /work/logstash-input-splunk_hec-0.1.0-java.gem >/dev/null 2>&1
+/usr/share/logstash/bin/logstash-plugin install --local --no-verify /work/@PLUGIN_GEM@ >/dev/null 2>&1
 set +e
 export HEC_TOKENS_JSON='[{"token":"11111111-1111-4111-8111-111111111111","index":"main","indexes":"main,app","useACK":false}]'
 export APP_TOKENS_JSON='[{"token":"22222222-2222-4222-8222-222222222222"}]'
@@ -106,7 +109,7 @@ def main():
                 (conf / ('neg_%s.conf' % slug)).write_text('input {\n  %s\n}\noutput { stdout { } }\n' % body)
             output = runtime.docker('run', '--rm', '--entrypoint', 'bash', '-v', str(ROOT) + ':/work:ro',
                                     '-v', str(conf) + ':/conf:ro', runtime.P['logstash.%s.image' % role],
-                                    '-c', SETUP, timeout=1800)
+                                    '-c', SETUP.replace('@PLUGIN_GEM@',runtime.GEM.name), timeout=1800)
             results = {}
             detail = {}
             current = None
@@ -139,10 +142,11 @@ def main():
                 if not (failed and matched):
                     failures.append((role, name, detail.get(key), 'expected rejection containing: %s' % expected))
     report['artifact'] = runtime.artifact_info()
+    report['validators'] = runtime.validators_info()
     report['status'] = 'pass' if not failures else 'fail'
     report['snippets'] = len(BLOCKS)
     report['example_pipelines'] = len(EXAMPLES)
-    (ROOT / 'tests/interop/evidence/config-check.json').write_text(json.dumps(report, indent=2) + '\n')
+    (runtime.EVIDENCE / 'config-check.json').write_text(json.dumps(report, indent=2) + '\n')
     for f in failures:
         print('FAIL', f)
     print(report['status'].upper(), len(BLOCKS), 'documented snippets,', len(EXAMPLES), 'example pipelines,', len(NEGATIVE), 'negative cases, 2 runtimes')

@@ -82,6 +82,130 @@ input {
 
 ## 2. What is configured where
 
+### Opt-in S2S assembly (0.2.0 development)
+
+`s2s_line_breaker_rules_json` is a startup-only JSON array, default `[]`.
+Only matched **unstructured S2S** traffic on HTTP/TCP assembles. Structured,
+indexed JSON, metric records and HEC `/event` and `/raw` keep their framing.
+The effective wire → query → token-default sourcetype selects an exact rule first,
+then the first matching glob in configuration order, then standard framing.
+Globs are case-sensitive with explicit `*` and `?`; an exact selector can contain
+literal wildcard characters. No matching start pattern means continuation of a
+selected event, not fallback. Empty rules/no selector match preserve LF/CRLF
+splitting, skipped empty delimiter lines, values and `s2s-v1` IDs.
+
+```logstash
+input {
+  splunk_hec {
+    state_directory => "/var/lib/logstash/hec-assembly"
+    id => "s2s-assembly"
+    tokens_json => '${HEC_TOKENS_JSON}'
+    s2s_line_breaker_rules_json => '[{"match":"exact","sourcetype":"java:payments","event_start_pattern":"^START","flush_timeout_ms":5000},{"match":"glob","sourcetype":"java:*","event_start_pattern":"^START","flush_timeout_ms":5000}]'
+  }
+}
+```
+
+All four rule keys are required, with no unknown/duplicate keys or selectors.
+Patterns use pinned **RE2/J 1.8** (linear-time matching); backreferences/lookbehind
+and other unsupported constructs fail startup with value-free diagnostics.
+Limits: 64 KiB JSON characters, 128 rules, 4096 characters per selector/pattern,
+positive integral millisecond timeouts. Patterns use search semantics (`^` anchors
+a start); rules cannot import arbitrary `props.conf` behavior.
+
+| Option | Default | Constraint |
+|---|---:|---|
+| `s2s_line_breaker_rules_json` | `[]` | Startup-only ordered exact/glob rules, as above. |
+| `s2s_assembly_max_bytes` | 2097152 | Committed JSON snapshot payload quota, 4096..67108863 bytes; two disk slots plus 65-byte checksum headers. Reserve **32 ×** this quota from `max_inflight_bytes` at startup, covering retained state, staged copies and bounded recovery/serialization. Leave room for parsing and health. |
+| `s2s_assembly_max_streams` | 1024 | 1..10000 active pending streams; outbox bounded to four times this setting; existing `max_events` also bounds contributions/event and logical lines/request. |
+
+The private, exclusively locked, checksummed store is `state_directory/assembly/`.
+It requires local storage supporting atomic rename, file fsync and directory fsync.
+It rewrites a bounded snapshot per transaction/handoff; this favors correctness
+and bounded recovery over high-throughput journal performance. Quota includes
+pending text, envelopes, provenance, outbox and retry receipts. The completed
+serialized envelope still must fit its transport's event limit, including metadata.
+Before accepting a contribution, admission reserves every pending stream's positive
+growth into its completed, tagged outbox representation and an outbox slot. A pending
+snapshot fitting on disk is insufficient by itself: all its tails must also be able
+to finish without needing an earlier queue handoff to free quota.
+Retained memory stays charged until the worker is joined and the store closes.
+
+Streams include input/transport namespace, token identity (TCP sender GUID scope),
+effective host/source/index/sourcetype, wire channel and stream ID; HTTP also uses
+the request channel when available. Selected records need host and source.
+Keep the input `id` stable across recovery; an explicit `id` avoids changes to a
+Logstash-generated identifier when editing the surrounding pipeline. A changed
+input identity is rejected against an existing assembly snapshot.
+TCP GUIDs remain self-declared, not authentication. Positionless HTTP records
+assemble only within an identical batch; positionless TCP records only within
+one record. No cross-request/connection identity is invented for them.
+
+A new start finalizes the previous event. Content and observed LF/CRLF separators,
+including blank lines and terminal delimiters, are retained. Stripped record
+delimiters join with a documented LF; stripped CRLF cannot be reconstructed.
+Before the first start, nonempty orphan lines retain standard framing and IDs.
+Idle timeout flushes the tail; a later orphan continuation cannot alter it.
+Metadata/indexed-field conflicts, coordinate gaps/reordering, and structured
+transitions finalize boundaries. Rotation with a new stream ID is isolated; reused
+coordinates with conflicting content are rejected. First-contribution source time
+is retained; raw-text timestamps are not inferred. Full provenance includes the
+rule, contributing wire metadata/coordinates and flush reason.
+
+**Matched-mode success/ACK means durable acceptance into the assembly stage.**
+The entire HTTP batch validates before any contribution commits. New data rejected
+by quota/disk/validation receives no success ACK. Unmatched and structured events
+still require queue acceptance; structured transitions wait for the completed
+preceding tail's queue handoff. No request waits for a future fragment.
+Completed output and direct queue insertions are coordinated per sender: TCP uses
+the forwarder's declared GUID scope; HTTP uses token plus request channel, falling
+back to token plus effective host when the channel is absent. Each direct insertion
+point waits for preceding completed output of that sender and holds later output
+until insertion returns. Other senders need no relative ordering. This does not
+infer a chronological order between incomplete tails on independently interleaved
+source streams, nor authenticate a sender's declared GUID or HTTP channel.
+**Failure/restart limit of that ordering.** The order above is strict while the
+input runs and each direct insertion succeeds. If the input stops, or a direct
+insertion fails, after a batch's assembled output was journaled but before its
+direct records were inserted, the journaled output is delivered first and the
+sender's retry of the unacknowledged batch delivers the direct records after it.
+Nothing is lost and the journaled output is not repeated (retry receipts
+suppress it), but strict sender order is **not** guaranteed across that window.
+Delivery is at-least-once; duplicates of direct records carry their unchanged
+legacy IDs.
+The owned worker hands completed events to Logstash, then checkpoints removal.
+A crash in that window can replay them: **at-least-once**, with
+`s2s-assembled-v1` IDs, not exactly-once. IDs exclude receipt/connection facts.
+Default IDs are unchanged. Queue acceptance is neither indexing completion nor a
+PQ-fsync receipt; memory/PQ durability after handoff is Logstash's contract.
+`hec_metadata=none` omits IDs/provenance as before. Selected searchable metadata
+is independent of that mode.
+
+Retry suppression retains the latest **N accepted record identities** in commit
+order, where `N = max(1, min(4096, floor((floor(s2s_assembly_max_bytes / 4) - 2) / 134)))`.
+The 134-byte bound per SHA-256 key/value entry keeps receipt JSON within one quarter
+of the snapshot quota (7 entries at the 4096-byte minimum, 3912 at the default).
+Proven coordinates plus identical content and retained provenance suppress a retry within
+that retention window; positionless HTTP uses identical-batch identity and record
+ordinal. Repeated occurrences at different coordinates/ordinals remain distinct.
+After eviction, retries may duplicate; arbitrary rebatching stability is not promised.
+Accepted policy/envelopes survive token reload/revocation; new traffic reauthenticates.
+Startup rejects changed assembly/provenance/selected-metadata configuration, including
+disabling rules while a snapshot exists. Corruption also fails closed before listeners.
+An oversized continuation blocks and retains the already accepted tail durably;
+health becomes unhealthy. Storage/handoff errors retain state and emit a value-free
+diagnostic. Stop/restart/socket close never opportunistically flush partial tails.
+
+Operator recovery is explicit: stop the input, preserve a complete private backup
+of the assembly directory, restore the same configuration/storage and restart for
+ordinary replay. For an incompatible policy or durably blocked oversize stream,
+retain that backup for reconciliation before explicitly moving the assembly
+directory aside and creating fresh state. This is a reset, not lossless migration;
+never delete acknowledged data as an automatic recovery action.
+
+New qualification lives under `tests/interop/evidence/0.2.0/`; historical reports
+outside it describe earlier artifacts and do not qualify this version. See
+[0.2.0 verification](verification-0.2.0.md) for the current evidence and gaps.
+
 | Concern | Setting | Applies to |
 |---|---|---|
 | Bind address | `host` | **Both** listeners |

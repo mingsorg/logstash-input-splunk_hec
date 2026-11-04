@@ -11,9 +11,10 @@ FROM ${LOGSTASH_IMAGE}
 
 # Install the gem as the unprivileged "logstash" user the image already runs as. Logstash vendors the plugin
 # under /usr/share/logstash/vendor/local_gems, so it stays in this image layer.
-COPY --chown=logstash:logstash logstash-input-splunk_hec-0.1.0-java.gem /tmp/
-RUN bin/logstash-plugin install /tmp/logstash-input-splunk_hec-0.1.0-java.gem \
- && rm /tmp/logstash-input-splunk_hec-0.1.0-java.gem
+ARG PLUGIN_GEM
+COPY --chown=logstash:logstash ${PLUGIN_GEM} /tmp/plugin.gem
+RUN bin/logstash-plugin install /tmp/plugin.gem \
+ && rm /tmp/plugin.gem
 
 # A ready-made, persistent-volume-friendly state directory owned by the logstash user. A NAMED Docker volume
 # mounted here inherits this ownership when it is first created, so the plugin can write its ACK counter and

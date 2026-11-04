@@ -26,6 +26,8 @@ final class IngressResources implements AutoCloseable{
     final MetadataMode metadata;
     /** Immutable startup mapping shared by HTTP and TCP, independent of provenance mode. */
     final S2SMetadataFields metadataFields;
+    S2SStreamAssembler assembly;
+    String assemblyNamespace="input";
     /** Memory permanently set aside for the health endpoint so it works even when memory is exhausted. */
     private final MemoryBudget.Lease healthReservation;
     /** Create resources with the default, full provenance. */

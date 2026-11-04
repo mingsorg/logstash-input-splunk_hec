@@ -167,7 +167,7 @@ def main():
             finish_receiver(rt, report, diagnostics=True)
         if completed and not report.get('cleanup_errors'):
             report['status'] = 'pass'
-        (runtime.ROOT/'tests/interop/evidence/metadata-fields.json').write_text(
+        (runtime.EVIDENCE/'metadata-fields.json').write_text(
             json.dumps(report, indent=2, ensure_ascii=False) + '\n')
     return 0 if report['status'] == 'pass' else 1
 

@@ -2,11 +2,12 @@ plugins { id 'java' }
 def pins = new Properties()
 file('versions.properties').withInputStream { pins.load(it) }
 group = 'org.logstashplugins.hec'
-version = '0.1.0'
+version = file('VERSION').text.trim()
 repositories { mavenCentral() }
 java { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
 tasks.withType(JavaCompile).configureEach { options.release = 21; options.encoding = 'UTF-8' }
 dependencies {
+    implementation "com.google.re2j:re2j:${pins['re2j.version']}"
     compileOnly fileTree(dir: '.cache/logstash-jars', include: '*.jar')
     compileOnly "joda-time:joda-time:${pins['joda.version']}"
     implementation "com.fasterxml.jackson.core:jackson-core:${pins['jackson.version']}"
@@ -19,7 +20,17 @@ dependencies {
     testImplementation "joda-time:joda-time:${pins['joda.version']}"
 }
 dependencyLocking { lockAllConfigurations() }
-test { useJUnitPlatform(); testLogging { events 'passed', 'failed', 'skipped'; exceptionFormat 'full' } }
+test {
+    useJUnitPlatform()
+    testLogging { events 'passed', 'failed', 'skipped'; exceptionFormat 'full' }
+    // Gradle 8.14's captured-output reader intermittently throws Kryo EOF while
+    // embedding HttpTlsTest stdout. Keep every test/assertion/failure in XML;
+    // console logging remains available without embedding captured streams.
+    reports.junitXml.includeSystemOutLog = false
+    reports.junitXml.includeSystemErrLog = false
+    // Gradle's HTML report writer intermittently fails after every case passed; the gate reads JUnit XML.
+    reports.html.required = false
+}
 jar {
     preserveFileTimestamps = false
     reproducibleFileOrder = true

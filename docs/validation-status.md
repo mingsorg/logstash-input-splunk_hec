@@ -1,5 +1,9 @@
 # Current validation status
 
+> **Version note.** This status describes the released **0.1.0** gem. The unreleased
+> 0.2.0 development gem is tracked in [verification-0.2.0.md](verification-0.2.0.md); its
+> evidence lives under `tests/interop/evidence/0.2.0/` and is not release-qualified.
+
 The plugin is packaged as `logstash-input-splunk_hec-0.1.0-java.gem`. It is a
 preview with finite compatibility coverage, not complete Splunk equivalence.
 Artifact-specific evidence below records the SHA-256 of the gem it exercised; compare it

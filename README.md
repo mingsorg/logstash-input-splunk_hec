@@ -1,5 +1,11 @@
 # Logstash Splunk HEC input
 
+**0.2.0 development, unreleased:** opt-in sourcetype-specific unstructured S2S
+assembly is configured with `s2s_line_breaker_rules_json`. Matched-mode ACKs mean
+durable assembly-stage acceptance; default/unmatched behavior stays unchanged.
+See [configuration](docs/configuration.md#opt-in-s2s-assembly-020-development)
+and [version-scoped verification](docs/verification-0.2.0.md).
+
 A Java input for **Logstash 9.5.0+ / Java 21** that receives HEC event, raw and S2S HTTP envelopes, and optionally the classic UF/HF cooked `tcpout` stream. Payloads stay native for later filters. The HEC listener uses **TLS by default**; the optional TCP listener is **plaintext by default** and can be switched to TLS separately. No HEC tokens are accepted until configured.
 
 Build and install locally (the full step-by-step guide, including Docker, Kubernetes, verification, upgrade and
@@ -7,15 +13,15 @@ troubleshooting, is [docs/installation.md](docs/installation.md)):
 
 ```sh
 ./gradlew test gem
-bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.1.0-java.gem
-bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.1.0)
+bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.2.0-java.gem
+bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.2.0)
 ```
 
 Installation needs access to rubygems.org (Logstash resolves dependencies even for a local gem) and a Logstash of
 **9.5.0 or newer**; older versions are refused at install time. For air-gapped sites bake the plugin into a Docker image
 with [`docker/Dockerfile.logstash`](docker/Dockerfile.logstash).
 
-The build needs Python 3, a JDK capable of `--release 21`, Docker and network access for the first dependency download. Gradle is checksum-pinned; the compile-only Logstash API is extracted from the pinned 9.5.5 image. The obsolete parent `.logstash/` is never used. Dependency versions and verification checksums are locked. The gem contains one plugin jar bundling Jackson, not Logstash or Elasticsearch.
+The build needs Python 3, a JDK capable of `--release 21`, Docker and network access for the first dependency download. Gradle is checksum-pinned; the compile-only Logstash API is extracted from the pinned 9.5.5 image. The obsolete parent `.logstash/` is never used. Dependency versions and verification checksums are locked. The gem contains one plugin jar bundling Jackson and RE2/J, not Logstash or Elasticsearch.
 
 **Installation:** [docs/installation.md](docs/installation.md). **All configuration options, token policy, TLS, TCP, limits, sender settings and troubleshooting are in the [configuration reference](docs/configuration.md).**
 

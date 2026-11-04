@@ -195,6 +195,13 @@ public final class HecProtocol {
         return safe;
     }
     void validateLogicalSize(Map<String,Object> event, MemoryBudget.Lease memory) {
+        validateLogicalSize(event,memory,limits.event());
+    }
+    static void validateLogicalSize(Map<String,Object> event,MemoryBudget.Lease memory,int maximum) {
+        if(!logicalSizeFits(event,memory,maximum))throw HecException.busy();
+    }
+    private static final class LogicalSizeLimit extends RuntimeException {}
+    static boolean logicalSizeFits(Map<String,Object> event,MemoryBudget.Lease memory,int maximum) {
         Map<String,Object> sized = event;
         if (event.containsKey("@timestamp") || event.containsKey("@version")) {
             memory.charge(64L + 96L * event.size());
@@ -206,15 +213,19 @@ public final class HecProtocol {
             // Bound serialization while writing; never allocate an oversized serialized copy.
             JSON.writeValue(new OutputStream(){
                 private long written;
-                @Override public void write(int b){if(++written>limits.event())throw HecException.busy();}
+                @Override public void write(int b){if(++written>maximum)throw new LogicalSizeLimit();}
                 @Override public void write(byte[] b,int off,int length){
-                    if(length>limits.event()-written)throw HecException.busy();written+=length;
+                    if(length>maximum-written)throw new LogicalSizeLimit();written+=length;
                 }
             },sized);
         } catch (IOException e) {
-            for(Throwable cause=e;cause!=null;cause=cause.getCause())if(cause instanceof HecException failure)throw failure;
+            for(Throwable cause=e;cause!=null;cause=cause.getCause()){
+                if(cause instanceof LogicalSizeLimit)return false;
+                if(cause instanceof HecException failure)throw failure;
+            }
             throw HecException.invalid();
-        }
+        }catch(LogicalSizeLimit oversized){return false;}
+        return true;
     }
     /**
      * Prepare values for Logstash's Event/PQ model without silent numeric loss.

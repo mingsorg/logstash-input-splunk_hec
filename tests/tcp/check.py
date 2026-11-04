@@ -12,7 +12,9 @@ from pathlib import Path
 import sys
 
 ROOT=Path(__file__).resolve().parents[2]
-EVIDENCE=ROOT/'tests/interop/evidence/tcp-senders.json'
+VERSION=(ROOT/'VERSION').read_text().strip()
+GEM=ROOT/('logstash-input-splunk_hec-'+VERSION+'-java.gem')
+EVIDENCE=ROOT/'tests/interop/evidence'/VERSION/'tcp-senders.json'
 CAPTURE=ROOT/'tests/tcp/evidence'
 
 def blocked(reason):
@@ -23,11 +25,10 @@ def main():
     if not EVIDENCE.exists():blocked('tests/interop/evidence/tcp-senders.json is absent; run the real UF/HF TCP stage')
     report=json.loads(EVIDENCE.read_text())
     if report.get('status')!='pass':blocked('the retained real-sender TCP run did not pass')
-    gems=sorted(ROOT.glob('logstash-input-splunk_hec-*-java.gem'))
-    if not gems:blocked('build the gem so its digest can be compared with the evidence')
-    digest=hashlib.sha256(gems[-1].read_bytes()).hexdigest()
+    if not GEM.is_file():blocked('build the explicitly selected gem: '+GEM.name)
+    digest=hashlib.sha256(GEM.read_bytes()).hexdigest()
     if report.get('artifact',{}).get('sha256')!=digest:
-        blocked('stale evidence: it names a different gem digest than '+gems[-1].name)
+        blocked('stale evidence: it names a different gem digest than '+GEM.name)
     expected={(role,compressed,ack,tls) for role in ('uf','hf') for compressed in (False,True)
               for ack in (False,True) for tls in (False,True)}
     observed={(row['role'],row['compressed'],row['useACK'],row['tls_verified_hostname_and_trust'])

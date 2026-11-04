@@ -30,12 +30,16 @@ final class S2SEvents {
     }
     List<Map<String,Object>> mapWithIdentity(List<S2SDecoder.Event> records,TokenStore.Token token,
                                   Map<String,String> request,String batchIdentity,MemoryBudget.Lease memory){
+        return mapWithIdentity(records,token,request,batchIdentity,memory,0);
+    }
+    List<Map<String,Object>> mapWithIdentity(List<S2SDecoder.Event> records,TokenStore.Token token,
+                                  Map<String,String> request,String batchIdentity,MemoryBudget.Lease memory,int firstRecord){
         List<Map<String,Object>> out=new ArrayList<>();
         // HTTP supplies its entity digest; TCP supplies one decoded wire-record
         // digest without retaining an extra copy. Missing-coordinate identities
         // promise exact batch/record replay, not arbitrary rebatching stability.
-        memory.charge(4L*limits.event());
-        int recordNumber=0;
+        if(firstRecord==0)memory.charge(4L*limits.event());
+        int recordNumber=firstRecord;
         for(S2SDecoder.Event record:records){
             memory.charge(8L*record.raw().length+1024L*Math.min(limits.events(),(long)record.raw().length+1));
             String text=HecProtocol.utf8(record.raw());

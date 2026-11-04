@@ -17,6 +17,10 @@ import uuid
 import importlib.util
 
 ROOT = Path(__file__).resolve().parents[2]
+VERSION = (ROOT/'VERSION').read_text().strip()
+GEM = ROOT / ('logstash-input-splunk_hec-'+VERSION+'-java.gem')
+EVIDENCE = ROOT/'tests/interop/evidence'/VERSION
+EVIDENCE.mkdir(parents=True,exist_ok=True)
 P = dict(line.split('=', 1) for line in (ROOT/'versions.properties').read_text().splitlines()
          if line and not line.startswith('#'))
 TOKEN = '11111111-1111-4111-8111-111111111111'
@@ -28,10 +32,17 @@ def read_events(path):
     return [json.loads(line) for line in path.read_bytes().split(b'\n')[:-1] if line.strip()]
 
 def artifact_info():
-    packages=sorted(ROOT.glob('logstash-input-splunk_hec-*-java.gem'))
-    if not packages:raise RuntimeError('build the plugin gem before qualification')
-    package=packages[-1]
+    package=GEM
+    if not package.is_file():raise RuntimeError('build the explicitly selected gem: '+str(package))
     return {'file':package.name,'sha256':hashlib.sha256(package.read_bytes()).hexdigest()}
+
+def validators_info():
+    """Digest of every producing validator/fixture so a report cannot outlive an edited assertion (the final gate is excluded)."""
+    base=ROOT/'tests/interop';digest=hashlib.sha256()
+    for path in sorted(p for p in base.rglob('*') if p.is_file() and 'evidence' not in p.relative_to(base).parts
+                       and '__pycache__' not in p.parts and p.name!='check_assembly_qualification.py'):
+        digest.update(path.relative_to(base).as_posix().encode()+b'\0'+hashlib.sha256(path.read_bytes()).digest())
+    return digest.hexdigest()
 
 def docker(*args, **kw):
     return subprocess.run(['docker', *args], check=True, text=True, capture_output=True, timeout=kw.pop('timeout', 120), **kw).stdout.strip()
@@ -95,7 +106,7 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
         docker('run','-d','--name',name,'-p','127.0.0.1::8088',
                '-e','JAVA_HOME=/usr/share/logstash/jdk','-v',str(ROOT)+':/work:ro',
                '-v',str(directory)+':/run-hec','--entrypoint','/usr/share/logstash/vendor/jruby/bin/jruby',
-               P[f'logstash.{role}.image'],'/work/tests/interop/install_and_run.rb')
+               P[f'logstash.{role}.image'],'/work/tests/interop/install_selected_and_run.rb')
         port,context=ready(name,directory)
         payload={'event':{'message':'native', 'a.b':[1,2.5,True,None], 'large':9223372036854775807},
                  'time':'1700000000.123456789','host':'original','source':'native-test','fields':{'literal.name':['a','b']}}
@@ -156,7 +167,7 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
         if not keep or not success: subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
 
 def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998, name=None, hec_metadata=None,
-                      s2s_metadata_fields=None):
+                       s2s_metadata_fields=None, s2s_line_breaker_rules=None, extra_pipeline='', docker_args=()):
     """Start an owned Logstash container running the packaged gem with the classic TCP listener on.
 
     * ``tls=True``  sets ``s2s_tcp_ssl_enabled => true`` (the TCP listener then uses the generated
@@ -178,6 +189,9 @@ def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998
     config=directory/'config'
     config.mkdir(parents=True)
     directory.chmod(0o777)
+    if docker_args:
+        (directory/'state').mkdir()
+        (directory/'state').chmod(0o777)
     (config/'logstash.yml').write_text('pipeline.workers: 1\npipeline.batch.size: 1\napi.enabled: false\n'
         'xpack.monitoring.enabled: false\npath.data: /run-hec/data\npath.logs: /run-hec/logs\nqueue.type: '+queue+
         '\nqueue.max_bytes: 256mb\nqueue.page_capacity: 16mb\nqueue.checkpoint.writes: 1\nqueue.checkpoint.acks: 1\n')
@@ -187,6 +201,7 @@ def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998
   '''+('s2s_tcp_ssl_enabled => true' if tls else '# s2s_tcp_ssl_enabled omitted: the TCP default (plaintext) is exercised')+'''
   '''+('hec_metadata => "'+hec_metadata+'"' if hec_metadata else '')+'''
   '''+('s2s_metadata_fields_json => \''+json.dumps(s2s_metadata_fields).replace("'", "\\'")+'\'' if s2s_metadata_fields is not None else '')+'''
+  '''+('s2s_line_breaker_rules_json => \''+json.dumps(s2s_line_breaker_rules).replace("'", "\\'")+'\'' if s2s_line_breaker_rules is not None else '')+'''
   ssl_self_signed_sans => "dns:localhost,dns:host.docker.internal,ip:127.0.0.1,ip:::1"
   s2s_tcp_enabled => true s2s_tcp_port => 9997
   tokens_json => '[{"token":"'''+TOKEN+'''","useACK":true},{"token":"55555555-5555-4555-8555-555555555555","useACK":false}]'
@@ -194,11 +209,13 @@ def start_tcp_runtime(role='latest', tls=True, queue='persisted', tcp_port=19998
 filter { ruby { code => 'event.set("verification_metadata", event.get("@metadata"))' } }
 output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_interval => 0 } }
 ''')
+    if extra_pipeline:
+        with (config/'pipeline.conf').open('a') as pipeline: pipeline.write(extra_pipeline)
     try:
-        docker('run','-d','--name',name,'-p','127.0.0.1::8088','-p','127.0.0.1:'+str(tcp_port)+':9997',
+        docker('run','-d','--name',name,*docker_args,'-p','127.0.0.1::8088','-p','127.0.0.1:'+str(tcp_port)+':9997',
                '-e','JAVA_HOME=/usr/share/logstash/jdk','-v',str(ROOT)+':/work:ro',
                '-v',str(directory)+':/run-hec','--entrypoint','/usr/share/logstash/vendor/jruby/bin/jruby',
-               P[f'logstash.{role}.image'],'/work/tests/interop/install_and_run.rb')
+               P[f'logstash.{role}.image'],'/work/tests/interop/install_selected_and_run.rb')
         port,context=ready(name,directory)   # HEC always uses its default TLS here
     except BaseException:
         subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
@@ -222,7 +239,7 @@ def main():
             except Exception as e:
                 results.append(dict(role=role,queue=queue,error=str(e)))
                 print(role,queue,'FAIL',str(e),flush=True)
-    out=ROOT/'tests/interop/evidence/runtime.json'
+    out=EVIDENCE/'runtime.json'
     existing=json.loads(out.read_text()) if out.exists() else []
     replaced={(row['role'],row['queue']) for row in results}
     combined=[row for row in existing if (row.get('role'),row.get('queue')) not in replaced]+results

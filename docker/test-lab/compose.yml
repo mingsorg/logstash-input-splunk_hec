@@ -38,6 +38,7 @@ services:
     restart: unless-stopped
     environment:
       JAVA_HOME: /usr/share/logstash/jdk
+      PLUGIN_VERSION: ${PLUGIN_VERSION:-0.1.0} # captured lab baseline; explicit for future disposable runs
       SPLUNK_HEC_TOKEN: ${SPLUNK_HEC_TOKEN:?Set the destination HEC token}
     entrypoint: ["/usr/share/logstash/vendor/jruby/bin/jruby"]
     command: ["/reference/scripts/bootstrap/logstash.rb"]
@@ -47,7 +48,7 @@ services:
       - ${TEST_LAB_STATE:?Set the existing state directory}/hec-inputs.conf:/demo/hec-inputs.conf:ro
       - ${TEST_LAB_STATE:?Set the existing state directory}/tls/indexer.crt:/demo/tls/indexer.crt:ro
       - ${TEST_LAB_STATE:?Set the existing state directory}/logstash:/run-hec
-      - ${PLUGIN_REPOSITORY:?Set the plugin repository path}/logstash-input-splunk_hec-0.1.0-java.gem:/work/logstash-input-splunk_hec-0.1.0-java.gem:ro
+      - ${PLUGIN_REPOSITORY:?Set the plugin repository path}/logstash-input-splunk_hec-${PLUGIN_VERSION:-0.1.0}-java.gem:/work/logstash-input-splunk_hec-${PLUGIN_VERSION:-0.1.0}-java.gem:ro
       - ./scripts/bootstrap/logstash.rb:/reference/scripts/bootstrap/logstash.rb:ro
       - ./config/logstash:/run-hec/config:ro
     networks: [existing-lab]

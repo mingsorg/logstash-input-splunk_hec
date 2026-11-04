@@ -77,6 +77,9 @@ public final class SplunkHec implements Input {
      * Strictly parsed once at startup; invalid policies fail without echoing configured values.
      */
     private static final PluginConfigSpec<String> S2SMETADATA=PluginConfigSpec.stringSetting("s2s_metadata_fields_json","{}");
+    private static final PluginConfigSpec<String> S2SRULES=PluginConfigSpec.stringSetting("s2s_line_breaker_rules_json","[]");
+    private static final PluginConfigSpec<Long> ASSEMBLYBYTES=PluginConfigSpec.numSetting("s2s_assembly_max_bytes",2L<<20);
+    private static final PluginConfigSpec<Long> ASSEMBLYSTREAMS=PluginConfigSpec.numSetting("s2s_assembly_max_streams",1024);
 
     // ---- optional classic TCP listener ---------------------------------------------------
     /** Start the cooked-mode tcpout receiver (default off). */
@@ -162,6 +165,15 @@ public final class SplunkHec implements Input {
         tls=tlsFor(httpTlsEnabled,httpClientAuth,state,config,keystore,certificate,key,clientCa);
         tcpTls=tlsFor(tcpTlsEnabled,tcpClientAuth,state,config,keystore,certificate,key,clientCa);
         acks=new AckManager(state);
+        try{
+            var policy=S2SLineBreakerPolicy.parse(config.get(S2SRULES));
+            long bytes=config.get(ASSEMBLYBYTES),streams=config.get(ASSEMBLYSTREAMS);
+            if(bytes<4096||bytes>Integer.MAX_VALUE/32||streams<1||streams>10000)throw new IllegalArgumentException("invalid S2S assembly bounds");
+            resources.assemblyNamespace="input:"+id;
+            if(policy.enabled()||Files.exists(state.resolve("assembly/state")))
+                resources.assembly=new S2SStreamAssembler(state.resolve("assembly"),policy,resources.metadata,resources.metadataFields,
+                    HecProtocol.JSON.writeValueAsString(List.of(id,config.get(S2SMETADATA))),bytes,(int)streams,resources.memory,diagnostic);
+        }catch(Exception error){acks.close();resources.close();reload.shutdownNow();throw error;}
         if(!config.get(FILE).isEmpty())reload.scheduleWithFixedDelay(tokens::reload,1,1,TimeUnit.SECONDS);
     }
     /**
@@ -187,6 +199,7 @@ public final class SplunkHec implements Input {
                 // A plaintext listener is allowed but never silent: tell the operator at startup.
                 if(!httpTlsEnabled)diagnostic.accept("HEC HTTP listener is plaintext; tokens travel unencrypted. Use only on an isolated network");
                 if(tcpEnabled&&!tcpTlsEnabled)diagnostic.accept("S2S TCP listener is plaintext and has no token authentication; restrict network access or set s2s_tcp_ssl_enabled => true");
+                if(resources.assembly!=null)resources.assembly.start(consumer);
                 server=new HecServer(host,port,tls,limits,tokens,acks,consumer,resources);server.start();
                 if(tcpEnabled){tcpServer=new S2STcpServer(host,tcpPort,tcpTls,tcpLimits,resources,consumer,tcpIndex,tcpIndexes,diagnostic);tcpServer.start();}
             }
@@ -211,10 +224,12 @@ public final class SplunkHec implements Input {
             // Interrupt BOTH listeners before joining either, so a blocked TCP
             // writer cannot consume the HTTP listener's shutdown grace or vice versa.
             if(closing!=null)closing.beginStop();if(tcpServer!=null)tcpServer.beginStop();
+            if(resources.assembly!=null)resources.assembly.beginStop();
             RuntimeException shutdown=null;
             try{if(closing!=null)closing.closeBy(deadline);}catch(RuntimeException error){shutdown=error;}
             try{if(tcpServer!=null)tcpServer.closeBy(deadline);}catch(RuntimeException error){if(shutdown==null)shutdown=error;else shutdown.addSuppressed(error);}
             if(shutdown!=null)throw shutdown;
+            if(resources.assembly!=null)resources.assembly.closeBy(deadline);
             interrupted|=Thread.interrupted();
             while(!reload.isTerminated()){
                 long left=deadline-System.nanoTime();if(left<=0)throw new IllegalStateException("policy reload did not terminate");
@@ -231,7 +246,7 @@ public final class SplunkHec implements Input {
     @Override public Collection<PluginConfigSpec<?>> configSchema(){
         // HTTP format is selected by path, not an input-wide JSON codec. Optional
         // TCP shares TLS/limits but has its own index defaults and wire handshake.
-        List<PluginConfigSpec<?>> schema=new ArrayList<>(List.of(HOST,PORT,TOKENS,FILE,STATE,TLS,SANS,STORE,STORETYPE,PASSWORD,CERT,KEY,CA,MTLS,TCP,TCPPORT,TCPINDEX,TCPINDEXES,TCPEVENT,TCPTLS,TCPMTLS,METADATA,S2SMETADATA));
+        List<PluginConfigSpec<?>> schema=new ArrayList<>(List.of(HOST,PORT,TOKENS,FILE,STATE,TLS,SANS,STORE,STORETYPE,PASSWORD,CERT,KEY,CA,MTLS,TCP,TCPPORT,TCPINDEX,TCPINDEXES,TCPEVENT,TCPTLS,TCPMTLS,METADATA,S2SMETADATA,S2SRULES,ASSEMBLYBYTES,ASSEMBLYSTREAMS));
         schema.addAll(NUMBERS.values());
         // Accept Logstash's standard input options (id, enable_metric, add_field, tags, type).
         // codec is removed on purpose: this input emits native maps and has no codec stage, so

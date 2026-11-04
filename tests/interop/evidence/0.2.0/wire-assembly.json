@@ -1,0 +1,2733 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.2.0-java.gem",
+    "sha256": "77289fec932c0fb2c63a6f18fecf715cbc88c7bfd5bdc2ced4fb106b3062e531"
+  },
+  "validators": "0ebc32a3bf26f5eb780e0611c7fafe4fef81ce7e15051af8ee43a8a240f8578f",
+  "runs": [
+    {
+      "sender": "uf",
+      "transport": "http",
+      "status": "pass",
+      "sender_image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "sender_version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "verified_tls": true,
+      "events": {
+        "selected": [
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "event": "START a one\n  trace a\n\n",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "20cad93076ce1274e59aa74bbf60f4d5ef4904329a3fbd4cce2a35710732e461",
+                      "line": 0,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 0,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "70e71dcf7696728eb8b92fd21613285320d2be92983e75ccc9338d857c0b3fb1",
+                      "line": 1,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 12,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+                      "line": 2,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 22,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "new-start",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "id": "s2s-assembled-v1:2733461253f7404c74eaa4a34ebb56c33b3b3566f81a7994a4ec231077e6a3d3"
+              }
+            }
+          },
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "event": "START b one\n  trace b\n\n",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "327f164513a22f0e514cb7f333ffa68f6c416945e885dd52655a45466fd8e6cd",
+                      "line": 0,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 0,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "e2a659a8654564440d00c79bcacf7727bce99a4137b504219bad40da6c6f5916",
+                      "line": 1,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 12,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+                      "line": 2,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 22,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "new-start",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "id": "s2s-assembled-v1:226ba2aca986a16f76e47d41630200a84de10b47d2586fc5afa2d307da2e218d"
+              }
+            }
+          },
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "event": "START a two\n  end a",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "2ae33ed0d0fc274403db7983f779952406244086a053059dd0cd64fe4170bf66",
+                      "line": 3,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 23,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "332dc444dcdc27af2056fb50f832701e7907db79f764ab9ceb2827e4380e828c",
+                      "line": 4,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 35,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "timeout",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "id": "s2s-assembled-v1:b1a212ce722e3022788649cc27cfa7fae58c8a57591705da2094596bdf29dc86"
+              }
+            }
+          },
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "event": "START b two\n  end b",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "28c98206cfdb3c219cd1c0efab744361e3eaaeadf1cc6fc522718a2bd8b10bb9",
+                      "line": 3,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 23,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "54b5dca38704f194c9a772dc196663726693fb0f53f22fa40a5674629de2d509",
+                      "line": 4,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 1,
+                        "time": "1793631809",
+                        "flags": 571,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 1,
+                      "logical_offset": 35,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "timeout",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "id": "s2s-assembled-v1:7aa605490ef8ebc2b6faae77d5b71de2aaf6f2c6cb7c19a0d8e031b9de66220b"
+              }
+            }
+          }
+        ],
+        "fallback": [
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "event": "fallback",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:677dac830162024fcf779d403375006418ff13d298403bab7c5992ae201f0b1e"
+              }
+            }
+          },
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "event": "  separate",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 9,
+                  "date_parts": [],
+                  "logical_line": 1,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:f4c63cc5d9ab7b41f0a5e602de72331f4819547d9607ec20c81efecea8e85abe"
+              }
+            }
+          },
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "event": "repeat",
+            "@timestamp": "2026-11-02T15:03:29.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631809",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 571,
+                  "logical_offset": 20,
+                  "date_parts": [],
+                  "logical_line": 2,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:5b824c8f5beacb76028682e2c75f35874dd49c020f312c737879454de9e6deb0"
+              }
+            }
+          }
+        ],
+        "structured": [
+          {
+            "host": "92b05372072d",
+            "@version": "1",
+            "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+            "sourcetype": "hec_native_json",
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 123,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 66,
+                      "part": 0,
+                      "value": 246913
+                    },
+                    {
+                      "tag": 66,
+                      "part": 1,
+                      "value": 20
+                    },
+                    {
+                      "tag": 66,
+                      "part": 3,
+                      "value": 14
+                    },
+                    {
+                      "tag": 66,
+                      "part": 2,
+                      "value": 13
+                    },
+                    {
+                      "tag": 66,
+                      "part": 4,
+                      "value": 2026
+                    },
+                    {
+                      "tag": 74,
+                      "part": 5,
+                      "value": 24
+                    },
+                    {
+                      "tag": 66,
+                      "part": 6,
+                      "value": 21
+                    },
+                    {
+                      "tag": 74,
+                      "part": 7,
+                      "value": 10
+                    },
+                    {
+                      "tag": 66,
+                      "part": 8,
+                      "value": 0
+                    }
+                  ],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 4661084260136768751,
+                  "channel": "10",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-source.json",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:d358f60b61ac9390f1480c0c708f1918132cfa28e609384588a7406843aa0f6a"
+              }
+            },
+            "@timestamp": "2026-09-21T14:13:20.123456Z",
+            "time": "1790000000.123456",
+            "source": "/tmp/hec-source.json",
+            "fields": {
+              "host": "payload-host",
+              "time": "1790000000.123456789",
+              "a.b{}": [
+                "first",
+                "second"
+              ],
+              "message": "native"
+            },
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-source.json",
+              "salt": "<SOURCE>"
+            }
+          }
+        ]
+      },
+      "wire_capture": {
+        "authority": "fresh TLS-terminating fixture capture; original transport bytes, not reconstructed records",
+        "items": [
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-cd724cbabb8f98042c6f4ca7e26297dbdb6224864bb283cc886504422b876e19.bin",
+            "sha256": "cd724cbabb8f98042c6f4ca7e26297dbdb6224864bb283cc886504422b876e19",
+            "bytes": 12287,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-15e72d1348ba4758656d1cc77152e5218492f12138d7cadec2ff70405b595fc2.bin",
+            "sha256": "15e72d1348ba4758656d1cc77152e5218492f12138d7cadec2ff70405b595fc2",
+            "bytes": 718,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-8ef1d66991aa3379ff83fc939e5469c3c5e87d64729a59f94ca99a4a369c414a.bin",
+            "sha256": "8ef1d66991aa3379ff83fc939e5469c3c5e87d64729a59f94ca99a4a369c414a",
+            "bytes": 27810,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-1c5234e58f2a19ed04869c40f36be258ac5c3fc915773bbcfb3227d6dda20d80.bin",
+            "sha256": "1c5234e58f2a19ed04869c40f36be258ac5c3fc915773bbcfb3227d6dda20d80",
+            "bytes": 12877,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-d038bd582fed573254d9d125bc5856896054b8b975f714626b3f7025a7ee22a5.bin",
+            "sha256": "d038bd582fed573254d9d125bc5856896054b8b975f714626b3f7025a7ee22a5",
+            "bytes": 15838,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-83ee8a22c0f20703c3f979f6fe63ad5b7085719947054977b70dd2dae74b0a95.bin",
+            "sha256": "83ee8a22c0f20703c3f979f6fe63ad5b7085719947054977b70dd2dae74b0a95",
+            "bytes": 16360,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-447902cd0f6c19062d62a918d9885a00982fce6e3ee2f9994c2aa46912da5de6.bin",
+            "sha256": "447902cd0f6c19062d62a918d9885a00982fce6e3ee2f9994c2aa46912da5de6",
+            "bytes": 102413,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 503
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-447902cd0f6c19062d62a918d9885a00982fce6e3ee2f9994c2aa46912da5de6.bin",
+            "sha256": "447902cd0f6c19062d62a918d9885a00982fce6e3ee2f9994c2aa46912da5de6",
+            "bytes": 102413,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 503
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/a0401b2540a74e96a97c4af9a4bcfe4f/http-entity-447902cd0f6c19062d62a918d9885a00982fce6e3ee2f9994c2aa46912da5de6.bin",
+            "sha256": "447902cd0f6c19062d62a918d9885a00982fce6e3ee2f9994c2aa46912da5de6",
+            "bytes": 102413,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 503
+          }
+        ],
+        "bounded_bytes_per_direction": 67108864
+      }
+    },
+    {
+      "sender": "hf",
+      "transport": "http",
+      "status": "pass",
+      "sender_image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "sender_version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "verified_tls": true,
+      "events": {
+        "selected": [
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "START a one\n  trace a",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 16763,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:ecb7e6c74d0b7f3f7828a40c4686882fa7a873506b9f139cf0bd97fe4774d9d0"
+              }
+            }
+          },
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "START a two\n  end a",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 3,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17275,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:cae9c74fa08bc37a94fff96ff1f251035d3e550d23836ae83e54f990d04b6b52"
+              }
+            }
+          },
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "START b one\n  trace b",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 16763,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:72ea545539e18b9b8919806816a1131e0ea6f9b753d108cc9b3a124696d387d7"
+              }
+            }
+          },
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "START b two\n  end b",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 3,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17275,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:2544128cba3b89669bc9e05f4b0db9cd162610ef33f27e2731f145f629d3fdea"
+              }
+            }
+          }
+        ],
+        "fallback": [
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "fallback",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 379,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:24ebec46630715b19966f154d7e4d74cd6b6e2dce64cfc1b1a5c02d46c24ccd6"
+              }
+            }
+          },
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "  separate",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 2,
+                  "identity_scope": "source-coordinates",
+                  "flags": 16763,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:28c72208369431171d8d3e301f72819bb7c9dc00230d393d2323111edd9b2451"
+              }
+            }
+          },
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "repeat",
+            "@timestamp": "2026-11-02T15:04:42.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631882",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 3,
+                  "identity_scope": "source-coordinates",
+                  "flags": 16763,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:de7f173790c49e36e7b257905f6cbea52f94a069d46a021a2de5546f0dc0a675"
+              }
+            }
+          }
+        ],
+        "structured": [
+          {
+            "host": "84b0ff4c1aeb",
+            "@version": "1",
+            "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+            "sourcetype": "hec_native_json",
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 379,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 66,
+                      "part": 0,
+                      "value": 246913
+                    },
+                    {
+                      "tag": 66,
+                      "part": 1,
+                      "value": 20
+                    },
+                    {
+                      "tag": 66,
+                      "part": 3,
+                      "value": 14
+                    },
+                    {
+                      "tag": 66,
+                      "part": 2,
+                      "value": 13
+                    },
+                    {
+                      "tag": 66,
+                      "part": 4,
+                      "value": 2026
+                    },
+                    {
+                      "tag": 74,
+                      "part": 5,
+                      "value": 24
+                    },
+                    {
+                      "tag": 66,
+                      "part": 6,
+                      "value": 21
+                    },
+                    {
+                      "tag": 74,
+                      "part": 7,
+                      "value": 10
+                    },
+                    {
+                      "tag": 66,
+                      "part": 8,
+                      "value": 0
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 4661084260136768751,
+                  "channel": "10",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-source.json",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>"
+                  },
+                  "offset": 0
+                },
+                "id": "s2s-v1:5bf3e1a0162cace701df471728b37aaf3a7b13b7fdbfc6deb1757857c628dbe6"
+              }
+            },
+            "@timestamp": "2026-09-21T14:13:20.123456Z",
+            "time": "1790000000.123456",
+            "source": "/tmp/hec-source.json",
+            "fields": {
+              "host": "payload-host",
+              "time": "1790000000.123456789",
+              "a.b{}": [
+                "first",
+                "second"
+              ],
+              "message": "native"
+            },
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-source.json",
+              "salt": "<SOURCE>"
+            }
+          }
+        ]
+      },
+      "wire_capture": {
+        "authority": "fresh TLS-terminating fixture capture; original transport bytes, not reconstructed records",
+        "items": [
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/0d519ff4f9244da4acaac2738ca2d735/http-entity-e3f724d116d380c126a1ba54c1469256338b49780a28c2483ddb6d1926e9913e.bin",
+            "sha256": "e3f724d116d380c126a1ba54c1469256338b49780a28c2483ddb6d1926e9913e",
+            "bytes": 6610,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/0d519ff4f9244da4acaac2738ca2d735/http-entity-784ed93bbe8a211c3deabcfa3ff885d61dc4e620ef5eb1cdd16999dece683347.bin",
+            "sha256": "784ed93bbe8a211c3deabcfa3ff885d61dc4e620ef5eb1cdd16999dece683347",
+            "bytes": 111456,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 200
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/0d519ff4f9244da4acaac2738ca2d735/http-entity-364c32829da38610310e0319b8cfba26bd82a5aa0f85c675309d7223f88fdac6.bin",
+            "sha256": "364c32829da38610310e0319b8cfba26bd82a5aa0f85c675309d7223f88fdac6",
+            "bytes": 21873,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 503
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/0d519ff4f9244da4acaac2738ca2d735/http-entity-364c32829da38610310e0319b8cfba26bd82a5aa0f85c675309d7223f88fdac6.bin",
+            "sha256": "364c32829da38610310e0319b8cfba26bd82a5aa0f85c675309d7223f88fdac6",
+            "bytes": 21873,
+            "kind": "http-entity",
+            "method": "POST",
+            "path": "/services/collector/s2s",
+            "receiver_status": 503
+          }
+        ],
+        "bounded_bytes_per_direction": 67108864
+      }
+    },
+    {
+      "sender": "uf",
+      "transport": "tcp",
+      "status": "pass",
+      "sender_image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "sender_version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "verified_tls": true,
+      "events": {
+        "selected": [
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "event": "START a one\n  trace a\n\n",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.717"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "20cad93076ce1274e59aa74bbf60f4d5ef4904329a3fbd4cce2a35710732e461",
+                      "line": 0,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.717"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 0,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "70e71dcf7696728eb8b92fd21613285320d2be92983e75ccc9338d857c0b3fb1",
+                      "line": 1,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.717"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 12,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+                      "line": 2,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.717"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 22,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "new-start",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "4",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-assembled-v1:c0bd82238357a964885f2649f9582bb3e87be83dbb3efa680c6b90542acf4149"
+              }
+            }
+          },
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "event": "START b one\n  trace b\n\n",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.718"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "327f164513a22f0e514cb7f333ffa68f6c416945e885dd52655a45466fd8e6cd",
+                      "line": 0,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.718"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 0,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "e2a659a8654564440d00c79bcacf7727bce99a4137b504219bad40da6c6f5916",
+                      "line": 1,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.718"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 12,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+                      "line": 2,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.718"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 22,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "new-start",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "6",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-assembled-v1:e9f3a3a80684488b9dde9f28abd11ea8c91cec1e2d2e6b06a015b9775323b6d3"
+              }
+            }
+          },
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "event": "START a two\n  end a\n",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.717"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "2ae33ed0d0fc274403db7983f779952406244086a053059dd0cd64fe4170bf66",
+                      "line": 3,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.717"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 23,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "2402dd75aa1bb85b2017f9bd2178f5fe40cf51e750a17e776e256eef764bb7d0",
+                      "line": 4,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "12524207217264449061",
+                        "channel": "4",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-a.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.717"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 35,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "timeout",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "4",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-assembled-v1:c8ebf0d341504b45fd2977ece8b8857a2c8991285740aa307409c26720a69217"
+              }
+            }
+          },
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "event": "START b two\n  end b\n",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.718"
+                  },
+                  "offset": 0
+                },
+                "assembly": {
+                  "contributions": [
+                    {
+                      "sha256": "28c98206cfdb3c219cd1c0efab744361e3eaaeadf1cc6fc522718a2bd8b10bb9",
+                      "line": 3,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.718"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 23,
+                      "offset": 0
+                    },
+                    {
+                      "sha256": "fcfdd9c2e7a9d56de48bcb4384a4c5b1d9f4963aa6a193d0441dcc98943c4572",
+                      "line": 4,
+                      "wire": {
+                        "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                        "csv_header": [],
+                        "stream": "560710506217445316",
+                        "channel": "6",
+                        "sequence": 0,
+                        "time": "1793631896",
+                        "flags": 63,
+                        "wire_metadata": {
+                          "_path": "/tmp/hec-assembly-b.log",
+                          "_MetaData:Index": "main",
+                          "crcSalt": "<SOURCE>",
+                          "_tcpoutTime": "1793631910.718"
+                        },
+                        "offset": 0,
+                        "date_parts": []
+                      },
+                      "sequence": 0,
+                      "logical_offset": 35,
+                      "offset": 0
+                    }
+                  ],
+                  "flush_reason": "timeout",
+                  "rule": "80cca4f86285c1311bb35f4be3d2268eef3505f14b534a3dda91aa75ee615703"
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "6",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-assembled-v1:3cd3da534633bc9e43ff65f1daa5c360690c8b15fbf921197be266c8b0dc9091"
+              }
+            }
+          }
+        ],
+        "fallback": [
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "event": "fallback",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 0,
+                  "date_parts": [],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.718"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "8",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-v1:e31d410276eaa3c2e431c1ac9146de6e3a1fd49f4e05dfb7a2406666d0b5f196"
+              }
+            }
+          },
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "event": "  separate",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 9,
+                  "date_parts": [],
+                  "logical_line": 1,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.718"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "8",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-v1:ada77890b4a3d8f52e3a856a08ea42da0e80ecea91f380cb98c76108f5e81ba8"
+              }
+            }
+          },
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "event": "repeat",
+            "@timestamp": "2026-11-02T15:04:56.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631896",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 0,
+                  "identity_scope": "source-coordinates",
+                  "flags": 63,
+                  "logical_offset": 20,
+                  "date_parts": [],
+                  "logical_line": 2,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.718"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "8",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-v1:85950c6426ce1454412d8a934815a4aa76599ccf05ec354c0f176f105390fd69"
+              }
+            }
+          }
+        ],
+        "structured": [
+          {
+            "host": "1f35374dd085",
+            "@version": "1",
+            "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+            "sourcetype": "hec_native_json",
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 639,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 66,
+                      "part": 0,
+                      "value": 246913
+                    },
+                    {
+                      "tag": 66,
+                      "part": 1,
+                      "value": 20
+                    },
+                    {
+                      "tag": 66,
+                      "part": 3,
+                      "value": 14
+                    },
+                    {
+                      "tag": 66,
+                      "part": 2,
+                      "value": 13
+                    },
+                    {
+                      "tag": 66,
+                      "part": 4,
+                      "value": 2026
+                    },
+                    {
+                      "tag": 74,
+                      "part": 5,
+                      "value": 24
+                    },
+                    {
+                      "tag": 66,
+                      "part": 6,
+                      "value": 21
+                    },
+                    {
+                      "tag": 74,
+                      "part": 7,
+                      "value": 10
+                    },
+                    {
+                      "tag": 66,
+                      "part": 8,
+                      "value": 0
+                    }
+                  ],
+                  "logical_line": 0,
+                  "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+                  "csv_header": [],
+                  "stream": 4661084260136768751,
+                  "channel": "10",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-source.json",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631910.766"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631910",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=1f35374dd085 guid=3CEAF38B-AA48-44EF-BAD3-EB723C104ACB fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "3CEAF38B-AA48-44EF-BAD3-EB723C104ACB",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "1f35374dd085",
+                  "management_port": "8089",
+                  "event_id": "18",
+                  "sender_guid": "3ceaf38b-aa48-44ef-bad3-eb723c104acb"
+                },
+                "id": "s2s-v1:4241d6d812c5282053740c09244156292a00980b18d28cfda9c8ee1421cd28af"
+              }
+            },
+            "@timestamp": "2026-09-21T14:13:20.123456Z",
+            "time": "1790000000.123456",
+            "source": "/tmp/hec-source.json",
+            "fields": {
+              "host": "payload-host",
+              "time": "1790000000.123456789",
+              "a.b{}": [
+                "first",
+                "second"
+              ],
+              "message": "native"
+            },
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-source.json",
+              "salt": "<SOURCE>"
+            }
+          }
+        ]
+      },
+      "wire_capture": {
+        "authority": "fresh TLS-terminating fixture capture; original transport bytes, not reconstructed records",
+        "items": [
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/59758e790f7b4e3386bb6847e3e42fa2/tcp-client-f0801dfacb09fecb4a7ae6dad4865ca4787c6faaee0c17e71d9823e02607667c.bin",
+            "sha256": "f0801dfacb09fecb4a7ae6dad4865ca4787c6faaee0c17e71d9823e02607667c",
+            "bytes": 318688,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/59758e790f7b4e3386bb6847e3e42fa2/tcp-server-578af9c7d822ea515ccb9cd17a6cc18c32e572a96283f6adbff9b5d75a734f15.bin",
+            "sha256": "578af9c7d822ea515ccb9cd17a6cc18c32e572a96283f6adbff9b5d75a734f15",
+            "bytes": 371,
+            "kind": "tcp-server",
+            "errors": []
+          }
+        ],
+        "bounded_bytes_per_direction": 67108864
+      }
+    },
+    {
+      "sender": "hf",
+      "transport": "tcp",
+      "status": "pass",
+      "sender_image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "sender_version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "verified_tls": true,
+      "events": {
+        "selected": [
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "START a one\n  trace a",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17279,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.037"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "4",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:fe0434c3c45627f219d54eacc2ede25dcc5fd8f26650c9af0ed603f794b37cb0"
+              }
+            }
+          },
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "START a two\n  end a",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-a.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-a.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 3,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17279,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": "12524207217264449061",
+                  "channel": "4",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-a.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.038"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "5",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:9e6b09b05d58100d628f8c5e4caca3613422f19b72553631f703195e35f1a629"
+              }
+            }
+          },
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "START b one\n  trace b",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17279,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.038"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "6",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:9c29a6f3968c9047fed6d5d1e56c10c77513ccf3b50a42057a9d818bf77672dd"
+              }
+            }
+          },
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "START b two\n  end b",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_selected",
+            "source": "/tmp/hec-assembly-b.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-b.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 3,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17279,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 560710506217445316,
+                  "channel": "6",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-b.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.038"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "7",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:a66cca3a5ba8157f13281413d3cf4fcc75ebf617f52366d60cf0ed0e3eedb820"
+              }
+            }
+          }
+        ],
+        "fallback": [
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "fallback",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 895,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.039"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "8",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:ce97a140f8939147892d4a8e7da22f0881b876c93f62eba23143951686a46ab2"
+              }
+            }
+          },
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "  separate",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 2,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17279,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.039"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "9",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:eacf20bd08bdf11d8996da72a6d668fb744457fd9244045286219e66d6547608"
+              }
+            }
+          },
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "repeat",
+            "@timestamp": "2026-11-02T15:06:18.000Z",
+            "sourcetype": "hec_assembly_fallback",
+            "source": "/tmp/hec-assembly-fallback.log",
+            "time": "1793631978",
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-assembly-fallback.log",
+              "salt": "<SOURCE>"
+            },
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 3,
+                  "identity_scope": "source-coordinates",
+                  "flags": 17279,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 74,
+                      "part": 46,
+                      "value": 48
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 6726001480480823452,
+                  "channel": "8",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-assembly-fallback.log",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.039"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "10",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:0faec69a8ed075321fb52d7d9cf3d64935445982b723d3a7f93e2095c71fdc68"
+              }
+            }
+          }
+        ],
+        "structured": [
+          {
+            "host": "a4ffdec21f4e",
+            "@version": "1",
+            "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+            "sourcetype": "hec_native_json",
+            "verification_metadata": {
+              "splunk_hec": {
+                "s2s": {
+                  "sequence": 1,
+                  "identity_scope": "source-coordinates",
+                  "flags": 895,
+                  "logical_offset": 0,
+                  "date_parts": [
+                    {
+                      "tag": 66,
+                      "part": 0,
+                      "value": 246913
+                    },
+                    {
+                      "tag": 66,
+                      "part": 1,
+                      "value": 20
+                    },
+                    {
+                      "tag": 66,
+                      "part": 3,
+                      "value": 14
+                    },
+                    {
+                      "tag": 66,
+                      "part": 2,
+                      "value": 13
+                    },
+                    {
+                      "tag": 66,
+                      "part": 4,
+                      "value": 2026
+                    },
+                    {
+                      "tag": 74,
+                      "part": 5,
+                      "value": 24
+                    },
+                    {
+                      "tag": 66,
+                      "part": 6,
+                      "value": 21
+                    },
+                    {
+                      "tag": 74,
+                      "part": 7,
+                      "value": 10
+                    },
+                    {
+                      "tag": 66,
+                      "part": 8,
+                      "value": 0
+                    }
+                  ],
+                  "logical_line": 0,
+                  "csv_header": [],
+                  "stream": 4661084260136768751,
+                  "channel": "10",
+                  "wire_metadata": {
+                    "_path": "/tmp/hec-source.json",
+                    "_MetaData:Index": "main",
+                    "crcSalt": "<SOURCE>",
+                    "_tcpoutTime": "1793631978.095"
+                  },
+                  "offset": 0
+                },
+                "tcp": {
+                  "compression_requested": true,
+                  "forwarder_info": {
+                    "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+                    "_time": "1793631978",
+                    "__s2s_eventId": "0",
+                    "_MetaData:Index": "_internal",
+                    "_ingLatColor": "green",
+                    "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=a4ffdec21f4e guid=58D6CFB9-155A-4C6D-B486-85647BE1AA41 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+                    "_guid": "58D6CFB9-155A-4C6D-B486-85647BE1AA41",
+                    "MetaData:Source": "source::fwd",
+                    "MetaData:Host": "host::$decideOnStartup",
+                    "MetaData:Sourcetype": "sourcetype::fwdinfo",
+                    "_ingLatChained": "{\"green\":{\"count\":0}}",
+                    "_done": "_done"
+                  },
+                  "ack_requested": true,
+                  "protocol": "s2s-v4",
+                  "peer_ip": "172.17.0.1",
+                  "stream_compressed": true,
+                  "sender_hostname": "a4ffdec21f4e",
+                  "management_port": "8089",
+                  "event_id": "12",
+                  "sender_guid": "58d6cfb9-155a-4c6d-b486-85647be1aa41"
+                },
+                "id": "s2s-v1:24ed7dc2369be85606fd9a23db9cb11ea0993a1930b0002c7e0689300e3fe20b"
+              }
+            },
+            "@timestamp": "2026-09-21T14:13:20.123456Z",
+            "time": "1790000000.123456",
+            "source": "/tmp/hec-source.json",
+            "fields": {
+              "host": "payload-host",
+              "time": "1790000000.123456789",
+              "a.b{}": [
+                "first",
+                "second"
+              ],
+              "message": "native"
+            },
+            "index": "main",
+            "s2s_metadata": {
+              "path": "/tmp/hec-source.json",
+              "salt": "<SOURCE>"
+            }
+          }
+        ]
+      },
+      "wire_capture": {
+        "authority": "fresh TLS-terminating fixture capture; original transport bytes, not reconstructed records",
+        "items": [
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-3a2a422426043742ae20b62f676aea11f06f449b4373354e0130be29faf3d8a3.bin",
+            "sha256": "3a2a422426043742ae20b62f676aea11f06f449b4373354e0130be29faf3d8a3",
+            "bytes": 498110,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-3dda70fdf3ac327e893dce5e1f637dc82d5e2c1bef6032999cd0fa489c72a254.bin",
+            "sha256": "3dda70fdf3ac327e893dce5e1f637dc82d5e2c1bef6032999cd0fa489c72a254",
+            "bytes": 395,
+            "kind": "tcp-server",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-319cdf2c835a4dc781ac8e504bf32247c12055754a56fcf1548250837fe3f161.bin",
+            "sha256": "319cdf2c835a4dc781ac8e504bf32247c12055754a56fcf1548250837fe3f161",
+            "bytes": 242500,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212.bin",
+            "sha256": "30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212",
+            "bytes": 191,
+            "kind": "tcp-server",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-53bb3cd8e03ab6173ba9f72f1e1e39450374b186ed41b7fb7ec959c6277ded10.bin",
+            "sha256": "53bb3cd8e03ab6173ba9f72f1e1e39450374b186ed41b7fb7ec959c6277ded10",
+            "bytes": 291584,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212.bin",
+            "sha256": "30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212",
+            "bytes": 191,
+            "kind": "tcp-server",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-f24579a1c4289e6d8972b3bd831a8f7597d9b8861d410aba9f1fe1ccd68503fb.bin",
+            "sha256": "f24579a1c4289e6d8972b3bd831a8f7597d9b8861d410aba9f1fe1ccd68503fb",
+            "bytes": 291584,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212.bin",
+            "sha256": "30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212",
+            "bytes": 191,
+            "kind": "tcp-server",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-f0bd193af37a27975225a1970a22e9a36f07c786258819762be7aa2780c397fb.bin",
+            "sha256": "f0bd193af37a27975225a1970a22e9a36f07c786258819762be7aa2780c397fb",
+            "bytes": 242434,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212.bin",
+            "sha256": "30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212",
+            "bytes": 191,
+            "kind": "tcp-server",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-31cfcc64ac90dab8069656c9803d0e85d54e9d8efcde039bfdb488410e593a6b.bin",
+            "sha256": "31cfcc64ac90dab8069656c9803d0e85d54e9d8efcde039bfdb488410e593a6b",
+            "bytes": 202470,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212.bin",
+            "sha256": "30995991b97491e120e77d2cf6a66d35b4882bcf79859e07fd3a1d6568bcb212",
+            "bytes": 191,
+            "kind": "tcp-server",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-client-694b1577c239cbdef531989d31ce0c975bf51ba2a55a6063f24c0513681a54f7.bin",
+            "sha256": "694b1577c239cbdef531989d31ce0c975bf51ba2a55a6063f24c0513681a54f7",
+            "bytes": 39926,
+            "kind": "tcp-client",
+            "errors": []
+          },
+          {
+            "file": "tests/interop/evidence/0.2.0/wire-assembly/ac364177e3a046ae9054086edb77a454/tcp-server-2f628c2099aee7498f8aa513b38a4936ee9999dcbe4a002d06c54d2926a1a7ad.bin",
+            "sha256": "2f628c2099aee7498f8aa513b38a4936ee9999dcbe4a002d06c54d2926a1a7ad",
+            "bytes": 260,
+            "kind": "tcp-server",
+            "errors": []
+          }
+        ],
+        "bounded_bytes_per_direction": 67108864
+      }
+    }
+  ],
+  "status": "pass"
+}

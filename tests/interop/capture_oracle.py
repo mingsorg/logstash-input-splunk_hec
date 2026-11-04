@@ -14,6 +14,7 @@ import urllib.parse
 import urllib.request
 import subprocess
 from pathlib import Path
+import runtime
 
 ROOT = Path(__file__).resolve().parents[2]
 TOKENS = ['11111111-1111-4111-8111-111111111111',
@@ -132,7 +133,7 @@ def main():
             matches = [e for e in indexed if e.get('source') == observation['expected_source']]
             observation['accepted_event_count'] = len(matches)
             observation['indexed_values'] = matches
-    out = ROOT/'tests/interop/evidence'
+    out = runtime.EVIDENCE
     out.mkdir(exist_ok=True)
     (out/'oracle-http.json').write_text(json.dumps(dict(
         source='real Splunk; not plugin expectations', version=version,

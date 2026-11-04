@@ -88,7 +88,7 @@ public final class HecServer implements AutoCloseable {
             String kind=route(request.path);
             if(!request.method.equals(kind.equals("health")?"GET":"POST"))throw new HecException(405,404,"The requested URL was not found on this server.");
             if(kind.equals("health")){
-                boolean healthy=!healthOnly && !stopped && processing.availablePermits()>0 && memory.used()<limits.aggregate();
+                boolean healthy=!healthOnly && !stopped && processing.availablePermits()>0 && memory.used()<limits.aggregate() && (resources.assembly==null||resources.assembly.healthy());
                 respond(socket,healthy?200:503,Map.of("text",healthy?"HEC is healthy":"HEC is unhealthy","code",healthy?17:18));return;
             }
             if(healthOnly)throw HecException.busy();
@@ -127,9 +127,11 @@ public final class HecServer implements AutoCloseable {
                 // records then native envelopes. S2S must finish ALL validation
                 // before any of its records can reach the queue insertion loop.
                 HecProtocol.Prepared prepared;
+                List<S2SDecoder.Event> assemblyRecords=null;
                 if(kind.equals("s2s")){
                     List<S2SDecoder.Event> records=new S2SDecoder(limits).decode(body,expansion,lease);
-                    prepared=new HecProtocol.Prepared(new S2SEvents(limits,protocol,resources.metadata,resources.metadataFields).map(records,policy,request.query,body,lease),null);
+                    if(resources.assembly!=null){assemblyRecords=records;prepared=new HecProtocol.Prepared(List.of(),null);}
+                    else prepared=new HecProtocol.Prepared(new S2SEvents(limits,protocol,resources.metadata,resources.metadataFields).map(records,policy,request.query,body,lease),null);
                 }else if(kind.equals("raw"))prepared=protocol.raw(body,policy,request.query,lease);
                 else prepared=protocol.events(body,policy,request.query,lease);
                 // Reserve ACK capacity before irreversible insertion. Event parsing
@@ -137,15 +139,19 @@ public final class HecServer implements AutoCloseable {
                 // never complete that ticket or return a success ackId.
                 AckManager.Ticket ticket=policy.ack()&&(prepared.failure()==null||!prepared.events().isEmpty())?acks.reserve(policy,channel):null;
                 boolean success=false;
+                S2SStreamAssembler.Ordered ordered=null;
                 try{
-                    for(Map<String,Object> event:prepared.events()){
+                    if(assemblyRecords!=null){ordered=resources.assembly.acceptOrdered(assemblyRecords,policy,request.query,
+                        TokenStore.fingerprint(body),resources.assemblyNamespace+"/http:"+(channel!=null?channel:request.headers.getOrDefault("x-splunk-request-channel",request.query.getOrDefault("channel",""))),limits,lease,null);prepared=new HecProtocol.Prepared(ordered.events(),null);}
+                    if(ordered!=null)ordered.enqueue(sink);
+                    else for(Map<String,Object> event:prepared.events()){
                         if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();
                         // No detached task: this is the worker we interrupt and join at stop.
                         sink.accept(event);
                     }
                     if(prepared.failure()!=null)throw prepared.failure();
                     success=true;
-                }finally{if(ticket!=null)acks.finish(ticket,success);}
+                }finally{if(ordered!=null)ordered.close();if(ticket!=null)acks.finish(ticket,success);}
                 // Reaching here means all insertions returned. This is QUEUE
                 // acceptance, not Elasticsearch/Splunk indexing or PQ fsync proof.
                 Map<String,Object> response=new LinkedHashMap<>();response.put("text","Success");response.put("code",0);

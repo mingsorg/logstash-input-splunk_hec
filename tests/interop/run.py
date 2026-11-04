@@ -19,13 +19,19 @@ def run(script,*args):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=('all','runtime','senders','tcp','config','install','metadata'),default='all',
+    parser.add_argument('--stage',choices=('all','runtime','senders','tcp','config','install','metadata','assembly'),default='all',
                         help='Run a targeted verification stage, or the full suite (default).')
     stage=parser.parse_args().stage
     owned=None
     try:
         if stage in ('all','metadata'):run('metadata_fields.py')
         if stage=='metadata':return 0
+        if stage in ('all','assembly'):
+            run('assembly.py')
+            run('assembly_disk_full.py')
+            run('indexed_assembly.py')
+            run('wire_assembly.py')
+        if stage=='assembly':return 0
         if stage in ('all','runtime'):
             run('run_queue_probe.py')
             run('recovery.py')
@@ -36,7 +42,9 @@ def main():
                 print(output,flush=True)
             run('runtime.py')
         if stage in ('all','runtime','config'):run('config_check.py')
-        if stage in ('all','runtime','install'):run('install_check.py')
+        if stage in ('all','runtime','install'):
+            run('install_check.py')
+            run('upgrade_check.py')
         if stage in ('runtime','config','install'):return 0
         if stage=='tcp':
             # Real UF/HF classic TCP stage owns its Logstash receiver; no HEC oracle is required.
@@ -68,7 +76,7 @@ def main():
             diagnostic={'status':'startup-timeout','container':owned,
                 'state':json.loads(runtime.docker('inspect',owned))[0]['State'],
                 'logs':runtime.docker('logs',owned),'timeout_seconds':900}
-            (ROOT/'tests/interop/evidence/oracle-startup-last-failure.json').write_text(json.dumps(diagnostic,indent=2)+'\n')
+            (runtime.EVIDENCE/'oracle-startup-last-failure.json').write_text(json.dumps(diagnostic,indent=2)+'\n')
             raise RuntimeError('oracle startup deadline exceeded; see oracle-startup-last-failure.json')
         if not direct:
             runtime.docker('cp',str(ROOT/'tests/interop/oracle/configure.py'),'hec-spec-oracle:/tmp/configure-hec.py')

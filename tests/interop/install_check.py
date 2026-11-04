@@ -4,7 +4,7 @@
 For each supported runtime (the pinned minimum 9.5.0 and latest 9.5.5 images) a fresh container:
 
 1. installs the built gem with ``logstash-plugin install <gem>`` (no extra flags);
-2. checks ``logstash-plugin list --verbose`` shows ``logstash-input-splunk_hec (0.1.0)``;
+2. checks ``logstash-plugin list --verbose`` shows the explicitly selected version;
 3. validates a pipeline with ``logstash -t``;
 4. runs a real pipeline using the DEFAULT TLS settings (generated certificate), waits for ``/health``,
    posts an event with curl while verifying the certificate, and checks the event came out;
@@ -35,8 +35,8 @@ LS=/usr/share/logstash/bin/logstash
 step() { if [ "$2" = 0 ]; then echo "STEP $1 OK"; else echo "STEP $1 FAIL"; fi; }
 
 # 1-2. Install from the local gem file and confirm Logstash lists it.
-$L install /work/logstash-input-splunk_hec-0.1.0-java.gem > /tmp/install.log 2>&1; step install $?
-$L list --verbose splunk 2>&1 | grep -q "logstash-input-splunk_hec (0.1.0)"; step list_shows_plugin $?
+$L install /work/@PLUGIN_GEM@ > /tmp/install.log 2>&1; step install $?
+$L list --verbose splunk 2>&1 | grep -q "logstash-input-splunk_hec (@PLUGIN_VERSION@)"; step list_shows_plugin $?
 
 # 3. Validate a minimal pipeline. state_directory is persistent in real deployments.
 mkdir -p /tmp/state
@@ -73,7 +73,7 @@ test "$CODE" = 401; step no_token_rejected $?
 pkill -f "logstash.*pipeline.conf"; sleep 3
 
 # 5. Reinstall is idempotent; remove really removes, and the failure afterwards is clear.
-$L install /work/logstash-input-splunk_hec-0.1.0-java.gem > /tmp/reinstall.log 2>&1; step reinstall $?
+$L install /work/@PLUGIN_GEM@ > /tmp/reinstall.log 2>&1; step reinstall $?
 $L remove logstash-input-splunk_hec > /tmp/remove.log 2>&1; step remove $?
 $L list --verbose splunk 2>&1 | grep -q "logstash-input-splunk_hec"; if [ $? -ne 0 ]; then step gone_from_list 0; else step gone_from_list 1; fi
 $LS -t -f /tmp/pipeline.conf --path.data /tmp/data-t2 2>&1 | grep -q "Couldn't find any input plugin named 'splunk_hec'"; step clear_error_after_remove $?
@@ -81,7 +81,7 @@ $LS -t -f /tmp/pipeline.conf --path.data /tmp/data-t2 2>&1 | grep -q "Couldn't f
 
 # Executed in the OLD image: installation must be refused with a version-conflict message and leave nothing behind.
 INSIDE_OLD = r'''
-/usr/share/logstash/bin/logstash-plugin install /work/logstash-input-splunk_hec-0.1.0-java.gem > /tmp/old.log 2>&1
+/usr/share/logstash/bin/logstash-plugin install /work/@PLUGIN_GEM@ > /tmp/old.log 2>&1
 echo "EXIT $?"
 grep -E "Plugin version conflict|logstash-core >= 9.5.0" /tmp/old.log | head -2
 echo "LISTED $(/usr/share/logstash/bin/logstash-plugin list splunk 2>&1 | grep -c logstash-input-splunk_hec)"
@@ -91,7 +91,7 @@ echo "LISTED $(/usr/share/logstash/bin/logstash-plugin list splunk 2>&1 | grep -
 def run_container(image, script):
     """Run ``script`` in a throwaway container with the repository mounted read-only at /work."""
     return runtime.docker('run', '--rm', '--entrypoint', 'bash', '-v', str(ROOT) + ':/work:ro',
-                          image, '-c', script, timeout=1800)
+                          image, '-c', script.replace('@PLUGIN_GEM@',runtime.GEM.name).replace('@PLUGIN_VERSION@',runtime.VERSION), timeout=1800)
 
 
 def parse_steps(output):
@@ -101,7 +101,7 @@ def parse_steps(output):
 
 def docker_image_check():
     """Build an image from docker/Dockerfile.logstash and validate a pipeline using the plugin inside it."""
-    gem = sorted(ROOT.glob('logstash-input-splunk_hec-*-java.gem'))[-1]
+    gem = runtime.GEM
     tag = 'logstash-splunk-hec-install-check'
     with tempfile.TemporaryDirectory(dir=str(ROOT / 'build')) as context:
         context = Path(context)
@@ -109,7 +109,7 @@ def docker_image_check():
         (context / gem.name).write_bytes(gem.read_bytes())
         (context / 'Dockerfile.logstash').write_text((ROOT / 'docker/Dockerfile.logstash').read_text())
         subprocess.run(['docker', 'build', '-q', '-f', str(context / 'Dockerfile.logstash'),
-                        '--build-arg', 'LOGSTASH_IMAGE=' + runtime.P['logstash.latest.image'], '-t', tag, str(context)],
+                        '--build-arg', 'LOGSTASH_IMAGE=' + runtime.P['logstash.latest.image'], '--build-arg', 'PLUGIN_GEM='+gem.name, '-t', tag, str(context)],
                        check=True, capture_output=True, timeout=1800)
     try:
         # state_directory lives on a NAMED volume at /var/lib/logstash/hec, which must be writable by the
@@ -120,7 +120,7 @@ def docker_image_check():
                   'ls /var/lib/logstash/hec/identity')
         volume = tag + '-state'
         output = runtime.docker('run', '--rm', '--entrypoint', 'bash', '-v', volume + ':/var/lib/logstash/hec', tag, '-c', script, timeout=900)
-        return {'built': True, 'plugin_listed': 'logstash-input-splunk_hec (0.1.0)' in output,
+        return {'built': True, 'plugin_listed': ('logstash-input-splunk_hec ('+runtime.VERSION+')') in output,
                 'config_ok': 'Configuration OK' in output,
                 # The plugin generated its TLS identity on the named volume, proving the volume was writable.
                 'state_volume_writable': 'server.crt' in output}
@@ -131,7 +131,7 @@ def docker_image_check():
 
 def main():
     artifact = runtime.artifact_info()
-    report = {'artifact': artifact, 'runtimes': {}, 'status': 'fail'}
+    report = {'artifact': artifact, 'validators': runtime.validators_info(), 'runtimes': {}, 'status': 'fail'}
     failures = []
     for role in ('minimum', 'latest'):
         image = runtime.P['logstash.%s.image' % role]
@@ -153,7 +153,7 @@ def main():
     if runtime.artifact_info() != artifact:
         failures.append('artifact changed during the check')
     report['status'] = 'pass' if not failures else 'fail'
-    (ROOT / 'tests/interop/evidence/install-check.json').write_text(json.dumps(report, indent=2) + '\n')
+    (runtime.EVIDENCE / 'install-check.json').write_text(json.dumps(report, indent=2) + '\n')
     for item in failures:
         print('FAIL', item)
     print(report['status'].upper(), 'install flows on 9.5.0, 9.5.5, the Docker image, and the 9.4.0 rejection')

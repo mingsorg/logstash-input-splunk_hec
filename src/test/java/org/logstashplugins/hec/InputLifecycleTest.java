@@ -64,6 +64,131 @@ class InputLifecycleTest {
             pending.cancel(true);
         }finally{input.stop();running.join(5000);}
     }
+    @Test void selectedHttpAckIsDurableBeforeQueueAndBadSuffixPreservesEarlierRequest()throws Exception{
+        var values=Map.<String,Object>of("s2s_line_breaker_rules_json",S2SAssemblyTest.RULES.replace(":100}",":60000}"),
+            "tokens_json",new Password("[{\"token\":\""+ProtocolTest.SECRET+"\",\"useACK\":true}]"));
+        var received=new LinkedBlockingQueue<Map<String,Object>>();var input=input(values);
+        Thread running=Thread.ofVirtual().start(()->input.start(received::add));
+        try{
+            var server=server(input);var client=HttpClient.newHttpClient();
+            var good=new S2STest.Body().meta().eventAt(0x0a,0,0,1).str("START pending").compressed();
+            var response=assemblyPost(client,server.port(),"s2s",good);
+            assertEquals(200,response.statusCode(),response.body());long ack=HecProtocol.JSON.readTree(response.body()).get("ackId").longValue();
+            assertTrue(java.nio.file.Files.isRegularFile(directory.resolve("assembly/state")));assertTrue(received.isEmpty());
+            var poll=assemblyPost(client,server.port(),"ack",("{\"acks\":["+ack+"]}").getBytes());
+            assertTrue(HecProtocol.JSON.readTree(poll.body()).path("acks").path(Long.toString(ack)).asBoolean());
+            byte[] before=java.nio.file.Files.readAllBytes(directory.resolve("assembly/state"));
+            byte[] malformed=new S2STest.Body().meta().eventAt(0x0a,0,13,1).str("trace").op(0xfb).compressed();
+            var bad=assemblyPost(client,server.port(),"s2s",malformed);assertEquals(400,bad.statusCode());assertFalse(bad.body().contains("ackId"));
+            assertArrayEquals(before,java.nio.file.Files.readAllBytes(directory.resolve("assembly/state")));
+        }finally{input.stop();running.join(5000);}
+        // Restart does not force a boundary; the accepted tail can receive a later request.
+        var reopened=input(values);Thread restarted=Thread.ofVirtual().start(()->reopened.start(received::add));
+        try{
+            var server=server(reopened);assertTrue(received.isEmpty());
+            var next=new S2STest.Body().meta().eventAt(0x0a,0,13,1).str("trace\nSTART next").compressed();
+            assertEquals(200,assemblyPost(HttpClient.newHttpClient(),server.port(),"s2s",next).statusCode());
+            var complete=received.poll(5,TimeUnit.SECONDS);assertNotNull(complete);assertEquals("START pending\ntrace\n",complete.get("event"));
+        }finally{reopened.stop();restarted.join(5000);}
+    }
+    /** With assembly enabled, unmatched/structured direct records still ACK only after successful queue insertion. */
+    @Test void directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged()throws Exception{
+        var values=Map.<String,Object>of("s2s_line_breaker_rules_json",S2SAssemblyTest.RULES.replace(":100}",":60000}"),"hec_metadata","none",
+            "tokens_json",new Password("[{\"token\":\""+ProtocolTest.SECRET+"\",\"useACK\":true}]"));
+        var input=input(values);var entered=new CountDownLatch(1);var release=new CountDownLatch(1);var fail=new java.util.concurrent.atomic.AtomicBoolean();
+        var received=new LinkedBlockingQueue<Map<String,Object>>();
+        Thread running=Thread.ofVirtual().start(()->input.start(event->{
+            entered.countDown();
+            try{if(!release.await(10,TimeUnit.SECONDS))throw new IllegalStateException("sink never released");}catch(InterruptedException e){Thread.currentThread().interrupt();throw new IllegalStateException(e);}
+            if(fail.get())throw new IllegalStateException("queue rejected");
+            received.add(event);}));
+        try{
+            int port=server(input).port();var client=HttpClient.newHttpClient();
+            byte[] unmatched=new S2STest.Body().op(0xfe).v(1).ns("source::s1").ns("host::h").ns("sourcetype::unmatched").ns("channel").v(0)
+                .eventAt(0x0a,0,0,1).str("direct line").compressed();
+            var pending=client.sendAsync(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/services/collector/s2s"))
+                .timeout(Duration.ofSeconds(10)).header("Authorization","Splunk "+ProtocolTest.SECRET).header("X-Splunk-Request-Channel",HttpTlsTest.CHANNEL)
+                .POST(HttpRequest.BodyPublishers.ofByteArray(unmatched)).build(),HttpResponse.BodyHandlers.ofString());
+            assertTrue(entered.await(5,TimeUnit.SECONDS));
+            assertFalse(pending.isDone(),"must not be acknowledged while queue insertion is blocked");
+            release.countDown();
+            var response=pending.get(5,TimeUnit.SECONDS);assertEquals(200,response.statusCode(),response.body());
+            assertTrue(response.body().contains("ackId"));assertEquals("direct line",received.poll(5,TimeUnit.SECONDS).get("event"));
+            fail.set(true);
+            byte[] second=new S2STest.Body().op(0xfe).v(1).ns("source::s2").ns("host::h").ns("sourcetype::unmatched").ns("channel").v(0)
+                .eventAt(0x0a,0,0,1).str("rejected line").compressed();
+            var rejected=assemblyPost(client,port,"s2s",second);
+            assertEquals(503,rejected.statusCode(),rejected.body());assertFalse(rejected.body().contains("ackId"));
+        }finally{release.countDown();input.stop();running.join(5000);}
+    }
+    private static HttpResponse<String> assemblyPost(HttpClient client,int port,String route,byte[] body)throws Exception{
+        return client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/services/collector/"+route))
+            .timeout(Duration.ofSeconds(5)).header("Authorization","Splunk "+ProtocolTest.SECRET).header("X-Splunk-Request-Channel",HttpTlsTest.CHANNEL)
+            .POST(HttpRequest.BodyPublishers.ofByteArray(body)).build(),HttpResponse.BodyHandlers.ofString());
+    }
+    @Test void httpFramingSelectsWireThenQueryThenTokenAndUnmatchedFallsBack()throws Exception{
+        String rules="["+String.join(",",java.util.stream.Stream.of("token","query","wire").map(type->
+            "{\"match\":\"exact\",\"sourcetype\":\""+type+"\",\"event_start_pattern\":\"^START\",\"flush_timeout_ms\":60000}").toList())+"]";
+        var received=new LinkedBlockingQueue<Map<String,Object>>();
+        var input=input(Map.of("s2s_line_breaker_rules_json",rules,"hec_metadata","none","tokens_json",
+            new Password("[{\"token\":\""+ProtocolTest.SECRET+"\",\"sourcetype\":\"token\"}]")));
+        Thread running=Thread.ofVirtual().start(()->input.start(received::add));
+        try{
+            int port=server(input).port();var client=HttpClient.newHttpClient();
+            // wire, query, expected effective type, selected (rather than standard LF framing)
+            String[][] cases={{"","","token","yes"},{"","query","query","yes"},
+                {"wire","query","wire","yes"},{"unmatched","query","unmatched","no"},{"","unmatched","unmatched","no"}};
+            for(int i=0;i<cases.length;i++){
+                var row=cases[i];var body=new S2STest.Body().op(0xfe).v(1).ns("source::source-"+i).ns("host::sender");
+                if(row[0].isEmpty())body.v(0);else body.ns("sourcetype::"+row[0]);
+                byte[] bytes=body.ns("channel").v(0).eventAt(0x0a,0,0,1).str("START one\n trace\nSTART two").compressed();
+                String route="s2s"+(row[1].isEmpty()?"":"?sourcetype="+row[1]);
+                var response=assemblyPost(client,port,route,bytes);assertEquals(200,response.statusCode(),response.body());
+                List<String> text=new ArrayList<>();int count=row[3].equals("yes")?1:3;
+                for(int n=0;n<count;n++){
+                    var event=received.poll(5,TimeUnit.SECONDS);assertNotNull(event);
+                    assertEquals(row[2],event.get("sourcetype"));assertEquals("source-"+i,event.get("source"));text.add((String)event.get("event"));
+                }
+                assertEquals(row[3].equals("yes")?List.of("START one\n trace\n"):List.of("START one"," trace","START two"),text);
+            }
+            assertNull(received.poll(200,TimeUnit.MILLISECONDS));
+        }finally{input.stop();running.join(5000);assertFalse(running.isAlive());}
+    }
+    @Test void selectedTcpAckPrecedesQueueAndReconnectContinuesTheDurableTail()throws Exception{
+        int tcp=freePort();var input=input(Map.of("s2s_tcp_enabled",true,"s2s_tcp_port",(long)tcp,
+            "s2s_line_breaker_rules_json",S2SAssemblyTest.RULES.replace(":100}",":60000}")));
+        var received=new LinkedBlockingQueue<Map<String,Object>>();Thread running=Thread.ofVirtual().start(()->input.start(received::add));
+        try{
+            for(int occurrence=0;occurrence<2;occurrence++)try(Socket socket=connectTcp(tcp)){
+                tcpHello(socket);
+                S2STcpProtocol.writeFrame(socket.getOutputStream(),Map.of("_guid","00000000-0000-4000-8000-000000000002","__s2s_capabilities","v4=1;pl=7"));
+                var record=new S2STest.Body().meta().op(0xfc).v(1).v(0x0e).v(7).v(occurrence==0?0:13).v(1).v(occurrence+1).v(1700000000).v(0)
+                    .str(occurrence==0?"START pending":"trace\nSTART next");
+                socket.getOutputStream().write(record.out.toByteArray());socket.getOutputStream().flush();
+                assertEquals(0xfb,socket.getInputStream().read());assertEquals(occurrence+1,socket.getInputStream().read());
+                if(occurrence==0){assertTrue(received.isEmpty());assertTrue(java.nio.file.Files.exists(directory.resolve("assembly/state")));}
+            }
+            var event=received.poll(5,TimeUnit.SECONDS);assertNotNull(event);assertEquals("START pending\ntrace\n",event.get("event"));
+        }finally{input.stop();running.join(5000);}
+    }
+    @Test void tokenRevocationRejectsNewTrafficButDoesNotDiscardAcceptedAssembly()throws Exception{
+        Path policy=directory.resolve("reload.conf");
+        java.nio.file.Files.writeString(policy,"[http://one]\ntoken = "+ProtocolTest.SECRET+"\nuseACK = true\n");
+        var input=input(Map.of("inputs_conf",policy.toString(),"tokens_json",new Password("[]"),
+            "s2s_line_breaker_rules_json",S2SAssemblyTest.RULES.replace(":100}",":5000}")));
+        var received=new LinkedBlockingQueue<Map<String,Object>>();Thread running=Thread.ofVirtual().start(()->input.start(received::add));
+        try{
+            var server=server(input);var client=HttpClient.newHttpClient();
+            var bytes=new S2STest.Body().meta().eventAt(0x0a,0,0,1).str("START accepted").compressed();
+            assertEquals(200,assemblyPost(client,server.port(),"s2s",bytes).statusCode());
+            java.nio.file.Files.writeString(policy,"[http://one]\ntoken = replacement-token\nuseACK = true\n");
+            long deadline=System.nanoTime()+TimeUnit.SECONDS.toNanos(4);int status;
+            do{status=assemblyPost(client,server.port(),"s2s",bytes).statusCode();if(status!=403)Thread.sleep(50);}while(status!=403&&System.nanoTime()<deadline);
+            assertEquals(403,status);
+            var accepted=received.poll(8,TimeUnit.SECONDS);assertNotNull(accepted);assertEquals("START accepted",accepted.get("event"));
+            assertTrue(received.isEmpty());
+        }finally{input.stop();running.join(5000);}
+    }
     @Test void unexpectedListenerFailureTerminatesTheInputAndReleasesState()throws Exception{
         SplunkHec input=input();var failure=new AtomicReference<Throwable>();
         Thread running=Thread.ofVirtual().start(()->{try{input.start(e->{});}catch(Throwable e){failure.set(e);}});

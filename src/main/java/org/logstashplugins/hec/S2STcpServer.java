@@ -195,8 +195,19 @@ final class S2STcpServer implements AutoCloseable{
                         io.cancel(false);io=null;socket.setSoTimeout(0);
                         // Metadata/control records produce no events. For an event record, build ALL envelopes
                         // first: if any of them is invalid nothing has been inserted yet.
-                        List<Map<String,Object>> events=record.event()==null||record.event().control()?List.of():
-                            mapper.mapWithIdentity(List.of(record.event()),policy,Map.of(),record.wireSha256(),memory);
+                        Map<String,Object> recordInfo=new LinkedHashMap<>(connectionInfo);
+                        if(record.eventId()!=null)recordInfo.put("event_id",Long.toUnsignedString(record.eventId()));
+                        S2SStreamAssembler.Ordered ordered=null;
+                        try{
+                        List<Map<String,Object>> events;
+                        if(record.event()==null||record.event().control())events=List.of();
+                        else if(resources.assembly==null)events=mapper.mapWithIdentity(List.of(record.event()),policy,Map.of(),record.wireSha256(),memory);
+                        else{
+                            ordered=resources.assembly.acceptOrdered(List.of(record.event()),policy,Map.of(),record.wireSha256(),
+                                record.event().sequence()>=0&&(record.event().offset()>0||record.event().offset()==0&&record.event().stream()!=0)
+                                    &&record.event().raw().length>0?record.wireSha256():UUID.randomUUID().toString(),resources.assemblyNamespace+"/tcp",limits,memory,recordInfo);
+                            events=ordered.events();
+                        }
                         for(var event:events){
                             // hec_metadata id_only/none attach no connection provenance, so skip building it.
                             if(resources.metadata!=MetadataMode.FULL)continue;
@@ -212,7 +223,9 @@ final class S2STcpServer implements AutoCloseable{
                         // Insertion into the Logstash queue. This call may block for a long time when the queue
                         // is full; that is the intended back-pressure. An interrupt (shutdown) aborts it
                         // without an ACK, so the sender resends after restart.
-                        for(var event:events){if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();sink.accept(event);}
+                        if(ordered!=null)ordered.enqueue(sink);
+                        else for(var event:events){if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();sink.accept(event);}
+                        }finally{if(ordered!=null)ordered.close();}
                         // ACK only if the sender asked for acknowledgements and this record carried a real
                         // (non-zero) event ID. This line is reached strictly AFTER all inserts succeeded.
                         if(requestedAck&&record.eventId()!=null&&record.eventId()!=0){

@@ -39,7 +39,7 @@ import runtime
 from senders import sender_bootstrap_args, sender_network, sender_ready
 
 ROOT = runtime.ROOT
-EVIDENCE = ROOT / 'tests/interop/evidence'
+EVIDENCE = runtime.EVIDENCE
 # Every synthetic event this test creates has a ``source`` starting with this prefix. The forwarder
 # also sends its own internal logs (splunkd.log and so on); those are ignored by the checks.
 SOURCE = '/tmp/hec-source.'

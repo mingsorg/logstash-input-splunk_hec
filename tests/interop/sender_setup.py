@@ -84,6 +84,18 @@ for name,content in [('log','alpha\n  indented remains separate\n重复\nrepeat\
 # Metadata qualification selects the observed per-record _path and crcSalt
 # keys emitted by these monitors. Do not confuse inputs.conf _meta indexed
 # extractions with wire-metadata keys: the receiver must keep those in fields.
+if os.environ.get('HEC_ASSEMBLY_FIXTURE'):
+    # Dedicated real-forwarder scenario; ordinary fixtures above remain the legacy regression.
+    inputs='[monitor://$SPLUNK_HOME/var/log/splunk]\ndisabled = true\n'
+    for name,kind in [('a','hec_assembly_selected'),('b','hec_assembly_selected'),('fallback','hec_assembly_fallback')]:
+        filename='/tmp/hec-assembly-'+name+'.log'
+        inputs+='\n[monitor://'+filename+']\ndisabled = false\nindex = main\nsourcetype = '+kind+'\ncrcSalt = <SOURCE>\n'
+        Path(filename).write_text(('START '+name+' one\n  trace '+name+'\n\nSTART '+name+' two\n  end '+name+'\n') if name!='fallback' else 'fallback\n  separate\nrepeat\n')
+    inputs+='\n[monitor:///tmp/hec-source.json]\ndisabled = false\nindex = main\nsourcetype = hec_native_json\ncrcSalt = <SOURCE>\n'
+    (app/'inputs.conf').write_text(inputs)
+    with (app/'props.conf').open('a') as props:
+        props.write('\n[hec_assembly_selected]\nDATETIME_CONFIG = CURRENT\nSHOULD_LINEMERGE = true\nBREAK_ONLY_BEFORE = ^START\n'
+                    '\n[hec_assembly_fallback]\nDATETIME_CONFIG = CURRENT\nSHOULD_LINEMERGE = false\n')
 subprocess.run(['chown','-R','splunk:splunk',str(app.parent)],check=True)
 print('sender setup: app configured',flush=True)
 if os.environ.get('HEC_STARTUP_MODE')=='direct':

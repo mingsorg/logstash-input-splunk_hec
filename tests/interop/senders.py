@@ -22,7 +22,7 @@ import urllib.parse
 import urllib.request
 
 ROOT=runtime.ROOT
-EVIDENCE=ROOT/'tests/interop/evidence'
+EVIDENCE=runtime.EVIDENCE
 CAPTURES=ROOT/'tests/interop/fixtures/senders'
 
 def sender_network():

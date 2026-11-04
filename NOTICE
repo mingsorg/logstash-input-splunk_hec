@@ -13,4 +13,6 @@ Bundled Jackson dependencies retain their upstream licenses and notices inside
 the plugin JAR, including artifact-specific copies under META-INF/third-party/.
 
 Logstash's Java plugin API is used as a compile-only dependency.
+RE2/J 1.8 (The RE2/J Authors), BSD 3-Clause License, provides bounded pattern matching.
+Its upstream license is retained with the bundled dependency in META-INF/third-party/.
 Splunk and Logstash product names are the trademarks of their respective owners.

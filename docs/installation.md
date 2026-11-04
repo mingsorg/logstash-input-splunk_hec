@@ -1,5 +1,10 @@
 # Installation guide
 
+Current source identity is selected by `VERSION` (**0.2.0 development**, unreleased).
+The verified labels in this guide originated with 0.1.0; they do not qualify the
+new gem. See [0.2.0 verification](verification-0.2.0.md) and release-scoped exact-digest
+reports under `tests/interop/evidence/0.2.0/` for current results.
+
 How to build the `splunk_hec` input and install it into Logstash: from a source checkout,
 onto a package/tarball Logstash, into a Docker image, and on Kubernetes. It also covers
 first-run verification, upgrade, removal and troubleshooting.
@@ -33,11 +38,11 @@ beyond what Logstash already ships.
 There is no published release; build the gem from the repository.
 
 ```sh
-git clone https://github.com/mingsorg/logstash-input-splunk_hec.git     # private repo: needs access
+git clone https://github.com/mingsorg/logstash-input-splunk_hec.git     # public repo
 cd logstash-input-splunk_hec
 ./gradlew test gem
-ls -l logstash-input-splunk_hec-0.1.0-java.gem
-sha256sum logstash-input-splunk_hec-0.1.0-java.gem
+ls -l logstash-input-splunk_hec-0.2.0-java.gem
+sha256sum logstash-input-splunk_hec-0.2.0-java.gem
 ```
 
 **Verified.** What the build does:
@@ -80,20 +85,20 @@ where Logstash lives.
 Package install (`/usr/share/logstash`):
 
 ```sh
-sudo /usr/share/logstash/bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.1.0-java.gem
+sudo /usr/share/logstash/bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.2.0-java.gem
 ```
 
 Tarball install (the directory you unpacked):
 
 ```sh
 cd /opt/logstash-9.5.5
-bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.1.0-java.gem
+bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.2.0-java.gem
 ```
 
 Expected output **(Verified)**:
 
 ```
-Validating /path/to/logstash-input-splunk_hec-0.1.0-java.gem
+Validating /path/to/logstash-input-splunk_hec-0.2.0-java.gem
 Installing logstash-input-splunk_hec
 Installation successful
 ```
@@ -119,9 +124,10 @@ This is the recommended method for containers and the only practical one for air
 ```dockerfile
 ARG LOGSTASH_IMAGE=docker.elastic.co/logstash/logstash:9.5.5
 FROM ${LOGSTASH_IMAGE}
-COPY --chown=logstash:logstash logstash-input-splunk_hec-0.1.0-java.gem /tmp/
-RUN bin/logstash-plugin install /tmp/logstash-input-splunk_hec-0.1.0-java.gem \
- && rm /tmp/logstash-input-splunk_hec-0.1.0-java.gem
+ARG PLUGIN_GEM
+COPY --chown=logstash:logstash ${PLUGIN_GEM} /tmp/plugin.gem
+RUN bin/logstash-plugin install /tmp/plugin.gem \
+ && rm /tmp/plugin.gem
 USER root
 RUN install -d -o logstash -g logstash -m 0750 /var/lib/logstash/hec
 USER logstash
@@ -131,16 +137,17 @@ EXPOSE 8088 9997
 Build and run:
 
 ```sh
-mkdir build-ctx && cp logstash-input-splunk_hec-0.1.0-java.gem docker/Dockerfile.logstash build-ctx/
+mkdir build-ctx && cp logstash-input-splunk_hec-0.2.0-java.gem docker/Dockerfile.logstash build-ctx/
 docker build -f build-ctx/Dockerfile.logstash \
   --build-arg LOGSTASH_IMAGE=docker.elastic.co/logstash/logstash:9.5.5 \
-  -t logstash-splunk-hec:0.1.0 build-ctx
+  --build-arg PLUGIN_GEM=logstash-input-splunk_hec-0.2.0-java.gem \
+  -t logstash-splunk-hec:0.2.0 build-ctx
 
 docker run -d --name logstash-hec \
   -p 8088:8088 -p 9997:9997 \
   -v "$PWD/pipeline:/usr/share/logstash/pipeline:ro" \
   -v hec-state:/var/lib/logstash/hec \
-  logstash-splunk-hec:0.1.0
+  logstash-splunk-hec:0.2.0
 ```
 
 Points that matter:
@@ -160,7 +167,7 @@ Docker Compose:
 ```yaml
 services:
   logstash:
-    image: logstash-splunk-hec:0.1.0
+    image: logstash-splunk-hec:0.2.0
     ports: ["8088:8088", "9997:9997"]
     volumes:
       - ./pipeline:/usr/share/logstash/pipeline:ro
@@ -169,7 +176,7 @@ volumes:
   hec-state:
 ```
 
-To ship the image to an air-gapped host: `docker save logstash-splunk-hec:0.1.0 | gzip > hec.tar.gz`, then
+To ship the image to an air-gapped host: `docker save logstash-splunk-hec:0.2.0 | gzip > hec.tar.gz`, then
 `docker load < hec.tar.gz` there (**Not tested here**; standard Docker).
 
 ## 6. Kubernetes
@@ -252,7 +259,7 @@ Run these in order; all were **Verified** in Docker for Logstash 9.5.0 and 9.5.5
 
    ```sh
    bin/logstash-plugin list --verbose splunk
-   # logstash-input-splunk_hec (0.1.0)
+   # logstash-input-splunk_hec (0.2.0)
    ```
 
 2. The pipeline parses and the plugin options are valid:
