@@ -30,6 +30,25 @@ class HttpTlsTest {
             .header("Authorization","Splunk "+secret).header("X-Splunk-Request-Channel",CHANNEL)
             .POST(HttpRequest.BodyPublishers.ofString(body)).build(),HttpResponse.BodyHandlers.ofString());
     }
+    /** A rejected request must leave a value-free, rate-limited operator diagnostic explaining the 4xx/5xx. */
+    @Test void rejectedRequestsLogAValueFreeRateLimitedReason()throws Exception{
+        var messages=new CopyOnWriteArrayList<String>();
+        try(var resources=new IngressResources(Limits.defaults());var acks=new AckManager(dir);
+            var server=new HecServer("127.0.0.1",0,plain(),Limits.defaults(),new TokenStore(null,ProtocolTest.INLINE,s->{}),acks,received::add,resources)){
+            resources.diagnostic=messages::add;server.start();
+            String base="http://127.0.0.1:"+server.port();HttpClient client=client();
+            String secretBody="SENSITIVE-PAYLOAD-VALUE";
+            assertEquals(400,post(client,base,"/services/collector/s2s",secretBody,ProtocolTest.SECRET).statusCode());
+            assertEquals(400,post(client,base,"/services/collector/s2s",secretBody,ProtocolTest.SECRET).statusCode());
+            assertEquals(1,messages.size(),"second rejection inside the window is suppressed: "+messages);
+            String line=messages.getFirst();
+            assertTrue(line.contains("route=s2s")&&line.contains("status=400")&&line.contains("HEC code 6")&&line.contains(" at "),line);
+            assertFalse(line.contains(secretBody)||line.contains(ProtocolTest.SECRET),line);
+            // Authentication failures are not logged (they would let unauthenticated peers flood the log).
+            int denied=post(client,base,"/services/collector/event","{}","22222222-2222-4222-8222-222222222222").statusCode();
+            assertTrue(denied==401||denied==403,"status "+denied);assertEquals(1,messages.size());
+        }
+    }
     @Test void realOracleWireCorpus()throws Exception{
         var fixture=HecProtocol.JSON.readTree(Files.readAllBytes(Path.of("tests/interop/evidence/oracle-http.json")));
         int checked=0;

@@ -26,6 +26,22 @@ final class IngressResources implements AutoCloseable{
     final MetadataMode metadata;
     /** Immutable startup mapping shared by HTTP and TCP, independent of provenance mode. */
     final S2SMetadataFields metadataFields;
+    /** Value-free operator diagnostics (never payload, token or header values); defaults to silent. */
+    volatile java.util.function.Consumer<String> diagnostic=message->{};
+    private final java.util.concurrent.atomic.AtomicLong lastRejection=new java.util.concurrent.atomic.AtomicLong(),suppressedRejections=new java.util.concurrent.atomic.AtomicLong();
+    /**
+     * Logs why a request was rejected, at most once per 10 s, with the count of rejections suppressed since the last
+     * line. Only the route, status, HEC code, fixed message and the throwing source line are reported.
+     */
+    void rejected(String route,int status,Throwable cause){
+        long now=System.currentTimeMillis(),before=lastRejection.get();
+        if(now-before<10_000||!lastRejection.compareAndSet(before,now)){suppressedRejections.incrementAndGet();return;}
+        long skipped=suppressedRejections.getAndSet(0);
+        StackTraceElement[] trace=cause.getStackTrace();
+        String where=trace.length>0?trace[0].getClassName().substring(trace[0].getClassName().lastIndexOf('.')+1)+":"+trace[0].getLineNumber():"unknown";
+        String reason=cause instanceof HecException e?"HEC code "+e.code+" \""+e.getMessage()+"\"":cause.getClass().getSimpleName();
+        diagnostic.accept("HEC request rejected: route="+route+" status="+status+" "+reason+" at "+where+(skipped>0?" ("+skipped+" similar rejections suppressed)":""));
+    }
     S2SStreamAssembler assembly;
     String assemblyNamespace="input";
     /** Memory permanently set aside for the health endpoint so it works even when memory is exhausted. */

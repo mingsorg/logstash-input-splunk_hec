@@ -73,7 +73,7 @@ def main():
         java.append({'suite':root.get('name'),'tests':int(root.get('tests')),'failures':int(root.get('failures')),
                      'errors':int(root.get('errors')),'skipped':int(root.get('skipped')),
                      'cases':[case.get('name') for case in root.findall('testcase')]})
-    checks['java_tests']=len(java)==8 and sum(s['tests'] for s in java)>=110 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in java)
+    checks['java_tests']=len(java)==8 and sum(s['tests'] for s in java)>=111 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in java)
     required_cases={'validationFailureRollsBackWholeBatchAndDefaultIdsRemainIdentical',
                     'concurrentStreamsRemainIsolatedUnderInterleavedCommits','inputNamespacesKeepIdenticalNativeSourcesAndAssembledIdsSeparate',
                     'emptyNativeRecordIsABlankLogicalLineAndUtf8CoordinatesAreRetained','metadataConflictGapReorderingAndStructuredTransitionDoNotOverwrite',
@@ -99,7 +99,8 @@ def main():
                            'enabledRuleDoesNotRejectDelimiterOnlyRecordWithDisallowedIndex',
                            'orphanAfterDirectRecordIsDeliveredInExactSenderOrder',
                            'failureOrRestartBeforeDirectHandoffIsAtLeastOnceWithoutLossOrDuplicates',
-                           'directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged'})
+                           'directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged',
+                           'rejectedRequestsLogAValueFreeRateLimitedReason'})
     checks['matrix_test_cases']={name+'()' for name in required_cases}<={name for suite in java for name in suite['cases']}
     suite=unittest.defaultTestLoader.discover(str(runtime.ROOT/'tests/build'))
     log=io.StringIO()

@@ -143,7 +143,7 @@ public final class SplunkHec implements Input {
         if(tcpEvent>limits.expanded())throw new IllegalArgumentException("s2s_tcp_max_event_bytes must not exceed max_expanded_bytes");
         tcpLimits=new Limits(limits.concurrency(),limits.connections(),limits.wire(),limits.expanded(),limits.aggregate(),(int)tcpEvent,
             limits.events(),limits.depth(),limits.readMillis(),limits.admissionMillis(),limits.shutdownMillis());
-        resources=new IngressResources(limits,MetadataMode.parse(config.get(METADATA)),S2SMetadataFields.parse(config.get(S2SMETADATA)));
+        resources=new IngressResources(limits,MetadataMode.parse(config.get(METADATA)),S2SMetadataFields.parse(config.get(S2SMETADATA)));resources.diagnostic=diagnostic;
         Path state=Path.of(config.get(STATE)).toAbsolutePath();
         tokens=new TokenStore(path(config.get(FILE)),config.get(TOKENS).getValue(),message->context.getLogger(this).warn(message));
         // --- Per-listener TLS -------------------------------------------------------------------------

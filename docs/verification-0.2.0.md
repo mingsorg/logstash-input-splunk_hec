@@ -58,3 +58,11 @@ intended workload and re-measure on the target filesystem; Linux/ext4/XFS fsync 
 differ. Batching many lines per request, which UF and HF normally do, amortizes the
 commit. An append-only journal would remove the quadratic term but is not part of 0.2.0.
 
+Operator diagnostics: every HTTP request rejected with a non-authentication 4xx/5xx
+now logs one value-free WARN line, at most once per 10 s with a count of suppressed
+similar rejections: route, status, HEC code, the fixed message and the rejecting source
+line (for example `HEC request rejected: route=s2s status=400 HEC code 6 "Invalid data
+format" at S2SDecoder:123`). Payloads, tokens and headers are never logged and 401/403
+are not logged. This exists because a forwarder that retries a rejected batch forever
+(observed in the demo lab on the 0.1.0 plugin) was otherwise undiagnosable.
+

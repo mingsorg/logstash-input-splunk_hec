@@ -68,7 +68,7 @@ public final class HecServer implements AutoCloseable {
         }catch(IOException e){if(!stopped){acceptFailure=e;stopAdmission();}}
     }
     private void handle(Socket socket){
-        boolean admitted=false, healthOnly=false;
+        boolean admitted=false, healthOnly=false;String rejectedRoute="unknown";
         ScheduledFuture<?> readDeadline=null;
         MemoryBudget.Lease lease=memory.lease();
         try{
@@ -85,7 +85,7 @@ public final class HecServer implements AutoCloseable {
             if(socket instanceof SSLSocket ssl)ssl.startHandshake();
             InputStream input=socket.getInputStream();
             Request request=headers(socket,input,deadline);
-            String kind=route(request.path);
+            String kind=route(request.path);rejectedRoute=kind;
             if(!request.method.equals(kind.equals("health")?"GET":"POST"))throw new HecException(405,404,"The requested URL was not found on this server.");
             if(kind.equals("health")){
                 boolean healthy=!healthOnly && !stopped && processing.availablePermits()>0 && memory.used()<limits.aggregate() && (resources.assembly==null||resources.assembly.healthy());
@@ -158,9 +158,9 @@ public final class HecServer implements AutoCloseable {
                 if(ticket!=null)response.put("ackId",ticket.id());
                 respond(socket,200,response);
             }
-        }catch(HecException e){quietResponse(socket,e.status,e.response());}
+        }catch(HecException e){if(e.status!=401&&e.status!=403)resources.rejected(rejectedRoute,e.status,e);quietResponse(socket,e.status,e.response());}
         catch(InterruptedException e){Thread.currentThread().interrupt();quietResponse(socket,503,HecException.busy().response());}
-        catch(Exception e){quietResponse(socket,503,HecException.busy().response());}
+        catch(Exception e){resources.rejected(rejectedRoute,503,e);quietResponse(socket,503,HecException.busy().response());}
         finally{
             if(readDeadline!=null)readDeadline.cancel(false);
             lease.close();
