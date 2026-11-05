@@ -44,9 +44,15 @@ class HttpTlsTest {
             String line=messages.getFirst();
             assertTrue(line.contains("route=s2s")&&line.contains("status=400")&&line.contains("HEC code 6")&&line.contains(" at "),line);
             assertFalse(line.contains(secretBody)||line.contains(ProtocolTest.SECRET),line);
-            // Authentication failures are not logged (they would let unauthenticated peers flood the log).
-            int denied=post(client,base,"/services/collector/event","{}","22222222-2222-4222-8222-222222222222").statusCode();
-            assertTrue(denied==401||denied==403,"status "+denied);assertEquals(1,messages.size());
+        }
+        // Authentication failures are not logged (they would let unauthenticated peers flood the log). A fresh server has no
+        // active suppression window, so a deleted 401/403 filter would be visible here.
+        var authMessages=new CopyOnWriteArrayList<String>();
+        try(var resources=new IngressResources(Limits.defaults());var acks=new AckManager(dir.resolve("auth"));
+            var server=new HecServer("127.0.0.1",0,plain(),Limits.defaults(),new TokenStore(null,ProtocolTest.INLINE,s->{}),acks,received::add,resources)){
+            resources.diagnostic=authMessages::add;server.start();
+            int denied=post(client(),"http://127.0.0.1:"+server.port(),"/services/collector/event","{}","22222222-2222-4222-8222-222222222222").statusCode();
+            assertTrue(denied==401||denied==403,"status "+denied);assertTrue(authMessages.isEmpty(),authMessages.toString());
         }
     }
     @Test void realOracleWireCorpus()throws Exception{

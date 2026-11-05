@@ -38,10 +38,17 @@ def artifact_info():
 
 def validators_info():
     """Digest of every producing validator/fixture so a report cannot outlive an edited assertion (the final gate is excluded)."""
-    base=ROOT/'tests/interop';digest=hashlib.sha256()
-    for path in sorted(p for p in base.rglob('*') if p.is_file() and 'evidence' not in p.relative_to(base).parts
-                       and '__pycache__' not in p.parts and p.name!='check_assembly_qualification.py'):
-        digest.update(path.relative_to(base).as_posix().encode()+b'\0'+hashlib.sha256(path.read_bytes()).digest())
+    digest=hashlib.sha256();paths=[]
+    base=ROOT/'tests/interop'
+    # Interop scripts/fixtures (per-release evidence output and the final gate itself are not producers) ...
+    paths+=[p for p in base.rglob('*') if p.is_file() and not (p.relative_to(base).parts[0]=='evidence' and len(p.relative_to(base).parts)>2)
+            and '__pycache__' not in p.parts and p.name!='check_assembly_qualification.py']
+    # ... plus the other executed harnesses, build scripts and version pins.
+    for extra in ('tests/http','tests/tcp','scripts'):
+        paths+=[p for p in (ROOT/extra).rglob('*') if p.is_file() and '__pycache__' not in p.parts and 'evidence' not in p.relative_to(ROOT/extra).parts]
+    paths+=[ROOT/'versions.properties',ROOT/'VERSION']
+    for path in sorted(set(paths)):
+        digest.update(path.relative_to(ROOT).as_posix().encode()+b'\0'+hashlib.sha256(path.read_bytes()).digest())
     return digest.hexdigest()
 
 def docker(*args, **kw):

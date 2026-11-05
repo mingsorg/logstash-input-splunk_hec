@@ -45,11 +45,18 @@ class AssemblyQualificationTest(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=ROOT/'build') as temporary:
             root=Path(temporary);base=root/'tests/interop';base.mkdir(parents=True)
             (base/'a.py').write_text('assert 1');(base/'check_assembly_qualification.py').write_text('gate v1')
-            (base/'evidence').mkdir();(base/'evidence/report.json').write_text('{}')
+            (base/'evidence').mkdir();(base/'evidence/report.json').write_text('{}');(base/'evidence/0.2.0').mkdir();(base/'evidence/0.2.0/out.json').write_text('{}')
+            (root/'versions.properties').write_text('a=1');(root/'VERSION').write_text('0.2.0');(root/'scripts').mkdir();(root/'scripts/s.py').write_text('x')
             with patch.object(runtime,'ROOT',root):
                 first=runtime.validators_info()
-                (base/'check_assembly_qualification.py').write_text('gate v2');(base/'evidence/report.json').write_text('{"x":1}')
-                self.assertEqual(first,runtime.validators_info(),'the gate and evidence output are not producers')
+                (base/'check_assembly_qualification.py').write_text('gate v2');(base/'evidence/0.2.0/out.json').write_text('{"x":1}')
+                self.assertEqual(first,runtime.validators_info(),'the gate and per-release evidence output are not producers')
+                (root/'scripts/s.py').write_text('y')
+                self.assertNotEqual(first,runtime.validators_info(),'build scripts and pins are producers')
+                (root/'scripts/s.py').write_text('x')
+                (base/'evidence/report.json').write_text('{"corpus":1}')
+                self.assertNotEqual(first,runtime.validators_info(),'top-level evidence is an input corpus')
+                (base/'evidence/report.json').write_text('{}')
                 (base/'a.py').write_text('assert 2')
                 self.assertNotEqual(first,runtime.validators_info(),'an edited assertion must invalidate retained reports')
 

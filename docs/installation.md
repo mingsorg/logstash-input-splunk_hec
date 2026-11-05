@@ -1,6 +1,6 @@
 # Installation guide
 
-Current source identity is selected by `VERSION` (**0.2.0 development**, unreleased).
+Current source identity is selected by `VERSION` (**0.2.0**, built from source; no published gem).
 The verified labels in this guide originated with 0.1.0; they do not qualify the
 new gem. See [0.2.0 verification](verification-0.2.0.md) and release-scoped exact-digest
 reports under `tests/interop/evidence/0.2.0/` for current results.

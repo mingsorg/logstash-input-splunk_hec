@@ -80,10 +80,15 @@ final class S2SStreamAssembler implements AutoCloseable {
             // Admission reserved finalization headroom under the quota in force at the time; recovery must prove the
             // same under the quota in force NOW, otherwise an ACKed tail could never be completed.
             try{validateFinalizationCapacity(state);}
-            catch(AssembledEventTooLarge|HecException error){throw new IOException("assembly recovery bounds exceeded; retained state cannot be finalized under the configured limits");}
-            catch(IOException error){throw new IOException("assembly recovery bounds exceeded; retained state cannot be finalized under the configured storage quota",error);}
+            catch(IOException|AssembledEventTooLarge|HecException|ArithmeticException|ClassCastException|IllegalArgumentException|NullPointerException error){
+                throw new IOException("assembly recovery bounds exceeded; retained state cannot be finalized under the configured s2s_assembly_max_bytes/s2s_assembly_max_streams",error);
+            }
             blocked=state.blocked;if(blocked)diagnostic.accept("S2S assembly blocked; retained oversized stream requires explicit operator recovery");
-        }catch(IOException|RuntimeException error){if(opened!=null)opened.close();reservation.close();throw error;}
+        }catch(IOException|RuntimeException error){
+            try{if(opened!=null)opened.close();}catch(IOException closeFailure){error.addSuppressed(closeFailure);}
+            finally{reservation.close();}
+            throw error;
+        }
     }
     /** Recovery reads only snapshots the store already bounded to {@code maximum} bytes, so string/number limits follow that bound rather than Jackson's defaults. */
     private static com.fasterxml.jackson.databind.ObjectMapper recoveryMapper(long maximum){
@@ -157,11 +162,20 @@ final class S2SStreamAssembler implements AutoCloseable {
                 // A record the legacy path maps to zero events (for example a delimiter-only record) must not become a new
                 // failure merely because an unrelated rule is enabled: only a stream-relevant identity may select it.
                 try{effective=effective(record,token,request,protocol,memory);}
-                catch(HecException unusable){mapped.add(new Mapped(legacy,null));continue;}
+                catch(HecException unusable){
+                    // Only identity/validation rejections (4xx) of a record the standard path ignores are skipped; resource
+                    // pressure (503) must still tell the sender to retry rather than silently drop the record.
+                    if(unusable.status>=500)throw unusable;
+                    mapped.add(new Mapped(legacy,null));continue;
+                }
             }else effective=legacy.getFirst();
             boolean selected=!record.structured()&&(record.flags()&S2SDecoder.METRIC)==0&&policy.select((String)effective.get("sourcetype"))!=null;
             if(selected){
-                if(effective.get("host")==null||effective.get("source")==null)throw new HecException(400,6,"Selected S2S record requires source identity");
+                if(effective.get("host")==null||effective.get("source")==null){
+                    // The standard path ignores a record with no events; lacking identity must not turn it into a rejection.
+                    if(legacy.isEmpty()){mapped.add(new Mapped(legacy,null));continue;}
+                    throw new HecException(400,6,"Selected S2S record requires source identity");
+                }
                 boolean positioned=record.sequence()>=0&&(record.offset()>0||record.offset()==0&&record.stream()!=0);
                 if(positioned)Math.addExact(record.offset(),record.raw().length);
                 String key=hash(Arrays.asList(namespace,token.identity(),effective.get("host"),effective.get("source"),effective.get("index"),effective.get("sourcetype"),record.channel(),record.stream()));
@@ -208,6 +222,7 @@ final class S2SStreamAssembler implements AutoCloseable {
             for(String other:new ArrayList<>(pending.keySet()))if(!other.equals(key)&&pending.get(other).origin.equals(origin)){
                 finish(other,pending,outbox,"metadata-conflict",memory);committed.remove(other);changed=true;
             }
+            if(legacy.isEmpty()&&!record.structured()&&(record.flags()&S2SDecoder.METRIC)==0&&rule==null){number++;continue;} // nothing to order or emit
             if(record.structured()||(record.flags()&S2SDecoder.METRIC)!=0||rule==null){
                 if((record.structured()||(record.flags()&S2SDecoder.METRIC)!=0)&&pending.containsKey(key)){
                     finish(key,pending,outbox,"structured-transition",memory);committed.remove(key);changed=true;

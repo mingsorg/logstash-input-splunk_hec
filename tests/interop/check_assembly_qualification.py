@@ -58,6 +58,7 @@ def main():
     indexed=read('indexed-assembly.json');controls=indexed.get('negative_controls',{})
     checks['indexed_only_negative_controls']=controls.get('rows',0)>0 and controls.get('rejected')==3*controls['rows']
     checks['first_contribution_time_across_restart']=len(assembly.get('timestamp_recovery',[]))==4 and all(r.get('first_contribution_time_retained') is True and r['first_time']!=r['later_time'] for r in assembly['timestamp_recovery'])
+    upgrade=read('upgrade-check.json');checks['upgrade_baseline_pinned']=upgrade['baseline']['sha256']==upgrade['baseline'].get('pinned_sha256')
     upgrade=read('upgrade-check.json');checks['live_stateful_upgrade_traffic']=len(upgrade.get('runtimes',[]))==2 and all('LIVE_BEFORE_OK' in r.get('output','') and 'LIVE_AFTER_OK' in r.get('output','') for r in upgrade['runtimes'])
     runtimes=read('runtime.json')
     checks['legacy_runtime_matrix']={(r['role'],r['queue']) for r in runtimes if r.get('artifact')==artifact and 'error' not in r}=={(role,queue) for role in ('minimum','latest') for queue in ('memory','persisted')}
@@ -73,7 +74,7 @@ def main():
         java.append({'suite':root.get('name'),'tests':int(root.get('tests')),'failures':int(root.get('failures')),
                      'errors':int(root.get('errors')),'skipped':int(root.get('skipped')),
                      'cases':[case.get('name') for case in root.findall('testcase')]})
-    checks['java_tests']=len(java)==8 and sum(s['tests'] for s in java)>=111 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in java)
+    checks['java_tests']=len(java)==8 and sum(s['tests'] for s in java)>=115 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in java)
     required_cases={'validationFailureRollsBackWholeBatchAndDefaultIdsRemainIdentical',
                     'concurrentStreamsRemainIsolatedUnderInterleavedCommits','inputNamespacesKeepIdenticalNativeSourcesAndAssembledIdsSeparate',
                     'emptyNativeRecordIsABlankLogicalLineAndUtf8CoordinatesAreRetained','metadataConflictGapReorderingAndStructuredTransitionDoNotOverwrite',
@@ -100,18 +101,23 @@ def main():
                            'orphanAfterDirectRecordIsDeliveredInExactSenderOrder',
                            'failureOrRestartBeforeDirectHandoffIsAtLeastOnceWithoutLossOrDuplicates',
                            'directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged',
-                           'rejectedRequestsLogAValueFreeRateLimitedReason'})
+                           'rejectedRequestsLogAValueFreeRateLimitedReason','legacyIgnoredUnselectedRecordCreatesNoGateStateOrBarrier',
+                           'httpDirectRecordWaitsBehindBlockedSameSenderPredecessorAtTheListener','httpMixedBatchReachesTheQueueInExactWireOrder',
+                           'tcpDirectRecordWaitsBehindBlockedSameSenderPredecessorAndIsAckedAfterInsertion'})
     checks['matrix_test_cases']={name+'()' for name in required_cases}<={name for suite in java for name in suite['cases']}
     suite=unittest.defaultTestLoader.discover(str(runtime.ROOT/'tests/build'))
     log=io.StringIO()
     with contextlib.redirect_stdout(log),contextlib.redirect_stderr(log):
         result=unittest.TextTestRunner(stream=log,verbosity=2).run(suite)
     checks['python_tests']=result.wasSuccessful() and result.testsRun>=21
+    review_file=runtime.EVIDENCE/'independent-review.md'
+    review={'status':'complete' if review_file.is_file() and 'No unresolved high or medium findings' in review_file.read_text() else 'findings-open','report':review_file.relative_to(runtime.ROOT).as_posix(),'sha256':hashlib.sha256(review_file.read_bytes()).hexdigest() if review_file.is_file() else None}
     report={'artifact':artifact,'validators':validators,'package_manifest_sha256':package_manifest,
             'status':'pass' if all(checks.values()) else 'fail','checks':checks,'java':java,
             'java_tests':sum(s['tests'] for s in java),'python_tests':result.testsRun,'python_output':log.getvalue(),
-            'independent_review':{'status':'findings-open','report':'build/reviews/completion-review-0.2.0.md','reason':'Review ran and reported R1-R4 plus verification gaps; code fixes are in place but live matrix evidence must be regenerated and the result re-reviewed before release'},
+            'independent_review':review,
             'release_ready':False}
+    report['release_ready']=report['status']=='pass' and review['status']=='complete'
     (runtime.EVIDENCE/'qualification-summary.json').write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps({k:report[k] for k in ('artifact','status','checks','java_tests','python_tests','independent_review','release_ready')},indent=2))
     return 0 if report['status']=='pass' else 1

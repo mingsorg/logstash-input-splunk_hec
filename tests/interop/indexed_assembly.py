@@ -99,11 +99,11 @@ output { http { url => "'''+destination+'''" http_method => "post" format => "me
             # fields differ, and one reduced to what _raw alone could supply.
             stripped={k:v for k,v in row.items() if k not in ('hec_qualification_digest','hec_qualification_fields_json')}
             altered=dict(row,hec_qualification_fields_json=json.dumps({'forged':['value']}))
-            raw_only=dict(stripped,**{k:v for k,v in row.items() if k.startswith('a.b')})
-            for control in (stripped,altered,raw_only):
+            wrong_digest=dict(row,hec_qualification_digest=hashlib.sha256((row['hec_qualification_digest']+'x').encode()).hexdigest())
+            for control in (stripped,altered,wrong_digest):
                 assert not any(native_values_match(control,event,hosts) for event in candidates),('negative control accepted',control)
                 controls+=1
-        report['negative_controls']={'rejected':controls,'rows':len(indexed),'kinds':['digest-and-fields-removed','ordered-fields-forged','raw-derivable-values-only']}
+        report['negative_controls']={'rejected':controls,'rows':len(indexed),'kinds':['digest-and-fields-removed','ordered-fields-forged','digest-of-a-different-event']}
         report.update(status='pass',indexer_image=runtime.P['splunk.image'],receiver_image=runtime.P['logstash.latest.image'],
                        indexed_events=indexed,route_marker=marker,search=search,
                       note='JSON fixture fields may repeat in search results: forwarded indexed fields plus Splunk default search-time extraction of identical _raw; assertions require per-event indexed-only digest and exact ordered fields (hec_qualification_digest / hec_qualification_fields_json, absent from _raw); legacy fields are compared de-duplicated and three negative controls per row must be rejected.',

@@ -1,8 +1,10 @@
 # Logstash Splunk HEC input
 
-**0.2.0 development, unreleased:** opt-in sourcetype-specific unstructured S2S
+**0.2.0:** opt-in sourcetype-specific unstructured S2S
 assembly is configured with `s2s_line_breaker_rules_json`. Matched-mode ACKs mean
-durable assembly-stage acceptance; default/unmatched behavior stays unchanged.
+durable assembly-stage acceptance. With assembly enabled, unmatched and structured
+records keep their queue-acceptance ACK semantics and IDs but are ordered per sender
+behind earlier completed assembly output. Without it nothing changes.
 See [configuration](docs/configuration.md#opt-in-s2s-assembly-020-development)
 and [version-scoped verification](docs/verification-0.2.0.md).
 

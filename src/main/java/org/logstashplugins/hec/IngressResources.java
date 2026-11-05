@@ -34,8 +34,8 @@ final class IngressResources implements AutoCloseable{
      * line. Only the route, status, HEC code, fixed message and the throwing source line are reported.
      */
     void rejected(String route,int status,Throwable cause){
-        long now=System.currentTimeMillis(),before=lastRejection.get();
-        if(now-before<10_000||!lastRejection.compareAndSet(before,now)){suppressedRejections.incrementAndGet();return;}
+        long now=System.nanoTime(),before=lastRejection.get();
+        if(before!=0&&now-before<10_000_000_000L||!lastRejection.compareAndSet(before,now)){suppressedRejections.incrementAndGet();return;}
         long skipped=suppressedRejections.getAndSet(0);
         StackTraceElement[] trace=cause.getStackTrace();
         String where=trace.length>0?trace[0].getClassName().substring(trace[0].getClassName().lastIndexOf('.')+1)+":"+trace[0].getLineNumber():"unknown";

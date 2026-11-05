@@ -515,4 +515,13 @@ class S2SAssemblyTest {
             assertEquals(0,assembly.outputCount());
         }
     }
+    // A record the standard path ignores and that no rule selects is neither ordered nor gated nor persisted.
+    @Test void legacyIgnoredUnselectedRecordCreatesNoGateStateOrBarrier()throws Exception{
+        var blank=new S2SDecoder.Event("host","a","other","channel","main",0x0a,7,0,1,1700000000,"1700000000.1",List.of(),null,List.of(),Map.of(),Map.of(),"\n".getBytes(StandardCharsets.UTF_8));
+        try(var assembly=assembler();var lease=memory.lease()){
+            try(var ordered=assembly.acceptOrdered(List.of(blank),token(),Map.of(),"b","http",limits,lease,null)){assertTrue(ordered.events().isEmpty());}
+            assertEquals(0,assembly.pendingCount());assertEquals(0,assembly.outputCount());
+            assertFalse(Files.exists(directory.resolve("assembly/state")),"nothing changed, so nothing is committed");
+        }
+    }
 }

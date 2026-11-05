@@ -6,6 +6,7 @@ import sys
 import runtime
 
 BASELINE=runtime.ROOT/'logstash-input-splunk_hec-0.1.0-java.gem'
+BASELINE_SHA256='ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54' # the released 0.1.0 gem; any other file is not the baseline
 SCRIPT=r'''
 set -e
 L=/usr/share/logstash/bin/logstash-plugin
@@ -70,8 +71,9 @@ echo LIVE_AFTER_OK
 
 def main():
     artifact=runtime.artifact_info()
-    report={'artifact':artifact,'validators':runtime.validators_info(),'baseline':{'file':BASELINE.name,'sha256':hashlib.sha256(BASELINE.read_bytes()).hexdigest()},'runtimes':[],'status':'fail'}
+    report={'artifact':artifact,'validators':runtime.validators_info(),'baseline':{'file':BASELINE.name,'sha256':hashlib.sha256(BASELINE.read_bytes()).hexdigest(),'pinned_sha256':BASELINE_SHA256},'runtimes':[],'status':'fail'}
     try:
+        assert report['baseline']['sha256']==BASELINE_SHA256,'baseline gem is not the pinned released 0.1.0 artifact'
         script=SCRIPT.replace('@TOKEN@',runtime.TOKEN).replace('@CHANNEL@',runtime.CHANNEL).replace('@BASELINE@',BASELINE.name).replace('@GEM@',runtime.GEM.name).replace('@VERSION@',runtime.VERSION)
         for role in ('minimum','latest'):
             output=runtime.docker('run','--rm','--entrypoint','bash','-e','JAVA_HOME=/usr/share/logstash/jdk','-v',str(runtime.ROOT)+':/work:ro',runtime.P['logstash.'+role+'.image'],'-c',script,timeout=1800)

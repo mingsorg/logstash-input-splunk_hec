@@ -121,6 +121,74 @@ class InputLifecycleTest {
             assertEquals(503,rejected.statusCode(),rejected.body());assertFalse(rejected.body().contains("ackId"));
         }finally{release.countDown();input.stop();running.join(5000);}
     }
+    /** Listener-level ordering: while a completed same-sender predecessor is still blocked in the queue, a direct record is neither inserted nor ACKed. */
+    @Test void httpDirectRecordWaitsBehindBlockedSameSenderPredecessorAtTheListener()throws Exception{
+        var values=Map.<String,Object>of("hec_metadata","none","s2s_line_breaker_rules_json",S2SAssemblyTest.RULES,
+            "tokens_json",new Password("[{\"token\":\""+ProtocolTest.SECRET+"\",\"useACK\":true}]"));
+        var input=input(values);var entered=new CountDownLatch(1);var release=new CountDownLatch(1);var first=new java.util.concurrent.atomic.AtomicBoolean(true);
+        var order=new CopyOnWriteArrayList<String>();
+        Thread running=Thread.ofVirtual().start(()->input.start(event->{
+            if(first.getAndSet(false)){entered.countDown();try{if(!release.await(15,TimeUnit.SECONDS))throw new IllegalStateException("never released");}catch(InterruptedException e){Thread.currentThread().interrupt();throw new IllegalStateException(e);}}
+            order.add((String)event.get("event"));}));
+        try{
+            int port=server(input).port();var client=HttpClient.newHttpClient();
+            // Predecessor: a selected tail that completes by its 100 ms deadline and then blocks the queue.
+            assertEquals(200,assemblyPost(client,port,"s2s",new S2STest.Body().meta().eventAt(0x0a,0,0,1).str("START predecessor").compressed()).statusCode());
+            assertTrue(entered.await(10,TimeUnit.SECONDS));
+            byte[] direct=new S2STest.Body().op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::unmatched").ns("channel").v(0)
+                .eventAt(0x0a,0,0,1).str("direct").compressed();
+            var pending=client.sendAsync(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/services/collector/s2s")).timeout(Duration.ofSeconds(20))
+                .header("Authorization","Splunk "+ProtocolTest.SECRET).header("X-Splunk-Request-Channel",HttpTlsTest.CHANNEL)
+                .POST(HttpRequest.BodyPublishers.ofByteArray(direct)).build(),HttpResponse.BodyHandlers.ofString());
+            Thread.sleep(700);
+            assertFalse(pending.isDone(),"direct record must not be ACKed while its predecessor is blocked");assertTrue(order.isEmpty(),order.toString());
+            release.countDown();
+            var response=pending.get(15,TimeUnit.SECONDS);assertEquals(200,response.statusCode(),response.body());assertTrue(response.body().contains("ackId"));
+            assertEquals(List.of("START predecessor","direct"),order);
+        }finally{release.countDown();input.stop();running.join(5000);}
+    }
+    /** One HTTP batch [direct, journaled orphan, direct] reaches the queue in wire order through the listener's own enqueue wiring. */
+    @Test void httpMixedBatchReachesTheQueueInExactWireOrder()throws Exception{
+        var input=input(Map.of("hec_metadata","none","s2s_line_breaker_rules_json",S2SAssemblyTest.RULES));
+        var order=new CopyOnWriteArrayList<String>();Thread running=Thread.ofVirtual().start(()->input.start(event->order.add((String)event.get("event"))));
+        try{
+            int port=server(input).port();
+            var body=new S2STest.Body().op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::unmatched").ns("channel").v(0)
+                .op(0xfe).v(2).ns("source::file").ns("host::host").ns("sourcetype::test").ns("channel").v(0);
+            body.op(0xfc).v(1).v(0x0a).v(7).v(0).v(1).v(1790000000).v(0).str("first-direct");
+            body.op(0xfc).v(2).v(0x0a).v(7).v(0).v(2).v(1790000000).v(0).str("orphan-line");
+            body.op(0xfc).v(1).v(0x0a).v(7).v(20).v(3).v(1790000000).v(0).str("second-direct");
+            var response=assemblyPost(HttpClient.newHttpClient(),port,"s2s",body.compressed());assertEquals(200,response.statusCode(),response.body());
+            long until=System.nanoTime()+TimeUnit.SECONDS.toNanos(10);while(order.size()<3&&System.nanoTime()<until)Thread.sleep(25);
+            assertEquals(List.of("first-direct","orphan-line","second-direct"),order);
+        }finally{input.stop();running.join(5000);}
+    }
+    @Test void tcpDirectRecordWaitsBehindBlockedSameSenderPredecessorAndIsAckedAfterInsertion()throws Exception{
+        int tcp=freePort();var input=input(Map.of("s2s_tcp_enabled",true,"s2s_tcp_port",(long)tcp,"hec_metadata","none","s2s_line_breaker_rules_json",S2SAssemblyTest.RULES));
+        var entered=new CountDownLatch(1);var release=new CountDownLatch(1);var first=new java.util.concurrent.atomic.AtomicBoolean(true);var order=new CopyOnWriteArrayList<String>();
+        Thread running=Thread.ofVirtual().start(()->input.start(event->{
+            if(first.getAndSet(false)){entered.countDown();try{if(!release.await(15,TimeUnit.SECONDS))throw new IllegalStateException("never released");}catch(InterruptedException e){Thread.currentThread().interrupt();throw new IllegalStateException(e);}}
+            order.add((String)event.get("event"));}));
+        try{
+            try(Socket socket=connectTcp(tcp)){
+                tcpHello(socket);S2STcpProtocol.writeFrame(socket.getOutputStream(),Map.of("_guid","00000000-0000-4000-8000-000000000002","__s2s_capabilities","v4=1;pl=7"));
+                socket.getOutputStream().write(new S2STest.Body().meta().op(0xfc).v(1).v(0x0e).v(7).v(0).v(1).v(1).v(1700000000).v(0).str("START predecessor").out.toByteArray());socket.getOutputStream().flush();
+                assertEquals(0xfb,socket.getInputStream().read());assertEquals(1,socket.getInputStream().read());
+            }
+            assertTrue(entered.await(10,TimeUnit.SECONDS));
+            try(Socket socket=connectTcp(tcp)){
+                tcpHello(socket);S2STcpProtocol.writeFrame(socket.getOutputStream(),Map.of("_guid","00000000-0000-4000-8000-000000000002","__s2s_capabilities","v4=1;pl=7"));
+                socket.getOutputStream().write(new S2STest.Body().op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::unmatched").ns("channel").v(0)
+                    .op(0xfc).v(1).v(0x0e).v(7).v(0).v(1).v(2).v(1700000000).v(0).str("direct").out.toByteArray());socket.getOutputStream().flush();
+                var ack=CompletableFuture.supplyAsync(()->{try{return new int[]{socket.getInputStream().read(),socket.getInputStream().read()};}catch(Exception e){throw new CompletionException(e);}});
+                Thread.sleep(700);
+                assertFalse(ack.isDone(),"direct record must not be ACKed while its predecessor is blocked");assertTrue(order.isEmpty(),order.toString());
+                release.countDown();
+                assertArrayEquals(new int[]{0xfb,2},ack.get(15,TimeUnit.SECONDS));
+                assertEquals(List.of("START predecessor","direct"),order);
+            }
+        }finally{release.countDown();input.stop();running.join(5000);}
+    }
     private static HttpResponse<String> assemblyPost(HttpClient client,int port,String route,byte[] body)throws Exception{
         return client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/services/collector/"+route))
             .timeout(Duration.ofSeconds(5)).header("Authorization","Splunk "+ProtocolTest.SECRET).header("X-Splunk-Request-Channel",HttpTlsTest.CHANNEL)

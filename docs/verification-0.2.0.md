@@ -1,6 +1,6 @@
-# 0.2.0 development verification
+# 0.2.0 verification
 
-This is an unreleased development artifact. `VERSION` selects the exact gem;
+This is the 0.2.0 artifact (built from source; not published). `VERSION` selects the exact gem;
 qualification scripts fail if it is absent, rather than choosing a different gem.
 New evidence is isolated under `tests/interop/evidence/0.2.0/`. The existing lab
 remains on its captured 0.1.0 configuration and is not an upgrade target.
@@ -19,7 +19,7 @@ limited assembly/retry scope. Policy migration and oversized blocked-stream
 reconciliation require explicit operator handling as described in configuration.md.
 
 Review corrections add pre-ACK finalization-capacity checks, byte-budgeted receipt
-retention, and per-sender direct/outbox dispatch gates. The unreleased snapshot
+retention, and per-sender direct/outbox dispatch gates. The snapshot
 format fingerprint is now `assembly-v2`; older development snapshots fail startup
 instead of being silently loaded without sender ordering identity. Preserve such
 state for explicit operator reconciliation.
@@ -44,14 +44,15 @@ batch's journal commit and its direct-record handoff, delivery is at-least-once 
 order is not guaranteed (see configuration.md). Qualification reports now also bind the
 digest of their producing validators/fixtures, so an edited assertion invalidates them.
 
-Measured assembly cost (development host, macOS/APFS, JDK 23, one sender, one
+Measured assembly cost (anecdotal single run, not retained as qualification evidence; development host, macOS/APFS, JDK 23, one sender, one
 line per acknowledged request, `hec_metadata=full`, so every line is its own durable
 commit): 500 lines/event 15.8 s total, 1,000 lines 18.0 s, 2,000 lines 48.8 s,
 4,000 lines 203 s, 8,000 lines 605 s. That is about 18 ms per acknowledged request
 for small retained state, rising roughly linearly with the retained event size, so
 total work per event is quadratic in its line count: each commit rewrites and
-fsyncs the whole bounded snapshot. All senders share that single commit under one
-monitor, so a large slow stream also delays other senders' matched-mode requests.
+fsyncs the whole bounded snapshot. Acceptance runs under one
+assembler monitor by design, so a large slow stream can delay other senders' matched-mode
+requests (not measured).
 Typical events (tens to a few hundred lines) are dominated by the fsync cost. Size
 `s2s_assembly_max_bytes`, `max_event_bytes` and the sender's batching for the
 intended workload and re-measure on the target filesystem; Linux/ext4/XFS fsync costs
@@ -63,6 +64,14 @@ now logs one value-free WARN line, at most once per 10 s with a count of suppres
 similar rejections: route, status, HEC code, the fixed message and the rejecting source
 line (for example `HEC request rejected: route=s2s status=400 HEC code 6 "Invalid data
 format" at S2SDecoder:123`). Payloads, tokens and headers are never logged and 401/403
-are not logged. This exists because a forwarder that retries a rejected batch forever
+are not logged (nor is the shutdown interruption 503). This exists because a forwarder that retries a rejected batch forever
 (observed in the demo lab on the 0.1.0 plugin) was otherwise undiagnosable.
+
+Known limits carried into the release: lowering `max_event_bytes` while a larger tail is
+retained does not shrink that tail (it keeps the limit it was admitted under; the next
+continuation of an over-limit tail blocks the assembler until operator recovery); after a
+failed listener shutdown within the grace period the assembly lock may be held until the
+JVM exits; and recovery fails startup closed (message names `s2s_assembly_max_bytes` /
+`s2s_assembly_max_streams`) if those settings are lowered below what retained state needs.
+Restore the previous values or follow the operator recovery steps in configuration.md.
 

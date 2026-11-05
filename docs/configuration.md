@@ -82,7 +82,7 @@ input {
 
 ## 2. What is configured where
 
-### Opt-in S2S assembly (0.2.0 development)
+### Opt-in S2S assembly (0.2.0)
 
 `s2s_line_breaker_rules_json` is a startup-only JSON array, default `[]`.
 Only matched **unstructured S2S** traffic on HTTP/TCP assembles. Structured,
