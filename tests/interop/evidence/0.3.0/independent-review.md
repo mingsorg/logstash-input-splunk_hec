@@ -1,12 +1,27 @@
-# 0.3.0 independent review — blocked
+# 0.3.0 independent review — complete
 
-Three separate read-only Claude CLI review sessions were requested for adversarial
-correctness/durability, edge cases/migration integrity, and verification/performance.
-Each returned HTTP 401: `OAuth access token is invalid`, before consuming input or
-producing findings. See `review-adversarial.json`, `review-edge.json`,
-`review-verification.json`, and `review-identity.json`.
+The original Claude CLI attempts failed authentication before reviewing. Their
+`review-adversarial.json`, `review-edge.json`, and `review-verification.json` files
+are historical failure records and are not used for approval.
 
-No independent review completed. No approval is asserted. Re-authenticate the local
-review CLI, rerun `python3 tests/interop/review_journal.py`, resolve findings, retain
-the reviewed artifact and validator identities, and rerun the qualification gate.
-The release must remain untagged until this requirement is satisfied.
+Three independent OpenCode Task reviewers subsequently reviewed the implementation,
+reported defects, and re-reviewed the corrections. Their final scoped verdicts
+contain no unresolved findings. Actual raw final responses and structured verdicts
+are retained in:
+
+- `review-task-durability.json` — adversarial correctness and durability.
+- `review-task-edge.json` — edge cases and migration integrity.
+- `review-task-verification.json` — verification gaps and performance claims.
+
+`review-identity.json` binds the exact source, repository-contained claims,
+artifact, validators, distinct reviewer sessions and report-byte digests. The gate
+independently recomputes these identities and requires the raw JSON verdict to
+agree with its structured form. No Claude CLI usage metadata was invented.
+
+Final artifact SHA-256:
+`ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a`.
+
+Scope limits remain: process-crash tests do not prove power-loss behavior; soak
+tests are finite; delivery is at least once with the documented failure-window
+ordering limit. Release readiness also requires all automated checks to pass for
+this exact artifact; review approval alone is insufficient.

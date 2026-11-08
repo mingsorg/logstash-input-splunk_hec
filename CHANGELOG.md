@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.3.0
 
 - Replace per-request assembly snapshots with authenticated append-only delta
   transactions, durable generation publication and bounded compaction.
@@ -10,7 +10,8 @@
 - Preserve live-state byte quotas; separately bound physical spool file contents to
   `8 * s2s_assembly_max_bytes + 32768`. See [journal operations](docs/assembly-journal-0.3.0.md).
 - Preserve at-least-once delivery and the existing cross-crash direct-record ordering
-  limitation. Release qualification is pending; this entry is not a published release.
+  limitation. Qualified with 143 Java tests, 41 Python tests, all 28 automated
+  checks and three source/artifact-bound independent review verdicts.
 
 ## 0.2.0
 
