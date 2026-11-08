@@ -1,23 +1,23 @@
 {
   "artifact": {
     "file": "logstash-input-splunk_hec-0.2.0-java.gem",
-    "sha256": "77289fec932c0fb2c63a6f18fecf715cbc88c7bfd5bdc2ced4fb106b3062e531"
+    "sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11"
   },
-  "validators": "0ebc32a3bf26f5eb780e0611c7fafe4fef81ce7e15051af8ee43a8a240f8578f",
+  "validators": "b941cce4c4839083f469a700ec732716c9b9aa6562fcff9e828985f2f64fa6eb",
   "package_manifest_sha256": {
     "LICENSE": "5c9817c129b98e7bb966bca028c43c19107102ef8e03fe799bffb4354f4ef015",
     "NOTICE": "86cbed79eac12f3ff7a20c9d751af2533ec4658680f1d9b6e74d31a70f2810e4",
-    "README.md": "379abd4e1e0109b97729e54b9e1c793863df3335388946d1883dfa032d882a91",
+    "README.md": "4065e2fc5b288e2f392d66047e0be611d2b23b4369f0c72df1a594f7e7545cbf",
     "VERSION": "1f930dd1f133c1f97a94fe3acb8db34372cf4c01ffdb2b3ff4ca72f9494121e9",
     "docs/compatibility.md": "e39b1cfab566f565e5429c46872e38492b851844cad165ed3ef9fe616f9960e1",
-    "docs/configuration.md": "5c6d809d52993017acc14ff62578fb46c16f26ea0764b14164d5c0eb14942c54",
+    "docs/configuration.md": "5a1d413c141998c52326b1d1415a534886972d30fde94d8fe5817b8d50582e45",
     "docs/http-endpoints.md": "cdecbd02d2f428c56a56d55bff49366682a34daf0551f92fdabdd732fb89c0b7",
-    "docs/installation.md": "732a575919bcf48e0942dc8c8ffe28999df93522664e4b2244ef4e6f73ffb218",
+    "docs/installation.md": "ff9b3b8f71ff76fd2e66fbc551e6fda82cfe3e520f74a1ef7c3560e4dd17b086",
     "docs/s2s-tcp.md": "30597b2322c6a1086bfe25bf961665b80cf5b0115025a206370f1138436550f2",
-    "docs/s2s-wire-format.md": "9004e1be92f6cc8071cf8d2ea451564a5eb5f03ca2a3d9a8fc40927b10d339ea",
+    "docs/s2s-wire-format.md": "8a0924118ccc11cc464905e52d65784dfd6a41e154495b7158483073c0534b08",
     "docs/uf-logstash-splunk-reference.md": "fed1e67a065cfbd9260a4f58576e35c09ebe626caae4adad3bab0dd1379234fd",
-    "docs/validation-status.md": "ba127bdf36f778b7c6d2ea380e5fc67bb104f8d818e11d97c65067fa6d466eb8",
-    "docs/verification-0.2.0.md": "865aa3af6804592f6ccb22ecca14d2c33cafbd6866938e7f221d5f7d94571b05",
+    "docs/validation-status.md": "2e23e8e634f0a0218fabd159c4db32da5669446eaab3827669245b9785a7d74d",
+    "docs/verification-0.2.0.md": "7f77770a1633277ca74d897d8240d2935443fd02036e145cbaf16af1cec1c577",
     "examples/hec-inputs.conf": "1b23a6a7d204e6adca9eb5c9324b0dee38f5db112889ba7a54c293e6bf52fe17",
     "examples/metadata-fields.conf": "90085f365ffd5a97eb74d61e3932c3c8a5f658283492a1ee29b1f8213129b6e3",
     "examples/outputs-tcp.conf": "4fa71b64f02c570c2a8a5b13e2d104c521713e3f3378710fdaa1f74eee4f857a",
@@ -29,7 +29,7 @@
     "examples/tcp-listener.conf": "d2f11373c1e9c2758da6e39a15f04a4d23fcc12a4ad361cbc40af1b9eb93999c",
     "lib/logstash/inputs/splunk_hec.rb": "afecf165f48692ccdcea5feab8ef775c987305b6710b9f5c971e9572842fa02c",
     "logstash-input-splunk_hec.gemspec": "a8c18a10352a325e603182a9a8468062a944d6035d7a04e96e7736ede1938b3a",
-    "vendor/jars/logstash-input-splunk_hec-0.2.0.jar": "a339a22bcbdee2d834b94f6c5db669b226875c38d68d8b5da69c254cb60153ce",
+    "vendor/jars/logstash-input-splunk_hec-0.2.0.jar": "e31762ddad3c054d8a62cf779f668410b18f3e00cf910367fa0c27066cf0ee6f",
     "versions.properties": "aa21604067a9f7209714f5b83ede49f5f2437d80d6059cafcbf35459cf6fa419"
   },
   "status": "pass",
@@ -48,6 +48,7 @@
     "four_crash_probes": true,
     "indexed_only_negative_controls": true,
     "first_contribution_time_across_restart": true,
+    "upgrade_baseline_pinned": true,
     "live_stateful_upgrade_traffic": true,
     "legacy_runtime_matrix": true,
     "reproducibility": true,
@@ -71,7 +72,7 @@
     },
     {
       "suite": "org.logstashplugins.hec.HttpTlsTest",
-      "tests": 13,
+      "tests": 14,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
@@ -88,12 +89,13 @@
         "failedQueueInsertionAfterAPrefixNeverReturnsOrCompletesASuccessAck()",
         "overloadHasIndependentHealthAndStopJoinsWorkers()",
         "expectContinueIsSentBeforeTheClientSuppliesItsBody()",
+        "rejectedRequestsLogAValueFreeRateLimitedReason()",
         "responseWritesHaveADeadlineAndCanceledTimersAreRemoved()"
       ]
     },
     {
       "suite": "org.logstashplugins.hec.InputLifecycleTest",
-      "tests": 16,
+      "tests": 19,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
@@ -106,10 +108,13 @@
         "unexpectedListenerFailureTerminatesTheInputAndReleasesState()",
         "largeHeavyForwarderRecordIsAcceptedByDefaultAndRefusedWithAnExplicitSmallerTcpCap()",
         "selectedHttpAckIsDurableBeforeQueueAndBadSuffixPreservesEarlierRequest()",
+        "httpMixedBatchReachesTheQueueInExactWireOrder()",
         "httpFramingSelectsWireThenQueryThenTokenAndUnmatchedFallsBack()",
         "metadataMappingFailsStartupAtomicallyWithValueFreeDiagnostics()",
+        "httpDirectRecordWaitsBehindBlockedSameSenderPredecessorAtTheListener()",
         "selectedTcpAckPrecedesQueueAndReconnectContinuesTheDurableTail()",
         "schemaAcceptsStandardLogstashInputOptionsButNotACodec()",
+        "tcpDirectRecordWaitsBehindBlockedSameSenderPredecessorAndIsAckedAfterInsertion()",
         "hecMetadataAcceptsOnlyDocumentedModes()",
         "directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged()",
         "defaultsGiveTlsOnTheHttpListenerAndPlaintextOnTheTcpListener()",
@@ -137,7 +142,7 @@
     },
     {
       "suite": "org.logstashplugins.hec.S2SAssemblyTest",
-      "tests": 33,
+      "tests": 34,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
@@ -158,6 +163,7 @@
         "thousandLineEventFitsTheRequestBudgetWithoutRepeatedPrefixCharging()",
         "positionlessBatchScopeAndRepeatedOccurrencesDoNotCollapse()",
         "sameSenderOutputWaitsForDirectRecordWhileOtherSendersFlow()",
+        "legacyIgnoredUnselectedRecordCreatesNoGateStateOrBarrier()",
         "quotasCorruptionTornWritesExclusiveLockAndConfigMismatchFailClosed()",
         "legacyWireIdentityIsIndependentOfSelectedPositionlessOccurrenceScope()",
         "crlfBlankLinesStrippedJoinsAndConcurrentSourceIsolation()",
@@ -179,7 +185,7 @@
     },
     {
       "suite": "org.logstashplugins.hec.S2STest",
-      "tests": 21,
+      "tests": 22,
       "failures": 0,
       "errors": 0,
       "skipped": 0,
@@ -199,6 +205,7 @@
         "amplifiedRawReferencesAreAccountedBeforeCopies()",
         "typedMetricAndDimensionsStayNative()",
         "multibyteRebatchAndReconnectStableCoordinatesPreserveDistinctOccurrences()",
+        "httpCoordinatesAndTimestampFlagsAreIndependent()",
         "gzipCRCAndTrailingGarbageAreValidated()",
         "leadingDelimitersRetainAbsolutePositionsAcrossRebatching()",
         "capturedRealSenderBodiesDecodeAsCompleteBatches()",
@@ -240,13 +247,13 @@
       ]
     }
   ],
-  "java_tests": 110,
-  "python_tests": 25,
-  "python_output": "test_artifact_binding_rejects_stale_jar_and_packaged_docs (test_assembly_qualification.AssemblyQualificationTest.test_artifact_binding_rejects_stale_jar_and_packaged_docs) ... ok\ntest_exact_delimiters_reject_missing_blank_line_or_extra_newline (test_assembly_qualification.AssemblyQualificationTest.test_exact_delimiters_reject_missing_blank_line_or_extra_newline) ... ok\ntest_stalled_tls_client_does_not_block_accept_or_cleanup (test_assembly_qualification.AssemblyQualificationTest.test_stalled_tls_client_does_not_block_accept_or_cleanup) ... ok\ntest_validator_digest_binds_reports_to_their_producing_assertions (test_assembly_qualification.AssemblyQualificationTest.test_validator_digest_binds_reports_to_their_producing_assertions) ... ok\ntest_every_configuration_option_and_policy_key_is_documented (test_helpers.ConfigurationDocumentTest.test_every_configuration_option_and_policy_key_is_documented) ... ok\ntest_every_option_documented_has_a_default_row_that_matches_the_source (test_helpers.ConfigurationDocumentTest.test_every_option_documented_has_a_default_row_that_matches_the_source) ... ok\ntest_cache_tracks_image_and_keeps_last_complete_api_after_failed_extraction (test_helpers.HelpersTest.test_cache_tracks_image_and_keeps_last_complete_api_after_failed_extraction) ... ok\ntest_create_timeout_finds_only_the_unique_ownership_label (test_helpers.HelpersTest.test_create_timeout_finds_only_the_unique_ownership_label) ... ok\ntest_direct_sender_ready_requires_native_marker_not_stock_health (test_helpers.HelpersTest.test_direct_sender_ready_requires_native_marker_not_stock_health) ... ok\ntest_event_reader_waits_for_complete_lines_without_masking_bad_complete_events (test_helpers.HelpersTest.test_event_reader_waits_for_complete_lines_without_masking_bad_complete_events) ... ok\ntest_failed_oracle_start_removes_only_its_created_container_id (test_helpers.HelpersTest.test_failed_oracle_start_removes_only_its_created_container_id) ... ok\ntest_gradle_execution_uses_the_version_pin (test_helpers.HelpersTest.test_gradle_execution_uses_the_version_pin) ... ok\ntest_native_bootstrap_refuses_unowned_host_execution (test_helpers.HelpersTest.test_native_bootstrap_refuses_unowned_host_execution) ... ok\ntest_native_pid_reader_accepts_worker_lines_and_waits_for_restart_marker (test_helpers.HelpersTest.test_native_pid_reader_accepts_worker_lines_and_waits_for_restart_marker) ... ok\ntest_native_sender_bootstrap_disables_racy_root_healthcheck (test_helpers.HelpersTest.test_native_sender_bootstrap_disables_racy_root_healthcheck) ... ok\ntest_relay_bind_failure_cleans_up_the_retained_runtime (test_helpers.HelpersTest.test_relay_bind_failure_cleans_up_the_retained_runtime) ... ok\ntest_relay_rejects_negative_and_stalled_lengths_without_an_unbounded_read (test_helpers.HelpersTest.test_relay_rejects_negative_and_stalled_lengths_without_an_unbounded_read) ... ok\ntest_sender_network_resolves_native_linux_and_desktop_without_dns_assumptions (test_helpers.HelpersTest.test_sender_network_resolves_native_linux_and_desktop_without_dns_assumptions) ... ok\ntest_bare_scenario_assertion_has_an_error_and_still_cleans_up (test_metadata_fields.MetadataQualificationTest.test_bare_scenario_assertion_has_an_error_and_still_cleans_up) ... ok\ntest_failed_logs_do_not_prevent_cleanup_or_failure_evidence (test_metadata_fields.MetadataQualificationTest.test_failed_logs_do_not_prevent_cleanup_or_failure_evidence) ... ok\ntest_metadata_stage_is_registered_and_included_in_all (test_metadata_fields.MetadataQualificationTest.test_metadata_stage_is_registered_and_included_in_all) ... ok\ntest_partial_sender_create_uses_unique_label_cleanup_for_both_transports (test_metadata_fields.MetadataQualificationTest.test_partial_sender_create_uses_unique_label_cleanup_for_both_transports) ... ok\ntest_receiver_cleanup_failure_cannot_report_pass (test_metadata_fields.MetadataQualificationTest.test_receiver_cleanup_failure_cannot_report_pass) ... PASS minimum none http uf\nPASS minimum none http hf\nPASS minimum none tcp uf\nPASS minimum none tcp hf\nok\ntest_sender_cleanup_failure_is_retained (test_metadata_fields.MetadataQualificationTest.test_sender_cleanup_failure_is_retained) ... ok\ntest_start_failure_removes_exact_created_container (test_metadata_fields.MetadataQualificationTest.test_start_failure_removes_exact_created_container) ... ok\n\n----------------------------------------------------------------------\nRan 25 tests in 0.245s\n\nOK\n",
+  "java_tests": 116,
+  "python_tests": 26,
+  "python_output": "test_artifact_binding_rejects_stale_jar_and_packaged_docs (test_assembly_qualification.AssemblyQualificationTest.test_artifact_binding_rejects_stale_jar_and_packaged_docs) ... ok\ntest_exact_delimiters_reject_missing_blank_line_or_extra_newline (test_assembly_qualification.AssemblyQualificationTest.test_exact_delimiters_reject_missing_blank_line_or_extra_newline) ... ok\ntest_failed_runtime_cleanup_preserves_the_startup_error (test_assembly_qualification.AssemblyQualificationTest.test_failed_runtime_cleanup_preserves_the_startup_error) ... ok\ntest_stalled_tls_client_does_not_block_accept_or_cleanup (test_assembly_qualification.AssemblyQualificationTest.test_stalled_tls_client_does_not_block_accept_or_cleanup) ... ok\ntest_validator_digest_binds_reports_to_their_producing_assertions (test_assembly_qualification.AssemblyQualificationTest.test_validator_digest_binds_reports_to_their_producing_assertions) ... ok\ntest_every_configuration_option_and_policy_key_is_documented (test_helpers.ConfigurationDocumentTest.test_every_configuration_option_and_policy_key_is_documented) ... ok\ntest_every_option_documented_has_a_default_row_that_matches_the_source (test_helpers.ConfigurationDocumentTest.test_every_option_documented_has_a_default_row_that_matches_the_source) ... ok\ntest_cache_tracks_image_and_keeps_last_complete_api_after_failed_extraction (test_helpers.HelpersTest.test_cache_tracks_image_and_keeps_last_complete_api_after_failed_extraction) ... ok\ntest_create_timeout_finds_only_the_unique_ownership_label (test_helpers.HelpersTest.test_create_timeout_finds_only_the_unique_ownership_label) ... ok\ntest_direct_sender_ready_requires_native_marker_not_stock_health (test_helpers.HelpersTest.test_direct_sender_ready_requires_native_marker_not_stock_health) ... ok\ntest_event_reader_waits_for_complete_lines_without_masking_bad_complete_events (test_helpers.HelpersTest.test_event_reader_waits_for_complete_lines_without_masking_bad_complete_events) ... ok\ntest_failed_oracle_start_removes_only_its_created_container_id (test_helpers.HelpersTest.test_failed_oracle_start_removes_only_its_created_container_id) ... ok\ntest_gradle_execution_uses_the_version_pin (test_helpers.HelpersTest.test_gradle_execution_uses_the_version_pin) ... ok\ntest_native_bootstrap_refuses_unowned_host_execution (test_helpers.HelpersTest.test_native_bootstrap_refuses_unowned_host_execution) ... ok\ntest_native_pid_reader_accepts_worker_lines_and_waits_for_restart_marker (test_helpers.HelpersTest.test_native_pid_reader_accepts_worker_lines_and_waits_for_restart_marker) ... ok\ntest_native_sender_bootstrap_disables_racy_root_healthcheck (test_helpers.HelpersTest.test_native_sender_bootstrap_disables_racy_root_healthcheck) ... ok\ntest_relay_bind_failure_cleans_up_the_retained_runtime (test_helpers.HelpersTest.test_relay_bind_failure_cleans_up_the_retained_runtime) ... ok\ntest_relay_rejects_negative_and_stalled_lengths_without_an_unbounded_read (test_helpers.HelpersTest.test_relay_rejects_negative_and_stalled_lengths_without_an_unbounded_read) ... ok\ntest_sender_network_resolves_native_linux_and_desktop_without_dns_assumptions (test_helpers.HelpersTest.test_sender_network_resolves_native_linux_and_desktop_without_dns_assumptions) ... ok\ntest_bare_scenario_assertion_has_an_error_and_still_cleans_up (test_metadata_fields.MetadataQualificationTest.test_bare_scenario_assertion_has_an_error_and_still_cleans_up) ... ok\ntest_failed_logs_do_not_prevent_cleanup_or_failure_evidence (test_metadata_fields.MetadataQualificationTest.test_failed_logs_do_not_prevent_cleanup_or_failure_evidence) ... ok\ntest_metadata_stage_is_registered_and_included_in_all (test_metadata_fields.MetadataQualificationTest.test_metadata_stage_is_registered_and_included_in_all) ... ok\ntest_partial_sender_create_uses_unique_label_cleanup_for_both_transports (test_metadata_fields.MetadataQualificationTest.test_partial_sender_create_uses_unique_label_cleanup_for_both_transports) ... ok\ntest_receiver_cleanup_failure_cannot_report_pass (test_metadata_fields.MetadataQualificationTest.test_receiver_cleanup_failure_cannot_report_pass) ... PASS minimum none http uf\nPASS minimum none http hf\nPASS minimum none tcp uf\nPASS minimum none tcp hf\nok\ntest_sender_cleanup_failure_is_retained (test_metadata_fields.MetadataQualificationTest.test_sender_cleanup_failure_is_retained) ... ok\ntest_start_failure_removes_exact_created_container (test_metadata_fields.MetadataQualificationTest.test_start_failure_removes_exact_created_container) ... ok\n\n----------------------------------------------------------------------\nRan 26 tests in 0.258s\n\nOK\n",
   "independent_review": {
-    "status": "findings-open",
-    "report": "build/reviews/completion-review-0.2.0.md",
-    "reason": "Review ran and reported R1-R4 plus verification gaps; code fixes are in place but live matrix evidence must be regenerated and the result re-reviewed before release"
+    "status": "complete",
+    "report": "tests/interop/evidence/0.2.0/independent-review.md",
+    "sha256": "e5c0e2dce10f138ef2954a4038620aaf88bff9f845a0df219f634119d53594c3"
   },
-  "release_ready": false
+  "release_ready": true
 }

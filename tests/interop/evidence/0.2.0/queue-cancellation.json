@@ -3,28 +3,28 @@
     "role": "latest",
     "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
     "exit_code": 0,
-    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":106,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":108,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
+    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":111,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":106,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
     "stderr": "uri:classloader:/jruby/java/core_ext/object.rb:3: warning: already initialized constant Thread\n",
     "artifact": {
       "file": "logstash-input-splunk_hec-0.2.0-java.gem",
-      "sha256": "77289fec932c0fb2c63a6f18fecf715cbc88c7bfd5bdc2ced4fb106b3062e531"
+      "sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11"
     },
     "probe_sha256": "a3d93e02e147239f055a6e7c86bff08186842f72372a541c8e7db0e0e19b68d6",
     "scope": "core Logstash queue API cancellation prerequisite; does not execute the plugin",
-    "run_id": "hec-queue-d577f08514"
+    "run_id": "hec-queue-de2a8e2254"
   },
   {
     "role": "minimum",
     "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
     "exit_code": 0,
-    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":109,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":113,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
+    "stdout": "{\"queue\":\"memory\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":1,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":114,\"error\":\"Java::JavaLang::IllegalStateException: java.lang.InterruptedException\"}\n{\"queue\":\"persisted\",\"blocked_state\":\"WAITING\",\"accepted_before_interrupt\":0,\"accepted_after_interrupt\":1,\"interrupt_stopped\":true,\"alive_after_release\":false,\"accepted_after_release\":1,\"elapsed_ms\":107,\"error\":\"Java::JavaLang::IllegalStateException: Unhandleable error occurred while writing to queue.\"}\n",
     "stderr": "uri:classloader:/jruby/java/core_ext/object.rb:3: warning: already initialized constant Thread\n",
     "artifact": {
       "file": "logstash-input-splunk_hec-0.2.0-java.gem",
-      "sha256": "77289fec932c0fb2c63a6f18fecf715cbc88c7bfd5bdc2ced4fb106b3062e531"
+      "sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11"
     },
     "probe_sha256": "a3d93e02e147239f055a6e7c86bff08186842f72372a541c8e7db0e0e19b68d6",
     "scope": "core Logstash queue API cancellation prerequisite; does not execute the plugin",
-    "run_id": "hec-queue-d83b5aae33"
+    "run_id": "hec-queue-2191e040eb"
   }
 ]

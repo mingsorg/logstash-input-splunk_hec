@@ -224,8 +224,18 @@ output { file { path => "/run-hec/events.ndjson" codec => json_lines flush_inter
                '-v',str(directory)+':/run-hec','--entrypoint','/usr/share/logstash/vendor/jruby/bin/jruby',
                P[f'logstash.{role}.image'],'/work/tests/interop/install_selected_and_run.rb')
         port,context=ready(name,directory)   # HEC always uses its default TLS here
-    except BaseException:
-        subprocess.run(['docker','rm','-f','-v',name],capture_output=True,timeout=60)
+    except BaseException as failure:
+        # Preserve the startup failure even if Docker cleanup is slow or fails.
+        # Logs live in the owned project directory, not the host's global temp directory.
+        try:
+            logs = docker('logs', name, timeout=60)
+            (directory/'startup-failure.log').write_text(logs)
+        except Exception as diagnostic_failure:
+            failure.add_note('startup log collection failed: '+repr(diagnostic_failure))
+        try:
+            subprocess.run(['docker','rm','-f','-v',name],capture_output=True,check=True,timeout=300)
+        except Exception as cleanup_failure:
+            failure.add_note('owned container cleanup failed: '+repr(cleanup_failure))
         raise
     return {'name':name,'directory':directory,'port':port,'context':context,'artifact':subject,'tcp_port':tcp_port}
 

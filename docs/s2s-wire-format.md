@@ -216,13 +216,14 @@ other bits:
 
 | Mask | Bit | Decoder interpretation |
 |---|---:|---|
-| `00000002` | 1 | Participates in the `flags & 0A` time/stream-block test |
-| `00000008` | 3 | Participates in the same test |
+| `00000002` | 1 | Stream ID, byte offset and sequence follow |
+| `00000008` | 3 | Epoch seconds follow the optional coordinate triple |
 | `00000040` | 6 | Structured/already-parsed event |
 | `00010000` | 16 | Metric-values blob precedes the raw blob |
 
-Bits 1 and 3 are not independently labeled “time” and “stream”: the decoder only
-knows that **either** makes the four-varint block present.
+Bits 1 and 3 are independent. Ordinary captures commonly set both, giving four
+varints. UF telemetry can set bit 1 without bit 3 (observed flags `23`), carrying
+coordinates but no timestamp; consuming a fourth varint then would corrupt field parsing.
 
 ```text
 Structured example: flags = 4A = 0100 1010

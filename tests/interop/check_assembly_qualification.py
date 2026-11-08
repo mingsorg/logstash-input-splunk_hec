@@ -103,7 +103,8 @@ def main():
                            'directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged',
                            'rejectedRequestsLogAValueFreeRateLimitedReason','legacyIgnoredUnselectedRecordCreatesNoGateStateOrBarrier',
                            'httpDirectRecordWaitsBehindBlockedSameSenderPredecessorAtTheListener','httpMixedBatchReachesTheQueueInExactWireOrder',
-                           'tcpDirectRecordWaitsBehindBlockedSameSenderPredecessorAndIsAckedAfterInsertion'})
+                           'tcpDirectRecordWaitsBehindBlockedSameSenderPredecessorAndIsAckedAfterInsertion',
+                           'httpCoordinatesAndTimestampFlagsAreIndependent'})
     checks['matrix_test_cases']={name+'()' for name in required_cases}<={name for suite in java for name in suite['cases']}
     suite=unittest.defaultTestLoader.discover(str(runtime.ROOT/'tests/build'))
     log=io.StringIO()

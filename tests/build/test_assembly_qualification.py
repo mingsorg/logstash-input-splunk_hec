@@ -4,6 +4,7 @@ import io
 import socket
 import socketserver
 import ssl
+import subprocess
 import sys
 import tarfile
 import tempfile
@@ -21,6 +22,24 @@ import check_assembly_qualification
 
 
 class AssemblyQualificationTest(unittest.TestCase):
+    def test_failed_runtime_cleanup_preserves_the_startup_error(self):
+        runtime=check_assembly_qualification.runtime
+        original=RuntimeError('receiver never became ready')
+        cleanup=subprocess.TimeoutExpired(['docker','rm'],300)
+        with tempfile.TemporaryDirectory(dir=ROOT/'build') as temporary:
+            root=Path(temporary)
+            with patch.object(runtime,'ROOT',root), patch.object(runtime,'artifact_info',return_value={'sha256':'test'}), \
+                 patch.object(runtime,'docker',side_effect=['owned-container','startup diagnostics']), \
+                 patch.object(runtime,'ready',side_effect=original), \
+                 patch.object(runtime.subprocess,'run',side_effect=cleanup) as remove:
+                with self.assertRaises(RuntimeError) as raised:
+                    runtime.start_tcp_runtime()
+                self.assertIs(original,raised.exception)
+                self.assertTrue(any('cleanup failed' in note for note in original.__notes__))
+                self.assertEqual(300,remove.call_args.kwargs['timeout'])
+                logs=list((root/'build/interop').glob('*/startup-failure.log'))
+                self.assertEqual(['startup diagnostics'],[p.read_text() for p in logs])
+
     def test_artifact_binding_rejects_stale_jar_and_packaged_docs(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'build') as temporary:
             root=Path(temporary);jar_name='logstash-input-splunk_hec-0.2.0.jar'

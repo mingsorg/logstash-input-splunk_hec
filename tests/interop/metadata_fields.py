@@ -58,7 +58,7 @@ def error_details(failure):
 def remove_container(identity, record):
     """Cleanup failures are evidence, never a passing scenario or a lost report."""
     try:
-        runtime.docker('rm', '-f', '-v', identity, timeout=60)
+        runtime.docker('rm', '-f', '-v', identity, timeout=300)
         return True
     except Exception as failure:
         record.setdefault('cleanup_errors', []).append({'container': identity, **error_details(failure)})

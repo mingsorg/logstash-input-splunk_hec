@@ -1,12 +1,13 @@
 {
   "artifact": {
     "file": "logstash-input-splunk_hec-0.2.0-java.gem",
-    "sha256": "77289fec932c0fb2c63a6f18fecf715cbc88c7bfd5bdc2ced4fb106b3062e531"
+    "sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11"
   },
-  "validators": "0ebc32a3bf26f5eb780e0611c7fafe4fef81ce7e15051af8ee43a8a240f8578f",
+  "validators": "b941cce4c4839083f469a700ec732716c9b9aa6562fcff9e828985f2f64fa6eb",
   "baseline": {
     "file": "logstash-input-splunk_hec-0.1.0-java.gem",
-    "sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54"
+    "sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54",
+    "pinned_sha256": "ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54"
   },
   "runtimes": [
     {

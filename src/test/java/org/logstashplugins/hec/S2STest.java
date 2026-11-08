@@ -29,14 +29,34 @@ class S2STest {
         Body meta(){return op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::test").ns("channel").v(0);}
         Body csvMeta(){return op(0xfe).v(1).ns("source::file").ns("host::host").ns("sourcetype::csv").ns("channel").v(2).str("a.b").str("message");}
         Body event(long flags,int count){return eventAt(flags,count,100,1);}
-        // FC/metaId/flags, the conditional four-varint block, then fieldCount.
+        // FC/metaId/flags, optional coordinate triple and timestamp, then fieldCount.
         // Individual tests append typed fields and payload blob lengths explicitly.
-        Body eventAt(long flags,int count,long offset,long sequence){op(0xfc).v(1).v(flags);if((flags&10)!=0)v(7).v(offset).v(sequence).v(1790000000);return v(count);}
+        Body eventAt(long flags,int count,long offset,long sequence){op(0xfc).v(1).v(flags);if((flags&2)!=0)v(7).v(offset).v(sequence);if((flags&8)!=0)v(1790000000);return v(count);}
         // Finished zlib and unfinished sync-flush exercise both accepted endings.
         byte[] compressed()throws Exception{ByteArrayOutputStream b=new ByteArrayOutputStream();b.write(0xf9);try(DeflaterOutputStream z=new DeflaterOutputStream(b)){z.write(out.toByteArray());}return b.toByteArray();}
         byte[] sync()throws Exception{ByteArrayOutputStream b=new ByteArrayOutputStream();b.write(0xf9);DeflaterOutputStream z=new DeflaterOutputStream(b,new Deflater(),true);z.write(out.toByteArray());z.flush();return b.toByteArray();}
     }
     Limits limits=Limits.defaults();
+    @org.junit.jupiter.api.Test void httpCoordinatesAndTimestampFlagsAreIndependent()throws Exception{
+        for(long flags:List.of(0x23L,0x28L,0x2aL)){
+            var body=new Body().meta().op(0xfc).v(1).v(flags);
+            if((flags&2)!=0)body.v(7).v(0).v(1);
+            if((flags&8)!=0)body.v(1790000000);
+            body.v(1).v(4).str("_MetaData:Index").str("_introspection")
+                .str("{\"component\":\"usage.python\",\"type\":\"event\"}");
+            // A following record proves the preceding conditional header consumed
+            // exactly its own bytes, rather than accidentally swallowing fields.
+            body.eventAt(0x0a,0,5,2).str("following");
+            try(var memory=new MemoryBudget(limits.aggregate()).lease()){
+                var records=new S2SDecoder(limits).decode(body.compressed(),new Compression.Expansion(limits.expanded(),memory),memory);
+                assertEquals(2,records.size());
+                assertEquals("_introspection",records.getFirst().index());
+                assertEquals((flags&2)!=0?7:0,records.getFirst().stream());
+                assertEquals((flags&8)!=0?"1790000000":null,records.getFirst().time());
+                assertEquals("following",HecProtocol.utf8(records.getLast().raw()));
+            }
+        }
+    }
     List<Map<String,Object>> decode(byte[] bytes)throws Exception{
         return decode(bytes,MetadataMode.FULL,S2SMetadataFields.EMPTY);
     }

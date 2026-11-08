@@ -17,6 +17,9 @@
   rejecting source line); 401/403 are not logged.
 
 ### Fixed (completion review)
+- HTTP S2S coordinate and timestamp flags are decoded independently. UF telemetry
+  with coordinates but no timestamp previously shifted field parsing, causing
+  repeated HTTP 400 responses and blocking the forwarder's shared output queue.
 - Recovery no longer fails to read an acknowledged tail above Jackson's default 20M-character limit.
 - Recovery no longer starts with state whose tails cannot be finalized under the configured quota.
 - Enabling an unrelated rule no longer turns a record the standard path ignores into a rejected batch;

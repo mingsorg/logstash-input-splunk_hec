@@ -40,12 +40,12 @@ import java.util.*;
  */
 public final class S2SDecoder {
     // Flags are decoded varint integers, not fixed-width bytes on the wire.
-    // For HTTP: bit 6 means structured, either of
-    // bits 1/3 supplies ALL four time/stream varints, and bit 16 adds a metric blob.
+    // For HTTP: bit 6 means structured, bit 1 supplies the coordinate triple,
+    // bit 3 supplies epoch seconds, and bit 16 adds a metric blob.
     // Other bits are retained as flags; their individual meanings are not guessed.
     static final int STRUCTURED=0x40, TIME_OR_STREAM=0x0a, METRIC=0x10000;
     // In the captured compact TCP profile these header bits are independent.
-    // HTTP retains its original four-varint TIME_OR_STREAM grammar below.
+    // HTTP has the same independent coordinate/time bits, without TCP's event ID.
     static final int TCP_STREAM_POS=0x02, TCP_EVENT_ID=0x04, TCP_TIMESTAMP=0x08;
     /**
      * Field tag seen only on records a forwarder RETRANSMITS after its acknowledgement wait expired.
@@ -146,9 +146,8 @@ public final class S2SDecoder {
         return events;
     }
     /**
-     * Decode FC's dependent grammar. Bits 1 and 3 are deliberately tested as a
-     * combined mask: either requires stream ID, source offset, sequence AND epoch
-     * seconds. Assigning separate guessed meanings would change byte alignment.
+     * Decode FC's conditional grammar. Coordinate and timestamp flags are independent;
+     * records carrying both have the common four-varint header.
      */
     private Event event(Reader r,Map<Long,Meta> metas,String tz,MemoryBudget.Lease memory) {
         return parsedEvent(r,metas,tz,memory,false).event();
@@ -163,9 +162,12 @@ public final class S2SDecoder {
             if((flags&TCP_STREAM_POS)!=0){stream=r.varint();offset=r.varint();seq=r.varint();}
             if((flags&TCP_EVENT_ID)!=0)eventId=r.varint();
             if((flags&TCP_TIMESTAMP)!=0){seconds=r.varint();if(seconds<0)throw HecException.invalid();}
-        }else if((flags & TIME_OR_STREAM)!=0) {
-            stream=r.varint();offset=r.varint();seq=r.varint();seconds=r.varint();
-            if(seconds<0)throw HecException.invalid();
+        }else {
+            // HTTP carries the coordinate triple only with bit 1, and epoch
+            // seconds only with bit 3. Most captured events set both, but UF
+            // telemetry can set coordinates without supplying a timestamp.
+            if((flags&TCP_STREAM_POS)!=0){stream=r.varint();offset=r.varint();seq=r.varint();}
+            if((flags&TCP_TIMESTAMP)!=0){seconds=r.varint();if(seconds<0)throw HecException.invalid();}
         }
         // fieldCount includes control metadata and date parts, not just the
         // indexed values that eventually appear in the output's fields map.

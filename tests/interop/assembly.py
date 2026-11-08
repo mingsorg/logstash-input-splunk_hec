@@ -82,7 +82,10 @@ def real_sender(rt,role,transport,mode,flags,host,row):
                    verified_tls=True,events=checked)
     except Exception as failure:
         row['error']=error_details(failure)
-        if identity:row['sender_logs']=runtime.docker('logs',identity)
+        if identity:
+            try:row['sender_logs']=runtime.docker('logs',identity)
+            except Exception as diagnostic_failure:
+                row.setdefault('diagnostic_errors',[]).append(error_details(diagnostic_failure))
         raise
     finally:
         if not cleanup_sender(identity,ownership,row):row['status']='fail';raise RuntimeError('assembly sender cleanup failed')

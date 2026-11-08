@@ -38,7 +38,10 @@ final class IngressResources implements AutoCloseable{
         if(before!=0&&now-before<10_000_000_000L||!lastRejection.compareAndSet(before,now)){suppressedRejections.incrementAndGet();return;}
         long skipped=suppressedRejections.getAndSet(0);
         StackTraceElement[] trace=cause.getStackTrace();
-        String where=trace.length>0?trace[0].getClassName().substring(trace[0].getClassName().lastIndexOf('.')+1)+":"+trace[0].getLineNumber():"unknown";
+        StackTraceElement origin=null;
+        for(var frame:trace)if(!frame.getClassName().equals(HecException.class.getName())&&
+            !(frame.getClassName().equals(HecProtocol.class.getName())&&frame.getMethodName().equals("utf8"))){origin=frame;break;}
+        String where=origin!=null?origin.getClassName().substring(origin.getClassName().lastIndexOf('.')+1)+":"+origin.getLineNumber():"unknown";
         String reason=cause instanceof HecException e?"HEC code "+e.code+" \""+e.getMessage()+"\"":cause.getClass().getSimpleName();
         diagnostic.accept("HEC request rejected: route="+route+" status="+status+" "+reason+" at "+where+(skipped>0?" ("+skipped+" similar rejections suppressed)":""));
     }
