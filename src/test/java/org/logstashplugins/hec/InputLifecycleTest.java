@@ -74,13 +74,13 @@ class InputLifecycleTest {
             var good=new S2STest.Body().meta().eventAt(0x0a,0,0,1).str("START pending").compressed();
             var response=assemblyPost(client,server.port(),"s2s",good);
             assertEquals(200,response.statusCode(),response.body());long ack=HecProtocol.JSON.readTree(response.body()).get("ackId").longValue();
-            assertTrue(java.nio.file.Files.isRegularFile(directory.resolve("assembly/state")));assertTrue(received.isEmpty());
+            assertTrue(java.nio.file.Files.isRegularFile(directory.resolve("assembly/current-v3")));assertTrue(received.isEmpty());
             var poll=assemblyPost(client,server.port(),"ack",("{\"acks\":["+ack+"]}").getBytes());
             assertTrue(HecProtocol.JSON.readTree(poll.body()).path("acks").path(Long.toString(ack)).asBoolean());
-            byte[] before=java.nio.file.Files.readAllBytes(directory.resolve("assembly/state"));
+            byte[] before=S2SAssemblyTest.durableBytes(directory.resolve("assembly"));
             byte[] malformed=new S2STest.Body().meta().eventAt(0x0a,0,13,1).str("trace").op(0xfb).compressed();
             var bad=assemblyPost(client,server.port(),"s2s",malformed);assertEquals(400,bad.statusCode());assertFalse(bad.body().contains("ackId"));
-            assertArrayEquals(before,java.nio.file.Files.readAllBytes(directory.resolve("assembly/state")));
+            assertArrayEquals(before,S2SAssemblyTest.durableBytes(directory.resolve("assembly")));
         }finally{input.stop();running.join(5000);}
         // Restart does not force a boundary; the accepted tail can receive a later request.
         var reopened=input(values);Thread restarted=Thread.ofVirtual().start(()->reopened.start(received::add));
@@ -91,6 +91,24 @@ class InputLifecycleTest {
             var complete=received.poll(5,TimeUnit.SECONDS);assertNotNull(complete);assertEquals("START pending\ntrace\n",complete.get("event"));
         }finally{reopened.stop();restarted.join(5000);}
     }
+    @Test void disabledRulesRejectRetainedV3WithoutLegacyMarkerMaskingDetection()throws Exception{
+        var values=Map.<String,Object>of("s2s_line_breaker_rules_json",S2SAssemblyTest.RULES.replace(":100}",":60000}"));
+        var input=input(values);Thread running=Thread.ofVirtual().start(()->input.start(event->{}));
+        try{
+            var good=new S2STest.Body().meta().eventAt(0x0a,0,0,1).str("START retained").compressed();
+            assertEquals(200,assemblyPost(HttpClient.newHttpClient(),server(input).port(),"s2s",good).statusCode());
+        }finally{input.stop();running.join(5000);}
+        Path assembly=directory.resolve("assembly");
+        // Remove the legacy marker so only current-v3 can trigger retained-state discovery.
+        java.nio.file.Files.delete(assembly.resolve("state"));
+        var before=new TreeMap<String,List<Byte>>();
+        try(var files=java.nio.file.Files.list(assembly)){for(Path file:files.toList())before.put(file.getFileName().toString(),bytes(java.nio.file.Files.readAllBytes(file)));}
+        assertThrows(Exception.class,()->input(Map.of("s2s_line_breaker_rules_json","[]")));
+        var after=new TreeMap<String,List<Byte>>();
+        try(var files=java.nio.file.Files.list(assembly)){for(Path file:files.toList())after.put(file.getFileName().toString(),bytes(java.nio.file.Files.readAllBytes(file)));}
+        assertEquals(before,after,"disabled rules must fail without altering retained v3 files");
+    }
+    private static List<Byte> bytes(byte[] value){var result=new ArrayList<Byte>();for(byte item:value)result.add(item);return result;}
     /** With assembly enabled, unmatched/structured direct records still ACK only after successful queue insertion. */
     @Test void directRecordAckWaitsForQueueInsertionAndFailedInsertionIsNotAcknowledged()throws Exception{
         var values=Map.<String,Object>of("s2s_line_breaker_rules_json",S2SAssemblyTest.RULES.replace(":100}",":60000}"),"hec_metadata","none",
@@ -234,7 +252,7 @@ class InputLifecycleTest {
                     .str(occurrence==0?"START pending":"trace\nSTART next");
                 socket.getOutputStream().write(record.out.toByteArray());socket.getOutputStream().flush();
                 assertEquals(0xfb,socket.getInputStream().read());assertEquals(occurrence+1,socket.getInputStream().read());
-                if(occurrence==0){assertTrue(received.isEmpty());assertTrue(java.nio.file.Files.exists(directory.resolve("assembly/state")));}
+                if(occurrence==0){assertTrue(received.isEmpty());assertTrue(java.nio.file.Files.exists(directory.resolve("assembly/current-v3")));}
             }
             var event=received.poll(5,TimeUnit.SECONDS);assertNotNull(event);assertEquals("START pending\ntrace\n",event.get("event"));
         }finally{input.stop();running.join(5000);}

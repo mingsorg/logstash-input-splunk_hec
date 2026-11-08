@@ -1,0 +1,31 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.3.0-java.gem",
+    "sha256": "ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a"
+  },
+  "validators": "1e6f4b37d1834667d7428e423a9066efe71f4306d4b1f41ce47f6326377ee1ee",
+  "run_id": "c771f16c323841f0b083402812ca96e2",
+  "runs": [
+    {
+      "events": 2000,
+      "compaction_observation_ns": 8564005504,
+      "transient_publication_samples": 1000,
+      "memory_released": true,
+      "quota": 8192,
+      "compactions": 499,
+      "peak_physical_bytes": 24641,
+      "role": "minimum"
+    },
+    {
+      "compactions": 499,
+      "quota": 8192,
+      "memory_released": true,
+      "transient_publication_samples": 1000,
+      "compaction_observation_ns": 8732447056,
+      "events": 2000,
+      "peak_physical_bytes": 24641,
+      "role": "latest"
+    }
+  ],
+  "status": "pass"
+}

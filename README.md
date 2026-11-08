@@ -1,12 +1,13 @@
 # Logstash Splunk HEC input
 
-**0.2.0:** opt-in sourcetype-specific unstructured S2S
+**0.3.0 (unreleased):** efficient append-only durable assembly with bounded compaction
+and validated 0.2.0 migration. Opt-in sourcetype-specific unstructured S2S
 assembly is configured with `s2s_line_breaker_rules_json`. Matched-mode ACKs mean
 durable assembly-stage acceptance. With assembly enabled, unmatched and structured
 records keep their queue-acceptance ACK semantics and IDs but are ordered per sender
 behind earlier completed assembly output. Without it nothing changes.
-See [configuration](docs/configuration.md#opt-in-s2s-assembly-020-development)
-and [version-scoped verification](docs/verification-0.2.0.md).
+See [configuration](docs/configuration.md#opt-in-s2s-assembly-030)
+and [journal operations and qualification](docs/assembly-journal-0.3.0.md).
 
 A Java input for **Logstash 9.5.0+ / Java 21** that receives HEC event, raw and S2S HTTP envelopes, and optionally the classic UF/HF cooked `tcpout` stream. Payloads stay native for later filters. The HEC listener uses **TLS by default**; the optional TCP listener is **plaintext by default** and can be switched to TLS separately. No HEC tokens are accepted until configured.
 
@@ -15,8 +16,8 @@ troubleshooting, is [docs/installation.md](docs/installation.md)):
 
 ```sh
 ./gradlew test gem
-bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.2.0-java.gem
-bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.2.0)
+bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.3.0-java.gem
+bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.3.0)
 ```
 
 Installation needs access to rubygems.org (Logstash resolves dependencies even for a local gem) and a Logstash of

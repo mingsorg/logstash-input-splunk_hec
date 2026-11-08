@@ -170,7 +170,7 @@ public final class SplunkHec implements Input {
             long bytes=config.get(ASSEMBLYBYTES),streams=config.get(ASSEMBLYSTREAMS);
             if(bytes<4096||bytes>Integer.MAX_VALUE/32||streams<1||streams>10000)throw new IllegalArgumentException("invalid S2S assembly bounds");
             resources.assemblyNamespace="input:"+id;
-            if(policy.enabled()||Files.exists(state.resolve("assembly/state")))
+            if(policy.enabled()||Files.exists(state.resolve("assembly/state"),java.nio.file.LinkOption.NOFOLLOW_LINKS)||Files.exists(state.resolve("assembly/current-v3"),java.nio.file.LinkOption.NOFOLLOW_LINKS))
                 resources.assembly=new S2SStreamAssembler(state.resolve("assembly"),policy,resources.metadata,resources.metadataFields,
                     HecProtocol.JSON.writeValueAsString(List.of(id,config.get(S2SMETADATA))),bytes,(int)streams,resources.memory,diagnostic);
         }catch(Exception error){acks.close();resources.close();reload.shutdownNow();throw error;}

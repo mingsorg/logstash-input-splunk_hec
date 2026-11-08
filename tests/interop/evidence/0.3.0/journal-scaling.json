@@ -1,0 +1,203 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.3.0-java.gem",
+    "sha256": "ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a"
+  },
+  "validators": "1e6f4b37d1834667d7428e423a9066efe71f4306d4b1f41ce47f6326377ee1ee",
+  "run_id": "c771f16c323841f0b083402812ca96e2",
+  "runs": [
+    {
+      "lines": 500,
+      "append_bytes": 864914,
+      "max_transaction_bytes": 1734,
+      "p50_ns": 1742833,
+      "p99_ns": 11328750,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 14727500,
+      "physical_bytes": 1210217,
+      "heap_peak_observed_bytes": 59147112,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 692662792,
+      "concurrent_unrelated_sender_ns": 1876917,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 502,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 1000,
+      "append_bytes": 1732783,
+      "max_transaction_bytes": 1738,
+      "p50_ns": 1433834,
+      "p99_ns": 4147667,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 16363834,
+      "physical_bytes": 2415751,
+      "heap_peak_observed_bytes": 173462632,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 1278778500,
+      "concurrent_unrelated_sender_ns": 1798334,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 1002,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 2000,
+      "append_bytes": 3470783,
+      "max_transaction_bytes": 1738,
+      "p50_ns": 1251709,
+      "p99_ns": 3192166,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 22360000,
+      "physical_bytes": 4830751,
+      "heap_peak_observed_bytes": 359340312,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 3043759669,
+      "concurrent_unrelated_sender_ns": 3445334,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 2002,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 4000,
+      "append_bytes": 6946783,
+      "max_transaction_bytes": 1738,
+      "p50_ns": 1180375,
+      "p99_ns": 3539125,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 37609083,
+      "physical_bytes": 9660751,
+      "heap_peak_observed_bytes": 359513432,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 10636603006,
+      "concurrent_unrelated_sender_ns": 2081875,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 4002,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 8000,
+      "append_bytes": 14157192,
+      "max_transaction_bytes": 1808,
+      "p50_ns": 1229000,
+      "p99_ns": 2947958,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 91844667,
+      "physical_bytes": 19579864,
+      "heap_peak_observed_bytes": 359827984,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 31276074681,
+      "concurrent_unrelated_sender_ns": 2051458,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 8002,
+      "contribution_limit": 10000
+    }
+  ],
+  "status": "pass",
+  "long_state_compaction": {
+    "pending_contributions": 8002,
+    "compacted_restart_ns": 81308542,
+    "physical_bytes": 10520544,
+    "complete_equivalence": true,
+    "long_compaction_ns": 1704139417
+  },
+  "process_halt_publication": [
+    {
+      "boundary": "snapshot-write",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "snapshot-sync",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "journal-write",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "journal-sync",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "generation-directory",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-write",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-sync",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-move",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-directory",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "publication-durable",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "cleanup",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    }
+  ],
+  "saturated_receipts": {
+    "memory_released": true,
+    "capacity_ns": 18286625,
+    "receipt_map_traversals": 0,
+    "receipts": 4096,
+    "checks": 1000
+  }
+}

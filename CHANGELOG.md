@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
+- Replace per-request assembly snapshots with authenticated append-only delta
+  transactions, durable generation publication and bounded compaction.
+- Use immutable text/provenance suffixes and cached exact completion accounting.
+- Migrate validated 0.2.0 state with an exact private backup and old-reader refusal
+  marker. Downgrade requires explicit restoration of the pre-migration backup.
+- Preserve live-state byte quotas; separately bound physical spool file contents to
+  `8 * s2s_assembly_max_bytes + 32768`. See [journal operations](docs/assembly-journal-0.3.0.md).
+- Preserve at-least-once delivery and the existing cross-crash direct-record ordering
+  limitation. Release qualification is pending; this entry is not a published release.
+
 ## 0.2.0
 
 ### Added

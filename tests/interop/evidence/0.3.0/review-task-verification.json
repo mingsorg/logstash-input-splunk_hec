@@ -1,0 +1,13 @@
+{
+  "provider": "opencode-task",
+  "reviewer_session_id": "ses_e4409affeffeGKJS2JPu0nAHAt",
+  "structured_output": {
+    "lens": "verification gaps and performance claims",
+    "source_sha256": "31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92",
+    "claims_sha256": "b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84",
+    "artifact_sha256": "ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a",
+    "verdict": "pass",
+    "findings": []
+  },
+  "text": "```json\n{\n  \"lens\": \"verification gaps and performance claims\",\n  \"source_sha256\": \"31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92\",\n  \"claims_sha256\": \"b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84\",\n  \"artifact_sha256\": \"ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a\",\n  \"verdict\": \"pass\",\n  \"findings\": []\n}\n```\n\nThe remaining blocker is corrected. The gate requires exactly one extracted raw JSON object, equality with `structured_output`, and the exact bound passing verdict (`check_assembly_qualification.py:15–58`). The regression test supplies raw findings alongside structured approval, recomputes the manifest hash, and asserts rejection; it also covers missing, duplicate, and conflicting verdict objects (`test_journal_fixes.py:118–136`).\n\nAll three digests independently match. **Limits:** This pass inspected the focused correction and test assertions without running tests or full qualification. Earlier process-crash and finite-soak coverage limits remain unchanged."
+}

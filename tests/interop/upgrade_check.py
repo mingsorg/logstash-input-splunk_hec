@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
-"""Upgrade the explicit preserved 0.1.0 gem in disposable pinned runtimes only."""
+"""Upgrade the explicit preserved 0.2.0 gem in disposable pinned runtimes only.
+
+Pending/outbox/receipt equivalence is additionally qualified by journal_qualification.py.
+"""
 import hashlib
 import json
 import sys
 import runtime
+import assembly
+import base64
 
-BASELINE=runtime.ROOT/'logstash-input-splunk_hec-0.1.0-java.gem'
-BASELINE_SHA256='ee316c417d53f0387890141d2369aeb739421a602e4a4f5e6ffcffe51cdf6b54' # the released 0.1.0 gem; any other file is not the baseline
+BASELINE=runtime.ROOT/'logstash-input-splunk_hec-0.2.0-java.gem'
+BASELINE_SHA256='3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11'
 SCRIPT=r'''
 set -e
 L=/usr/share/logstash/bin/logstash-plugin
 $L install --local --no-verify /work/@BASELINE@
-$L list --verbose splunk | grep -F 'logstash-input-splunk_hec (0.1.0)'
+$L list --verbose splunk | grep -F 'logstash-input-splunk_hec (0.2.0)'
 mkdir -p /tmp/hec-upgrade
 cat > /tmp/upgrade.conf <<'CONF'
 input { splunk_hec { state_directory => "/tmp/hec-upgrade" ssl_enabled => false } }
@@ -22,7 +27,8 @@ sha256sum /tmp/hec-upgrade/* > /tmp/before.sha256
 # --- live stateful traffic on the OLD plugin: ACK-enabled event, ACK confirmed, then a clean stop ---
 mkdir -p /tmp/hec-live
 cat > /tmp/live.conf <<'CONF'
-input { splunk_hec { host => "127.0.0.1" port => 18088 ssl_enabled => false state_directory => "/tmp/hec-live"
+input { splunk_hec { id => "stateful-upgrade" host => "127.0.0.1" port => 18088 ssl_enabled => false state_directory => "/tmp/hec-live"
+  s2s_line_breaker_rules_json => '[{"match":"exact","sourcetype":"hec_assembly_selected","event_start_pattern":"^START","flush_timeout_ms":600000}]'
   tokens_json => '[{"token":"@TOKEN@","useACK":true}]' } }
 output { file { path => "/tmp/live-out.ndjson" codec => json_lines flush_interval => 0 } }
 CONF
@@ -48,6 +54,13 @@ R1=$(post_event '{"event":"upgrade-before"}'); echo "BEFORE_RESPONSE $R1"
 ACK1=$(echo "$R1" | grep -o '"ackId":[0-9]*' | cut -d: -f2); test -n "$ACK1"
 wait_events upgrade-before
 poll_ack "$ACK1" | grep -F "\"$ACK1\":true"
+printf '%s' '@S2S_HEAD@' | base64 -d > /tmp/head.bin
+printf '%s' '@S2S_TAIL@' | base64 -d > /tmp/tail.bin
+printf '%s' '@S2S_END@' | base64 -d > /tmp/end.bin
+post_s2s(){ curl -sS -H "Authorization: Splunk @TOKEN@" -H "X-Splunk-Request-Channel: @CHANNEL@" --data-binary "@$1" http://127.0.0.1:18088/services/collector/s2s; }
+post_s2s /tmp/head.bin | grep -F '"code":0'
+test -f /tmp/hec-live/assembly/state
+cp /tmp/hec-live/assembly/state /tmp/original-assembly-state
 stop_ls
 echo LIVE_BEFORE_OK
 $L install --local --no-verify /work/@GEM@
@@ -56,6 +69,17 @@ $L list --verbose splunk | grep -F 'logstash-input-splunk_hec (@VERSION@)'
 sha256sum -c /tmp/before.sha256
 # --- the SAME state directory, now under the new plugin: ids never reused, old traffic stays unacknowledged-unknown, new traffic flows ---
 start_ls /tmp/live-after after
+test "$(sha256sum /tmp/original-assembly-state | cut -d' ' -f1)" = "$(sha256sum /tmp/hec-live/assembly/backup-v2 | cut -d' ' -f1)"
+test -f /tmp/hec-live/assembly/current-v3
+post_s2s /tmp/tail.bin | grep -F '"code":0'
+post_s2s /tmp/end.bin | grep -F '"code":0'
+wait_events 'START migrated'
+grep -F 'START migrated\ntrace' /tmp/live-out.ndjson
+post_s2s /tmp/head.bin | grep -F '"code":0'
+post_s2s /tmp/tail.bin | grep -F '"code":0'
+sleep 2
+test "$(grep -c 'START migrated' /tmp/live-out.ndjson)" -eq 1
+echo ASSEMBLY_MIGRATION_OK
 OLD=$(poll_ack "$ACK1"); echo "OLD_ACK_AFTER $OLD"
 echo "$OLD" | grep -F "\"$ACK1\":false"
 R2=$(post_event '{"event":"upgrade-after"}'); echo "AFTER_RESPONSE $R2"
@@ -73,11 +97,13 @@ def main():
     artifact=runtime.artifact_info()
     report={'artifact':artifact,'validators':runtime.validators_info(),'baseline':{'file':BASELINE.name,'sha256':hashlib.sha256(BASELINE.read_bytes()).hexdigest(),'pinned_sha256':BASELINE_SHA256},'runtimes':[],'status':'fail'}
     try:
-        assert report['baseline']['sha256']==BASELINE_SHA256,'baseline gem is not the pinned released 0.1.0 artifact'
+        assert report['baseline']['sha256']==BASELINE_SHA256,'baseline gem is not the pinned released 0.2.0 artifact'
         script=SCRIPT.replace('@TOKEN@',runtime.TOKEN).replace('@CHANNEL@',runtime.CHANNEL).replace('@BASELINE@',BASELINE.name).replace('@GEM@',runtime.GEM.name).replace('@VERSION@',runtime.VERSION)
+        for marker,text,offset in (('@S2S_HEAD@','START migrated',0),('@S2S_TAIL@','trace',14),('@S2S_END@','START next',19)):
+            script=script.replace(marker,base64.b64encode(assembly.body(text,offset,source='upgrade-assembly')).decode())
         for role in ('minimum','latest'):
             output=runtime.docker('run','--rm','--entrypoint','bash','-e','JAVA_HOME=/usr/share/logstash/jdk','-v',str(runtime.ROOT)+':/work:ro',runtime.P['logstash.'+role+'.image'],'-c',script,timeout=1800)
-            assert 'ONE_CORRECTLY_NAMED_JAR' in output and 'LIVE_BEFORE_OK' in output and 'LIVE_AFTER_OK' in output
+            assert 'ONE_CORRECTLY_NAMED_JAR' in output and 'LIVE_BEFORE_OK' in output and 'LIVE_AFTER_OK' in output and 'ASSEMBLY_MIGRATION_OK' in output
             report['runtimes'].append({'role':role,'image':runtime.P['logstash.'+role+'.image'],'status':'pass','output':output})
         assert artifact==runtime.artifact_info();report['status']='pass'
     except Exception as error:

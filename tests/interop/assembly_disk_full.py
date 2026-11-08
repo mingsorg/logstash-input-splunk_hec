@@ -5,6 +5,8 @@ import socket
 import sys
 import assembly
 import runtime
+import assembly_state
+import hashlib
 from metadata_fields import finish_receiver, error_details
 
 def main():
@@ -16,16 +18,25 @@ def main():
             rt=runtime.start_tcp_runtime(role,tls=True,queue='memory',tcp_port=port,s2s_line_breaker_rules=rules,
                 docker_args=('--tmpfs','/run-hec/state/assembly:rw,size=65536,uid=1000,gid=1000,mode=0700'))
             assert assembly.post(rt,assembly.body('START retained'))[0]==200
-            command=('exec',rt['name'],'sha256sum','/run-hec/state/assembly/state')
-            before=runtime.docker(*command)
+            # The tmpfs is container-owned. Preserve the acknowledged prefix; failed appends
+            # can leave an incomplete suffix and must be judged by authenticated replay.
+            command=('exec',rt['name'],'sh','-c','cd /run-hec/state/assembly && tar cf - .')
+            def capture(label):
+                import subprocess,tarfile,io
+                data=subprocess.run(['docker',*command],check=True,capture_output=True,timeout=30).stdout
+                target=rt['directory']/label;target.mkdir()
+                with tarfile.open(fileobj=io.BytesIO(data)) as archive:archive.extractall(target,filter='data')
+                return assembly_state.read(target)
+            before=capture('before-enospc')
             status,response=assembly.post(rt,assembly.body('x'*100000,14))
             assert status==503 and 'ackId' not in response,(status,response)
-            assert runtime.docker(*command)==before,'ENOSPC changed accepted snapshot'
+            after=capture('after-enospc')
+            assert after==before,'ENOSPC changed accepted committed state'
             assert runtime.request(rt['port'],rt['context'],'health')[0]==503
             logs=runtime.docker('logs',rt['name'])
             assert 'assembly storage blocked' in logs,logs
             report['runs'].append({'role':role,'image':runtime.P['logstash.'+role+'.image'],'status':'pass','injection':'64KiB tmpfs; 100000-byte continuation exceeds actual filesystem capacity',
-                                   'accepted_snapshot_sha256':before.split()[0],'response':response,'rejected_status':status,'health_status':503})
+                                   'accepted_state_sha256':hashlib.sha256(json.dumps(before,sort_keys=True).encode()).hexdigest(),'response':response,'rejected_status':status,'health_status':503})
             if not finish_receiver(rt,report):raise RuntimeError('ENOSPC receiver cleanup failed')
             rt=None
         assert runtime.artifact_info()==report['artifact'];report['status']='pass'

@@ -42,7 +42,7 @@ def validators_info():
     base=ROOT/'tests/interop'
     # Interop scripts/fixtures (per-release evidence output and the final gate itself are not producers) ...
     paths+=[p for p in base.rglob('*') if p.is_file() and not (p.relative_to(base).parts[0]=='evidence' and len(p.relative_to(base).parts)>2)
-            and '__pycache__' not in p.parts and p.name!='check_assembly_qualification.py']
+            and '__pycache__' not in p.parts and p.name not in ('check_assembly_qualification.py','review_journal.py')]
     # ... plus the other executed harnesses, build scripts and version pins.
     for extra in ('tests/http','tests/tcp','scripts'):
         paths+=[p for p in (ROOT/extra).rglob('*') if p.is_file() and '__pycache__' not in p.parts and 'evidence' not in p.relative_to(ROOT/extra).parts]

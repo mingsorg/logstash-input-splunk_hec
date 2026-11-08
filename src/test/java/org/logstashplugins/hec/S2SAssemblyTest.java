@@ -30,6 +30,11 @@ class S2SAssemblyTest {
     }
     void expire(S2SStreamAssembler assembly)throws Exception{clock.addAndGet(101);try(var lease=memory.lease()){assembly.expire(lease);}}
     Map<String,Object> take(BlockingQueue<Map<String,Object>> received)throws Exception{var value=received.poll(3,TimeUnit.SECONDS);assertNotNull(value);return value;}
+    static Path journal(Path directory)throws Exception{
+        var pointer=HecProtocol.JSON.readTree(Files.readAllBytes(directory.resolve("current-v3")),65,(int)Files.size(directory.resolve("current-v3"))-65);
+        return directory.resolve("journal-v3-"+pointer.get("generation").asLong());
+    }
+    static byte[] durableBytes(Path directory)throws Exception{return Files.readAllBytes(journal(directory));}
     @Test void strictPolicyAndExactThenOrderedGlobPrecedence(){
         String rules="[{\"match\":\"glob\",\"sourcetype\":\"t*\",\"event_start_pattern\":\"first\",\"flush_timeout_ms\":1},"+
             "{\"match\":\"glob\",\"sourcetype\":\"te??\",\"event_start_pattern\":\"second\",\"flush_timeout_ms\":2},"+
@@ -119,10 +124,10 @@ class S2SAssemblyTest {
     @Test void validationFailureRollsBackWholeBatchAndDefaultIdsRemainIdentical()throws Exception{
         try(var assembly=assembler()){
             accept(assembly,"prior",event("a",0,"START prior"));
-            byte[] snapshot=Files.readAllBytes(directory.resolve("assembly/state"));
+            byte[] snapshot=durableBytes(directory.resolve("assembly"));
             var invalid=new S2SDecoder.Event("host","a","test","channel","forbidden",10,7,11,1,0,null,List.of(),null,List.of(),Map.of(),Map.of(),new byte[]{(byte)0xff});
             assertThrows(HecException.class,()->accept(assembly,"bad",event("b",0,"START bad"),invalid));
-            assertArrayEquals(snapshot,Files.readAllBytes(directory.resolve("assembly/state")));
+            assertArrayEquals(snapshot,durableBytes(directory.resolve("assembly")));
             var records=List.of(event("x",-1,"a\r\n\n b"),event("x",-1,"repeated"));
             try(var lease=memory.lease()){
                 var unmatched=S2SLineBreakerPolicy.parse(RULES.replace("test","other"));
@@ -135,15 +140,15 @@ class S2SAssemblyTest {
     }
     @Test void quotasCorruptionTornWritesExclusiveLockAndConfigMismatchFailClosed()throws Exception{
         try(var assembly=assembler(MetadataMode.NONE,4096,1,RULES)){
-            accept(assembly,"1",event("a",0,"START a"));byte[] before=Files.readAllBytes(directory.resolve("assembly/state"));
-            assertThrows(HecException.class,()->accept(assembly,"2",event("b",0,"START b")));assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));
+            accept(assembly,"1",event("a",0,"START a"));byte[] before=durableBytes(directory.resolve("assembly"));
+            assertThrows(HecException.class,()->accept(assembly,"2",event("b",0,"START b")));assertArrayEquals(before,durableBytes(directory.resolve("assembly")));
             assertThrows(Exception.class,()->assembler());
-            assertThrows(java.io.IOException.class,()->accept(assembly,"3",event("a",7,"x".repeat(3000))));assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));
+            assertThrows(java.io.IOException.class,()->accept(assembly,"3",event("a",7,"x".repeat(3000))));assertArrayEquals(before,durableBytes(directory.resolve("assembly")));
         }
-        Files.writeString(directory.resolve("assembly/next"),"torn uncommitted write");
+        Files.write(journal(directory.resolve("assembly")),new byte[]{1,2,3},StandardOpenOption.APPEND);
         try(var assembly=assembler(MetadataMode.NONE,4096,1,RULES)){assertEquals(1,assembly.pendingCount());}
         assertThrows(java.io.IOException.class,()->assembler(MetadataMode.FULL,4096,1,RULES));
-        byte[] bytes=Files.readAllBytes(directory.resolve("assembly/state"));bytes[bytes.length-1]^=1;Files.write(directory.resolve("assembly/state"),bytes);
+        Path journal=journal(directory.resolve("assembly"));byte[] bytes=Files.readAllBytes(journal);bytes[bytes.length-1]^=1;Files.write(journal,bytes);
         assertThrows(java.io.IOException.class,()->assembler(MetadataMode.NONE,4096,1,RULES));
     }
     @Test void admissionReservesTaggedFinalizationBeforeAcknowledgingPendingData()throws Exception{
@@ -151,8 +156,8 @@ class S2SAssemblyTest {
         long pendingBytes,completedBytes;
         try(var probe=assembler()){
             accept(probe,"one",event("a",0,text));
-            pendingBytes=Files.size(directory.resolve("assembly/state"))-65;
-            expire(probe);completedBytes=Files.size(directory.resolve("assembly/state"))-65;
+            pendingBytes=probe.liveBytes();
+            expire(probe);completedBytes=probe.liveBytes();
         }
         assertTrue(completedBytes>pendingBytes,"full tagged contribution output must exercise positive finalization growth");
         Path tight=directory.resolve("tight");
@@ -160,7 +165,7 @@ class S2SAssemblyTest {
                 S2SMetadataFields.EMPTY,"{}",pendingBytes,10,memory,s->{},clock::get)){
             assertThrows(java.io.IOException.class,()->accept(assembly,"one",event("a",0,text)));
             assertTrue(assembly.healthy());assertEquals(0,assembly.pendingCount());
-            assertFalse(Files.exists(tight.resolve("state")),"reject before committing or ACKing a tail that cannot complete");
+            assertFalse(Files.exists(tight.resolve("current-v3")),"reject before committing or ACKing a tail that cannot complete");
         }
         // An admitted snapshot can complete after restart with no handoff needed to make room.
         Path enough=directory.resolve("enough");long quota=completedBytes+512;
@@ -171,7 +176,7 @@ class S2SAssemblyTest {
         try(var assembly=new S2SStreamAssembler(enough,S2SLineBreakerPolicy.parse(RULES),MetadataMode.FULL,
                 S2SMetadataFields.EMPTY,"{}",quota,10,memory,s->{},clock::get)){
             expire(assembly);assertEquals(0,assembly.pendingCount());assertEquals(1,assembly.outputCount());
-            assertTrue(Files.size(enough.resolve("state"))<=quota+65);
+            assertTrue(assembly.liveBytes()<=quota);
         }
     }
     @Test void thousandLineEventFitsTheRequestBudgetWithoutRepeatedPrefixCharging()throws Exception{
@@ -232,12 +237,12 @@ class S2SAssemblyTest {
     }
     @Test void failedDiskWriteNeverCommitsTheNewContributionAndDiagnosesBlockedHealth()throws Exception{
         try(var assembly=assembler()){
-            accept(assembly,"one",event("a",0,"START retained"));byte[] before=Files.readAllBytes(directory.resolve("assembly/state"));
-            Files.createDirectory(directory.resolve("assembly/next")); // write failure at the actual journal I/O boundary
+            accept(assembly,"one",event("a",0,"START retained"));byte[] before=durableBytes(directory.resolve("assembly"));
+            Path journal=journal(directory.resolve("assembly"));Files.move(journal,directory.resolve("saved-journal"));Files.createDirectory(journal);
             assertThrows(java.io.IOException.class,()->accept(assembly,"two",event("a",14,"trace")));
-            assertFalse(assembly.healthy());assertNotNull(assembly.failure());assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));
+            assertFalse(assembly.healthy());assertNotNull(assembly.failure());assertArrayEquals(before,Files.readAllBytes(directory.resolve("saved-journal")));
         }
-        Files.delete(directory.resolve("assembly/next")); // repair injected storage failure, not accepted state
+        Path journal=journal(directory.resolve("assembly"));Files.delete(journal);Files.move(directory.resolve("saved-journal"),journal);
         try(var assembly=assembler()){assertEquals(1,assembly.pendingCount());}
     }
     @Test void deadlineAppliesBeforeLateContinuationEvenWhenTheWorkerHasNotRun()throws Exception{
@@ -265,14 +270,14 @@ class S2SAssemblyTest {
         Limits small=new Limits(1,1,4096,4096,8L<<20,1024,100,100,1000,1000,1000);
         try(var assembly=assembler(MetadataMode.NONE,1<<20,10,RULES);var lease=memory.lease()){
             assembly.accept(List.of(event("a",0,"START "+"x".repeat(600))),token(),Map.of(),"prior","http",small,lease,null);
-            byte[] before=Files.readAllBytes(directory.resolve("assembly/state"));
+            byte[] before=durableBytes(directory.resolve("assembly"));
             var invalid=new S2SDecoder.Event("host","b","test","channel","main",10,7,0,1,0,null,List.of(),null,List.of(),Map.of(),Map.of(),new byte[]{(byte)0xff});
             var error=assertThrows(HecException.class,()->assembly.accept(List.of(event("a",606,"x".repeat(600)),invalid),token(),Map.of(),"invalid","http",small,lease,null));
             assertEquals(6,error.code);assertTrue(assembly.healthy());assertEquals(1,assembly.pendingCount());
-            assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));
+            assertArrayEquals(before,durableBytes(directory.resolve("assembly")));
             var conflict=assertThrows(HecException.class,()->assembly.accept(List.of(event("a",606,"x".repeat(600)),event("a",0,"changed retry")),token(),Map.of(),"conflicting","http",small,lease,null));
             assertEquals(6,conflict.code);assertTrue(assembly.healthy());
-            assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));
+            assertArrayEquals(before,durableBytes(directory.resolve("assembly")));
         }
     }
     @Test void oversizeStartAfterRetiredStreamDoesNotBlockUnrelatedDurableState()throws Exception{
@@ -387,12 +392,12 @@ class S2SAssemblyTest {
     @Test void changedRetryHeaderTimezoneOrDatePartsConflictsBeforeAnyMutation()throws Exception{
         var original=event("a",0,"START first");
         try(var assembly=assembler()){
-            accept(assembly,"one",original);byte[] before=Files.readAllBytes(directory.resolve("assembly/state"));
+            accept(assembly,"one",original);byte[] before=durableBytes(directory.resolve("assembly"));
             for(var changed:List.of(attributes(original,"main",List.of(),null,List.of("changed")),
                     attributes(original,"main",List.of(),"UTC",List.of()),
                     attributes(original,"main",List.of(new S2SDecoder.DatePart(1,0x42,7)),null,List.of()))){
                 var error=assertThrows(HecException.class,()->accept(assembly,"retry",changed));assertEquals(6,error.code);
-                assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));assertTrue(assembly.healthy());
+                assertArrayEquals(before,durableBytes(directory.resolve("assembly")));assertTrue(assembly.healthy());
             }
         }
     }
@@ -403,9 +408,9 @@ class S2SAssemblyTest {
             assembly.accept(List.of(old),policy,Map.of(),"one","http",limits,lease,null);
             assembly.accept(List.of(attributes(event("a",9,"START new"),"changed",List.of(),null,List.of())),policy,Map.of(),"two","http",limits,lease,null);
             assertEquals(1,assembly.outputCount());assertEquals(1,assembly.pendingCount());
-            byte[] before=Files.readAllBytes(directory.resolve("assembly/state"));
+            byte[] before=durableBytes(directory.resolve("assembly"));
             assembly.accept(List.of(old),policy,Map.of(),"retry","http",limits,lease,null);
-            assertArrayEquals(before,Files.readAllBytes(directory.resolve("assembly/state")));
+            assertArrayEquals(before,durableBytes(directory.resolve("assembly")));
             assertEquals(1,assembly.outputCount());assertEquals(1,assembly.pendingCount());
         }
     }
@@ -427,20 +432,20 @@ class S2SAssemblyTest {
         String text="START first\n"+"trace\n".repeat(40);
         long pendingBytes,completedBytes;
         try(var probe=assembler()){
-            accept(probe,"one",event("a",0,text));pendingBytes=Files.size(directory.resolve("assembly/state"))-65;
-            expire(probe);completedBytes=Files.size(directory.resolve("assembly/state"))-65;
+            accept(probe,"one",event("a",0,text));pendingBytes=probe.liveBytes();
+            expire(probe);completedBytes=probe.liveBytes();
         }
         assertTrue(completedBytes>pendingBytes);
         Path path=directory.resolve("shrunk");long original=completedBytes+512;
         try(var assembly=new S2SStreamAssembler(path,S2SLineBreakerPolicy.parse(RULES),MetadataMode.FULL,S2SMetadataFields.EMPTY,"{}",original,10,memory,s->{},clock::get)){
             accept(assembly,"one",event("a",0,text));assertEquals(1,assembly.pendingCount());
         }
-        byte[] before=Files.readAllBytes(path.resolve("state"));
+        byte[] before=durableBytes(path);
         // The snapshot itself fits, but its completed form does not.
         var error=assertThrows(java.io.IOException.class,()->new S2SStreamAssembler(path,S2SLineBreakerPolicy.parse(RULES),MetadataMode.FULL,
             S2SMetadataFields.EMPTY,"{}",pendingBytes,10,memory,s->{},clock::get));
         assertTrue(error.getMessage().contains("recovery bounds"),error.getMessage());
-        assertArrayEquals(before,Files.readAllBytes(path.resolve("state")),"failed recovery must not alter retained state");
+        assertArrayEquals(before,durableBytes(path),"failed recovery must not alter retained state");
         // Fewer stream slots than the retained work also fails closed, and the original configuration still recovers it.
         assertThrows(java.io.IOException.class,()->new S2SStreamAssembler(path,S2SLineBreakerPolicy.parse(RULES),MetadataMode.FULL,
             S2SMetadataFields.EMPTY,"{}",original,0,memory,s->{},clock::get));

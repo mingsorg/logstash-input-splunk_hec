@@ -29,6 +29,7 @@ def main():
         if stage in ('all','assembly'):
             run('assembly.py')
             run('assembly_disk_full.py')
+            run('journal_qualification.py')
             run('indexed_assembly.py')
             run('wire_assembly.py')
         if stage=='assembly':return 0

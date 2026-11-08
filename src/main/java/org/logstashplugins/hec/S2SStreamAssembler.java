@@ -9,8 +9,14 @@ import java.util.function.LongSupplier;
 
 /** Transactional source-isolated assembly plus one owned, interruptible outbox worker. */
 final class S2SStreamAssembler implements AutoCloseable {
-    record Pending(Object envelope,String text,String delimiter,String rule,String chain,String attributes,String origin,List<Object> contributions,
+    record Pending(Object envelope,AssemblyChunks.Text text,String delimiter,String rule,String chain,String attributes,String origin,AssemblyChunks.Contributions contributions,
                    long touched,long timeout,long offset,long sequence,int eventLimit,String sender) {}
+    private record Sizes(long text,long contributions,long wireContributions,long taggedContributions) {}
+    private final Map<Pending,Sizes> sizes=new IdentityHashMap<>();
+    private final Map<Output,Long> outputSizes=new IdentityHashMap<>();
+    private record Shape(long pending,long logical,long output) {}
+    private final Map<Pending,Shape> shapes=new IdentityHashMap<>();
+    private final Map<Map<String,String>,Long> receiptSizes=new IdentityHashMap<>();
     record Output(String id,Object envelope,String sender) {}
     /** Holds back later output of the listed senders (except the listed barrier outputs) until the caller has enqueued its direct events. */
     private static final class Gate{
@@ -59,6 +65,10 @@ final class S2SStreamAssembler implements AutoCloseable {
     }
     S2SStreamAssembler(Path path,S2SLineBreakerPolicy policy,MetadataMode mode,S2SMetadataFields fields,
                        String metadataConfiguration,long maximum,int streams,MemoryBudget memory,Consumer<String> diagnostic,LongSupplier clock)throws IOException{
+        this(path,policy,mode,fields,metadataConfiguration,maximum,streams,memory,diagnostic,clock,boundary->{});
+    }
+    S2SStreamAssembler(Path path,S2SLineBreakerPolicy policy,MetadataMode mode,S2SMetadataFields fields,
+                       String metadataConfiguration,long maximum,int streams,MemoryBudget memory,Consumer<String> diagnostic,LongSupplier clock,S2SAssemblyStore.Faults faults)throws IOException{
         this.policy=policy;this.mode=mode;metadataFields=fields;maxStreams=streams;this.clock=clock;this.diagnostic=diagnostic;
         // Each SHA-256 key/value receipt occupies at most 134 JSON bytes including its comma.
         // Reserve at most a quarter of the snapshot for receipts, including the map's braces.
@@ -67,22 +77,25 @@ final class S2SStreamAssembler implements AutoCloseable {
         reservation=memory.lease();reservation.charge(Math.multiplyExact(maximum,32));
         S2SAssemblyStore opened=null;
         try{
-            opened=new S2SAssemblyStore(path,maximum);store=opened;
+            opened=new S2SAssemblyStore(path,maximum,faults);store=opened;
             String configuration=TokenStore.fingerprint("assembly-v2:"+policy.fingerprint+":"+mode+":"+metadataConfiguration);
-            byte[] recovered=store.recover();
+            byte[] recovered=store.recover(value->{
+                if(!configuration.equals(value.configuration))throw new IOException("assembly policy mismatch; restore configuration or explicitly migrate retained state");
+                validateStructure(value);
+                // Keep replay accounting bounded to the current recovered generation state.
+                var retained=Collections.newSetFromMap(new IdentityHashMap<Pending,Boolean>());retained.addAll(value.pending.values());sizes.keySet().retainAll(retained);
+                var outputs=Collections.newSetFromMap(new IdentityHashMap<Output,Boolean>());outputs.addAll(value.outbox);outputSizes.keySet().retainAll(outputs);
+                shapes.keySet().retainAll(retained);
+                receiptSizes.keySet().removeIf(receipts->receipts!=value.receipts);
+            });
             state=recovered==null?new State(configuration,new LinkedHashMap<>(),new ArrayList<>(),new LinkedHashMap<>(),false):
-                recoveryMapper(maximum).readValue(recovered,State.class);
+                recoveryMapper(S2SAssemblyStore.SAFETY_MAXIMUM).readValue(recovered,State.class);
             if(!configuration.equals(state.configuration))throw new IOException("assembly policy mismatch; restore configuration or explicitly migrate retained state");
-            if(state.pending.size()>streams||state.receipts.size()>receiptLimit)throw new IOException("assembly recovery bounds exceeded");
-            // Validate all tagged envelopes before opening listeners or emitting anything.
-            for(var pending:state.pending.values())S2SAssemblyStore.envelope(pending.envelope);
-            for(var output:state.outbox)S2SAssemblyStore.envelope(output.envelope);
             // Admission reserved finalization headroom under the quota in force at the time; recovery must prove the
             // same under the quota in force NOW, otherwise an ACKed tail could never be completed.
-            try{validateFinalizationCapacity(state);}
-            catch(IOException|AssembledEventTooLarge|HecException|ArithmeticException|ClassCastException|IllegalArgumentException|NullPointerException error){
-                throw new IOException("assembly recovery bounds exceeded; retained state cannot be finalized under the configured s2s_assembly_max_bytes/s2s_assembly_max_streams",error);
-            }
+            validateRecovered(state);
+            receiptSizes.clear();receiptSizes.put(state.receipts,2L+134L*state.receipts.size()-(state.receipts.isEmpty()?0:1));
+            store.initialize(state);
             blocked=state.blocked;if(blocked)diagnostic.accept("S2S assembly blocked; retained oversized stream requires explicit operator recovery");
         }catch(IOException|RuntimeException error){
             try{if(opened!=null)opened.close();}catch(IOException closeFailure){error.addSuppressed(closeFailure);}
@@ -91,13 +104,46 @@ final class S2SStreamAssembler implements AutoCloseable {
         }
     }
     /** Recovery reads only snapshots the store already bounded to {@code maximum} bytes, so string/number limits follow that bound rather than Jackson's defaults. */
-    private static com.fasterxml.jackson.databind.ObjectMapper recoveryMapper(long maximum){
+    static com.fasterxml.jackson.databind.ObjectMapper recoveryMapper(long maximum){
         int bound=(int)Math.min(Integer.MAX_VALUE,Math.max(1,maximum+65));
-        var factory=com.fasterxml.jackson.core.JsonFactory.builder().streamReadConstraints(com.fasterxml.jackson.core.StreamReadConstraints.builder()
+        var factory=com.fasterxml.jackson.core.JsonFactory.builder().enable(com.fasterxml.jackson.core.StreamReadFeature.STRICT_DUPLICATE_DETECTION).streamReadConstraints(com.fasterxml.jackson.core.StreamReadConstraints.builder()
             .maxStringLength(bound).maxNumberLength(bound).build()).build();
         return new com.fasterxml.jackson.databind.ObjectMapper(factory)
             .enable(com.fasterxml.jackson.databind.DeserializationFeature.USE_LONG_FOR_INTS)
             .enable(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+    }
+    private void validateRecovered(State value)throws IOException{
+        try{
+            if(value.pending.size()>maxStreams||value.receipts.size()>receiptLimit)throw new IOException("assembly recovery bounds exceeded");
+            validateStructure(value);
+            validateFinalizationCapacity(value);
+        }catch(IOException|RuntimeException error){throw new IOException("assembly recovery bounds exceeded; retained state cannot be finalized under the configured s2s_assembly_max_bytes/s2s_assembly_max_streams",error);}
+    }
+    private void validateStructure(State value)throws IOException{
+        try{
+            if(value.pending.size()>10000||value.outbox.size()>40000||value.receipts.size()>4096)throw new IOException("assembly safety bounds exceeded");
+            var ids=new HashSet<String>();
+            for(var entry:value.pending.entrySet()){
+                var pending=entry.getValue();
+                if(!entry.getKey().matches("[a-f0-9]{64}")||pending.contributions.isEmpty()||pending.timeout<1||pending.eventLimit<1||pending.touched<0||
+                    !pending.chain.matches("[a-f0-9]{64}")||!pending.rule.matches("[a-f0-9]{64}"))throw new IOException("invalid assembly pending state");
+                S2SAssemblyStore.envelope(pending.envelope);
+                // Validate only newly appended wire values; cached prefixes were already decoded.
+                if(!sizes.containsKey(pending)){
+                    for(Object contribution:pending.contributions.suffix)decodedContribution(contribution);
+                }
+            }
+            for(var output:value.outbox){if(!ids.add(output.id))throw new IOException("duplicate assembly output identity");S2SAssemblyStore.envelope(output.envelope);}
+            for(var receipt:value.receipts.entrySet())if(!receipt.getKey().matches("[a-f0-9]{64}")||!receipt.getValue().matches("[a-f0-9]{64}"))throw new IOException("invalid assembly receipt");
+            long bytes=store.serializedSize(new State(value.configuration,Map.of(),List.of(),Map.of(),value.blocked))-2+receiptBytes(value.receipts);
+            int count=0;
+            for(var entry:value.pending.entrySet()){
+                var pending=entry.getValue();var accounted=account(pending);
+                bytes+=store.serializedSize(entry.getKey())+1+store.serializedSize(empty(pending))+accounted.text+accounted.contributions+(count++==0?0:1);
+            }
+            count=0;for(var output:value.outbox){Long size=outputSizes.get(output);if(size==null){size=store.serializedSize(output);outputSizes.put(output,size);}bytes+=size+(count++==0?0:1);}
+            if(bytes>S2SAssemblyStore.SAFETY_MAXIMUM)throw new IOException("assembly historical byte safety bound exceeded");
+        }catch(RuntimeException error){throw new IOException("invalid assembly historical state",error);}
     }
     synchronized void start(Consumer<Map<String,Object>> sink){
         if(worker!=null||stopped)throw new IllegalStateException("assembly worker lifecycle");
@@ -136,7 +182,10 @@ final class S2SStreamAssembler implements AutoCloseable {
             if(stopped||blocked)throw HecException.busy();wait(50);
         }
         if(stopped||blocked)throw HecException.busy();
+        // Retain accounting only for accepted entries; rejected staging must not retain suffixes.
+        pruneSizes();
         var pending=new LinkedHashMap<>(state.pending);var outbox=new ArrayList<>(state.outbox);var receipts=new LinkedHashMap<>(state.receipts);
+        receiptSizes.put(receipts,receiptBytes(state.receipts));
         // Keys whose retained stream is still durable: an oversize block may only quarantine those.
         var committed=new HashSet<>(state.pending.keySet());
         List<Map<String,Object>> direct=new ArrayList<>();
@@ -280,27 +329,36 @@ final class S2SStreamAssembler implements AutoCloseable {
                     if((long)prior+join.length()+value.length()+delimiter.length()>limits.event())rejectOversize(key,committed.contains(key));
                     // Charge only this line's incremental scratch; the retained state was already charged when admitted.
                     memory.charge(8192L+16L*(join.length()+value.length())+256L);
-                    String assembled=(current==null?"":current.text)+join+value;
+                    var assembled=new AssemblyChunks.Text(current==null?null:current.text,join+value);
                     Map<String,Object> contribution=new LinkedHashMap<>();
                     contribution.put("offset",record.offset());contribution.put("sequence",record.sequence());contribution.put("line",(long)line);
                     contribution.put("logical_offset",record.offset()<0?-1:Math.addExact(record.offset(),rawCursor));
                     contribution.put("sha256",TokenStore.fingerprint((value+delimiter).getBytes(StandardCharsets.UTF_8)));
                     if(mode==MetadataMode.FULL)contribution.put("wire",S2SAssemblyStore.encode(wireProvenance(record)));
-                    List<Object> contributions=current==null?new ArrayList<>():new ArrayList<>(current.contributions);contributions.add(contribution);
+                    var contributions=new AssemblyChunks.Contributions(current==null?null:current.contributions,List.of(contribution));
                     if(contributions.size()>limits.events())throw HecException.busy();
                     String chain=hash(List.of(current==null?key+rule.fingerprint():current.chain,receipt,content,line));
                     Object envelope=current==null?S2SAssemblyStore.encode(base):current.envelope;
-                    Pending updated=new Pending(envelope,assembled,delimiter,rule.fingerprint(),chain,attributes,origin,List.copyOf(contributions),clock.getAsLong(),rule.timeout(),
+                    Pending updated=new Pending(envelope,assembled,delimiter,rule.fingerprint(),chain,attributes,origin,contributions,clock.getAsLong(),rule.timeout(),
                         positioned?Math.addExact(record.offset(),record.raw().length):-1,record.sequence(),limits.event(),sender);
                     // Include the final delimiter and full provenance in admission size checks.
-                    try{completed(updated,"coordinate-gap-or-reordering",memory);}catch(AssembledEventTooLarge error){rejectOversize(key,committed.contains(key));}
+                    Sizes priorSizes=current==null?new Sizes(0,0,0,0):account(current);
+                    sizes.put(updated,new Sizes(priorSizes.text+stringContentBytes(join+value),
+                        priorSizes.contributions+store.serializedSize(contribution)+(current==null?0:1),
+                        priorSizes.wireContributions+store.serializedSize(decodedContribution(contribution))+(current==null?0:1),
+                        priorSizes.taggedContributions+store.serializedSize(S2SAssemblyStore.encode(decodedContribution(contribution)))+(current==null?0:1)));
+                    if(current!=null&&current.eventLimit==updated.eventLimit)shapes.put(updated,shape(current));
+                    try{validateCompletedSize(updated);}catch(AssembledEventTooLarge error){rejectOversize(key,committed.contains(key));}
                     pending.put(key,updated);
                 }
                 if(!value.isEmpty())legacyLine++;
                 rawCursor+=(value+delimiter).getBytes(StandardCharsets.UTF_8).length;
                 start=lf<0?text.length():lf+1;line++;
             }
-            receipts.put(receipt,content);while(receipts.size()>receiptLimit)receipts.remove(receipts.keySet().iterator().next());
+            long receiptBytes=receiptBytes(receipts);boolean wasEmpty=receipts.isEmpty();
+            receipts.put(receipt,content);receiptBytes+=wasEmpty?133:134;
+            while(receipts.size()>receiptLimit){receipts.remove(receipts.keySet().iterator().next());receiptBytes-=receipts.isEmpty()?133:134;}
+            receiptSizes.put(receipts,receiptBytes);
             if(pending.size()>maxStreams||outbox.size()>maxStreams*4L)throw HecException.busy();
             number++;
         }
@@ -370,7 +428,7 @@ final class S2SStreamAssembler implements AutoCloseable {
     // envelopes must not share a gate permit just because their serialized content matches.
     private static Output output(Map<String,Object> envelope,String sender){return new Output(UUID.randomUUID().toString(),S2SAssemblyStore.encode(envelope),sender);}
     private Map<String,Object> completed(Pending pending,String reason,MemoryBudget.Lease memory){
-        var envelope=S2SAssemblyStore.envelope(pending.envelope);envelope.put("event",pending.text+pending.delimiter);
+        var envelope=S2SAssemblyStore.envelope(pending.envelope);envelope.put("event",pending.text.value()+pending.delimiter);
         String id="s2s-assembled-v1:"+hash(List.of(pending.chain,pending.rule,reason));
         if(mode!=MetadataMode.NONE){
             Map<String,Object> metadata=new LinkedHashMap<>();
@@ -413,7 +471,7 @@ final class S2SStreamAssembler implements AutoCloseable {
         throw HecException.busy();
     }
     private void persist(State next)throws IOException{
-        try{store.commit(next);state=next;}
+        try{store.commit(next);state=next;pruneSizes();}
         catch(IOException error){
             if(store.failed()){blocked=true;failure="S2S assembly storage blocked; accepted state retained";diagnostic.accept(failure);notifyAll();}
             throw error;
@@ -425,19 +483,71 @@ final class S2SStreamAssembler implements AutoCloseable {
      * The longest flush reason also bounds all other completion reasons (IDs have fixed length).
      */
     private void validateFinalizationCapacity(State next)throws IOException{
+        var capacity=capacity(next);store.validateCapacity(capacity.live,capacity.reserve);
+    }
+    private record Capacity(long live,long reserve) {}
+    private Capacity capacity(State next)throws IOException{
         if(next.outbox.size()+(long)next.pending.size()>maxStreams*4L)throw HecException.busy();
         long reserve=0;
-        MemoryBudget scratch=new MemoryBudget(Long.MAX_VALUE);
-        try(var memory=scratch.lease()){
-            for(var entry:next.pending.entrySet()){
-                Pending pending=entry.getValue();
-                Output completed=output(completed(pending,"coordinate-gap-or-reordering",memory),pending.sender);
-                long pendingBytes=store.serializedSize(Collections.singletonMap(entry.getKey(),pending))-2;
-                reserve=Math.addExact(reserve,Math.max(0,store.serializedSize(completed)+1-pendingBytes));
+        long live=store.serializedSize(new State(next.configuration,Map.of(),List.of(),Map.of(),next.blocked))-2+receiptBytes(next.receipts);
+        int count=0;
+        for(var entry:next.pending.entrySet()){
+            Pending pending=entry.getValue();validateCompletedSize(pending);
+            long pendingBytes=store.serializedSize(entry.getKey())+1+shape(pending).pending+stringContentBytes(pending.delimiter)+
+                store.serializedSize(pending.touched)+store.serializedSize(pending.offset)+store.serializedSize(pending.sequence)+account(pending).text+account(pending).contributions;
+            live=Math.addExact(live,pendingBytes+(count++==0?0:1));
+            reserve=Math.addExact(reserve,Math.max(0,completedBytes(pending,true)+1-pendingBytes));
+        }
+        count=0;for(var output:next.outbox){Long bytes=outputSizes.get(output);if(bytes==null){bytes=store.serializedSize(output);outputSizes.put(output,bytes);}live=Math.addExact(live,bytes+(count++==0?0:1));}
+        return new Capacity(live,reserve);
+    }
+    private static Map<String,Object> decodedContribution(Object value){
+        @SuppressWarnings("unchecked") var result=new LinkedHashMap<>((Map<String,Object>)value);
+        if(result.containsKey("wire"))result.put("wire",S2SAssemblyStore.decode(result.get("wire")));return result;
+    }
+    private long stringContentBytes(String text)throws IOException{return store.serializedSize(text)-2;}
+    private long receiptBytes(Map<String,String> receipts){return receiptSizes.computeIfAbsent(receipts,values->2L+134L*values.size()-(values.isEmpty()?0:1));}
+    private Pending empty(Pending value){return new Pending(value.envelope,new AssemblyChunks.Text(""),value.delimiter,value.rule,value.chain,value.attributes,value.origin,
+        new AssemblyChunks.Contributions(List.of()),value.touched,value.timeout,value.offset,value.sequence,value.eventLimit,value.sender);}
+    private Sizes account(Pending value)throws IOException{
+        Sizes cached=sizes.get(value);if(cached!=null)return cached;
+        if(value.text.previous!=null&&value.contributions.previous!=null){
+            // During replay, the preceding accepted entry is still in the cache.
+            Sizes ancestor=null;
+            for(var entry:sizes.entrySet())if(entry.getKey().text==value.text.previous&&entry.getKey().contributions==value.contributions.previous){ancestor=entry.getValue();break;}
+            if(ancestor!=null){
+                long plain=ancestor.wireContributions,tagged=ancestor.taggedContributions,contributions=ancestor.contributions;
+                for(Object item:value.contributions.suffix){var decoded=decodedContribution(item);plain+=store.serializedSize(decoded)+1;tagged+=store.serializedSize(S2SAssemblyStore.encode(decoded))+1;contributions+=store.serializedSize(item)+1;}
+                cached=new Sizes(ancestor.text+stringContentBytes(value.text.suffix),contributions,plain,tagged);sizes.put(value,cached);return cached;
             }
         }
-        store.validateCapacity(next,reserve);
+        long plain=0,tagged=0;int count=0;
+        for(Object item:value.contributions){var decoded=decodedContribution(item);plain+=store.serializedSize(decoded)+(count==0?0:1);tagged+=store.serializedSize(S2SAssemblyStore.encode(decoded))+(count++==0?0:1);}
+        cached=new Sizes(stringContentBytes(value.text.value()),store.serializedSize(value.contributions)-2,plain,tagged);sizes.put(value,cached);return cached;
     }
+    private Shape shape(Pending value)throws IOException{
+        Shape cached=shapes.get(value);if(cached!=null)return cached;
+        if(value.text.previous!=null&&value.contributions.previous!=null){
+            for(var entry:shapes.entrySet())if(entry.getKey().text==value.text.previous&&entry.getKey().contributions==value.contributions.previous&&entry.getKey().eventLimit==value.eventLimit){shapes.put(value,entry.getValue());return entry.getValue();}
+        }
+        Pending empty=empty(value);MemoryBudget scratch=new MemoryBudget(Long.MAX_VALUE);Map<String,Object> envelope;
+        try(var lease=scratch.lease()){envelope=completed(empty,"coordinate-gap-or-reordering",lease);}
+        long output=store.serializedSize(new Output("00000000-0000-0000-0000-000000000000",S2SAssemblyStore.encode(envelope),value.sender))-stringContentBytes(value.delimiter);
+        envelope.remove("@timestamp");envelope.remove("@version");long logical=store.serializedSize(envelope)-stringContentBytes(value.delimiter);
+        long pending=store.serializedSize(empty)-stringContentBytes(value.delimiter)-store.serializedSize(value.touched)-store.serializedSize(value.offset)-store.serializedSize(value.sequence);
+        cached=new Shape(pending,logical,output);shapes.put(value,cached);return cached;
+    }
+    private long completedBytes(Pending value,boolean tagged)throws IOException{
+        var shape=shape(value);var cached=account(value);
+        return (tagged?shape.output:shape.logical)+cached.text+stringContentBytes(value.delimiter)+(mode==MetadataMode.FULL?(tagged?cached.taggedContributions:cached.wireContributions):0);
+    }
+    private void validateCompletedSize(Pending value)throws IOException{if(completedBytes(value,false)>value.eventLimit)throw new AssembledEventTooLarge();}
+    private void pruneSizes(){var retained=Collections.newSetFromMap(new IdentityHashMap<Pending,Boolean>());retained.addAll(state.pending.values());sizes.keySet().retainAll(retained);
+        receiptSizes.keySet().removeIf(value->value!=state.receipts);
+        shapes.keySet().retainAll(retained);
+        var outputs=Collections.newSetFromMap(new IdentityHashMap<Output,Boolean>());outputs.addAll(state.outbox);outputSizes.keySet().retainAll(outputs);}
+    synchronized long liveBytes()throws IOException{return store.serializedSize(state);}
+    synchronized long accountedLiveBytes()throws IOException{return capacity(state).live;}
     private void run(Consumer<Map<String,Object>> sink){
         // Scratch already covered by the permanent reservation, not charged to request leases.
         MemoryBudget scratch=new MemoryBudget(Long.MAX_VALUE);

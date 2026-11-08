@@ -1,17 +1,37 @@
 # Installation guide
 
-Current source identity is selected by `VERSION` (**0.2.0**, built from source; no published gem).
-The verified labels in this guide originated with 0.1.0; they do not qualify the
-new gem. See [0.2.0 verification](verification-0.2.0.md) and release-scoped exact-digest
-reports under `tests/interop/evidence/0.2.0/` for current results.
+Current source identity is selected by `VERSION` (**0.3.0**, unreleased, built from source).
+Examples below are **expected output/behavior**, not current-artifact proof. Historical
+verification labels describe earlier runs. Current assertions require matching artifact
+and validator digests in `tests/interop/evidence/0.3.0/install-check.json`,
+`upgrade-check.json`, and `qualification-summary.json`. See [0.3.0 journal operations](assembly-journal-0.3.0.md) and release-scoped exact-digest
+reports under `tests/interop/evidence/0.3.0/` for current results. A migrated assembly
+spool refuses the 0.2.0 reader; downgrade requires restoring the pre-migration backup.
 
 How to build the `splunk_hec` input and install it into Logstash: from a source checkout,
 onto a package/tarball Logstash, into a Docker image, and on Kubernetes. It also covers
 first-run verification, upgrade, removal and troubleshooting.
 
-Each step is marked **Verified** when it was run for this guide in the official Logstash
+Each historical step is marked **Verified** when it was run for this guide in the official Logstash
 containers (see [What was verified](#12-what-was-verified)) or **Not tested here** when it
 relies on standard Logstash/OS behaviour that was not exercised in this project.
+
+### Explicit 0.2.0 regression baseline preparation
+
+The old-reader/migration Java tests require the released 0.2.0 gem, which is an
+ignored local fixture and is not included in a clean checkout. They fail explicitly
+when it is missing; they are never silently skipped. Prepare it with:
+
+```sh
+python3 scripts/prepare-v2-baseline.py --download
+```
+
+This explicitly uses `gh release download` against GitHub repository
+`mingsorg/logstash-input-splunk_hec`, tag `v0.2.0`; it needs GitHub/network access
+and may use the configured `gh` credentials. The downloaded bytes must match
+SHA-256 `3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11`.
+An existing gem is validated and never overwritten. Downloads and staging remain
+inside the project. Run without `--download` to validate an already prepared fixture.
 
 Contents: [1 Requirements](#1-requirements) · [2 Get the gem](#2-get-the-gem-build-from-source) ·
 [3 Choose an install method](#3-choose-an-install-method) · [4 Package or tarball Logstash](#4-install-on-a-linux-logstash-package-or-tarball) ·
@@ -41,8 +61,8 @@ There is no published release; build the gem from the repository.
 git clone https://github.com/mingsorg/logstash-input-splunk_hec.git     # public repo
 cd logstash-input-splunk_hec
 ./gradlew test gem
-ls -l logstash-input-splunk_hec-0.2.0-java.gem
-sha256sum logstash-input-splunk_hec-0.2.0-java.gem
+ls -l logstash-input-splunk_hec-0.3.0-java.gem
+sha256sum logstash-input-splunk_hec-0.3.0-java.gem
 ```
 
 **Verified.** What the build does:
@@ -85,20 +105,20 @@ where Logstash lives.
 Package install (`/usr/share/logstash`):
 
 ```sh
-sudo /usr/share/logstash/bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.2.0-java.gem
+sudo /usr/share/logstash/bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.3.0-java.gem
 ```
 
 Tarball install (the directory you unpacked):
 
 ```sh
 cd /opt/logstash-9.5.5
-bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.2.0-java.gem
+bin/logstash-plugin install /path/to/logstash-input-splunk_hec-0.3.0-java.gem
 ```
 
 Expected output **(Verified)**:
 
 ```
-Validating /path/to/logstash-input-splunk_hec-0.2.0-java.gem
+Validating /path/to/logstash-input-splunk_hec-0.3.0-java.gem
 Installing logstash-input-splunk_hec
 Installation successful
 ```
@@ -137,17 +157,17 @@ EXPOSE 8088 9997
 Build and run:
 
 ```sh
-mkdir build-ctx && cp logstash-input-splunk_hec-0.2.0-java.gem docker/Dockerfile.logstash build-ctx/
+mkdir build-ctx && cp logstash-input-splunk_hec-0.3.0-java.gem docker/Dockerfile.logstash build-ctx/
 docker build -f build-ctx/Dockerfile.logstash \
   --build-arg LOGSTASH_IMAGE=docker.elastic.co/logstash/logstash:9.5.5 \
-  --build-arg PLUGIN_GEM=logstash-input-splunk_hec-0.2.0-java.gem \
-  -t logstash-splunk-hec:0.2.0 build-ctx
+  --build-arg PLUGIN_GEM=logstash-input-splunk_hec-0.3.0-java.gem \
+  -t logstash-splunk-hec:0.3.0 build-ctx
 
 docker run -d --name logstash-hec \
   -p 8088:8088 -p 9997:9997 \
   -v "$PWD/pipeline:/usr/share/logstash/pipeline:ro" \
   -v hec-state:/var/lib/logstash/hec \
-  logstash-splunk-hec:0.2.0
+  logstash-splunk-hec:0.3.0
 ```
 
 Points that matter:
@@ -167,7 +187,7 @@ Docker Compose:
 ```yaml
 services:
   logstash:
-    image: logstash-splunk-hec:0.2.0
+    image: logstash-splunk-hec:0.3.0
     ports: ["8088:8088", "9997:9997"]
     volumes:
       - ./pipeline:/usr/share/logstash/pipeline:ro
@@ -176,7 +196,7 @@ volumes:
   hec-state:
 ```
 
-To ship the image to an air-gapped host: `docker save logstash-splunk-hec:0.2.0 | gzip > hec.tar.gz`, then
+To ship the image to an air-gapped host: `docker save logstash-splunk-hec:0.3.0 | gzip > hec.tar.gz`, then
 `docker load < hec.tar.gz` there (**Not tested here**; standard Docker).
 
 ## 6. Kubernetes
@@ -259,7 +279,7 @@ Run these in order; all were **Verified** in Docker for Logstash 9.5.0 and 9.5.5
 
    ```sh
    bin/logstash-plugin list --verbose splunk
-   # logstash-input-splunk_hec (0.2.0)
+   # logstash-input-splunk_hec (0.3.0)
    ```
 
 2. The pipeline parses and the plugin options are valid:

@@ -82,7 +82,7 @@ input {
 
 ## 2. What is configured where
 
-### Opt-in S2S assembly (0.2.0)
+### Opt-in S2S assembly (0.3.0)
 
 `s2s_line_breaker_rules_json` is a startup-only JSON array, default `[]`.
 Only matched **unstructured S2S** traffic on HTTP/TCP assembles. Structured,
@@ -115,13 +115,13 @@ a start); rules cannot import arbitrary `props.conf` behavior.
 | Option | Default | Constraint |
 |---|---:|---|
 | `s2s_line_breaker_rules_json` | `[]` | Startup-only ordered exact/glob rules, as above. |
-| `s2s_assembly_max_bytes` | 2097152 | Committed JSON snapshot payload quota, 4096..67108863 bytes; two disk slots plus 65-byte checksum headers. Reserve **32 ×** this quota from `max_inflight_bytes` at startup, covering retained state, staged copies and bounded recovery/serialization. Leave room for parsing and health. |
+| `s2s_assembly_max_bytes` | 2097152 | Live-state JSON payload quota, 4096..67108863 bytes. Physical spool file contents are separately bounded to **8 × quota + 32768 bytes**, including compaction and migration backup; journal history is **2 × quota + 4096 bytes**. Reserve **32 ×** this quota from `max_inflight_bytes` at startup, covering retained state, staging and bounded recovery/serialization. Leave room for parsing and health. |
 | `s2s_assembly_max_streams` | 1024 | 1..10000 active pending streams; outbox bounded to four times this setting; existing `max_events` also bounds contributions/event and logical lines/request. |
 
 The private, exclusively locked, checksummed store is `state_directory/assembly/`.
 It requires local storage supporting atomic rename, file fsync and directory fsync.
-It rewrites a bounded snapshot per transaction/handoff; this favors correctness
-and bounded recovery over high-throughput journal performance. Quota includes
+It appends a checksummed delta transaction per accepted batch/handoff and compacts
+bounded journal history using durable generation publication. Live-state quota includes
 pending text, envelopes, provenance, outbox and retry receipts. The completed
 serialized envelope still must fit its transport's event limit, including metadata.
 Before accepting a contribution, admission reserves every pending stream's positive
@@ -202,9 +202,10 @@ retain that backup for reconciliation before explicitly moving the assembly
 directory aside and creating fresh state. This is a reset, not lossless migration;
 never delete acknowledged data as an automatic recovery action.
 
-New qualification lives under `tests/interop/evidence/0.2.0/`; historical reports
+New qualification lives under `tests/interop/evidence/0.3.0/`; historical reports
 outside it describe earlier artifacts and do not qualify this version. See
-[0.2.0 verification](verification-0.2.0.md) for the current evidence and gaps.
+[0.3.0 journal operations](assembly-journal-0.3.0.md) for migration, downgrade refusal,
+physical bounds and current qualification commands.
 
 | Concern | Setting | Applies to |
 |---|---|---|

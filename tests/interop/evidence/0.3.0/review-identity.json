@@ -1,0 +1,27 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.3.0-java.gem",
+    "sha256": "ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a"
+  },
+  "validators": "1e6f4b37d1834667d7428e423a9066efe71f4306d4b1f41ce47f6326377ee1ee",
+  "source_sha256": "31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92",
+  "claims_file": "docs/assembly-journal-0.3.0.md",
+  "claims_sha256": "b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84",
+  "reports": [
+    {
+      "lens": "adversarial correctness and durability",
+      "file": "tests/interop/evidence/0.3.0/review-task-durability.json",
+      "sha256": "174e7cabde648c7875b9ee61fa2a55c70f22e0468f743803f6a39e4f64501b5f"
+    },
+    {
+      "lens": "edge cases and migration integrity",
+      "file": "tests/interop/evidence/0.3.0/review-task-edge.json",
+      "sha256": "be778f349ff69f3c867cd2980793ec9805531d5601e4935482b332aeb5ae7ff8"
+    },
+    {
+      "lens": "verification gaps and performance claims",
+      "file": "tests/interop/evidence/0.3.0/review-task-verification.json",
+      "sha256": "635f8035ab777f1c47f614e14b7a698ace02d47f75d69d504ae4965bbd8b0fe6"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "provider": "opencode-task",
+  "reviewer_session_id": "ses_e4409b1f9ffeO0Ic75Z10EYrvI",
+  "structured_output": {
+    "lens": "adversarial correctness and durability",
+    "source_sha256": "31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92",
+    "claims_sha256": "b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84",
+    "artifact_sha256": "ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a",
+    "verdict": "pass",
+    "findings": []
+  },
+  "text": "```json\n{\n  \"lens\": \"adversarial correctness and durability\",\n  \"source_sha256\": \"31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92\",\n  \"claims_sha256\": \"b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84\",\n  \"artifact_sha256\": \"ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a\",\n  \"verdict\": \"pass\",\n  \"findings\": []\n}\n```\n\n**Limits:** Independently recomputed all three digests; supplied bindings match. Inspected raw-review reconciliation and its regression tests: the gate requires one raw JSON verdict matching the structured proof, rejecting missing, duplicate, contradictory or stale verdicts. Read-only parser checks confirmed fenced acceptance and missing/ambiguous rejection.\n\nNo unresolved concrete blockers in this scoped gate change. Full tests were not rerun; prior implementation review remains applicable. No release-readiness assertion."
+}

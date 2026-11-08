@@ -11,6 +11,7 @@ import uuid
 import zlib
 
 import runtime
+import assembly_state
 from senders import sender_bootstrap_args, sender_network, sender_ready
 from metadata_fields import cleanup_sender, finish_receiver, error_details
 
@@ -115,13 +116,12 @@ def crash_probe(rt):
     assert status==200 and 'ackId' in response,(status,response)
     ack=response['ackId']
     assert runtime.request(rt['port'],rt['context'],'ack',{'acks':[ack]})==(200,{'acks':{str(ack):True}})
-    snapshot=rt['directory']/'state/assembly/state'
-    assert snapshot.exists()
-    before=snapshot.read_bytes()
-    assert any(pending['text']=='START retained' for pending in json.loads(before[65:])['pending'].values())
+    snapshot=rt['directory']/'state/assembly'
+    before=assembly_state.retained_bytes(snapshot)
+    assert any(pending['text']=='START retained' for pending in assembly_state.read(snapshot)['pending'].values())
     assert not [e for e in runtime.read_events(rt['directory']/'events.ndjson') if e.get('source')=='assembly-crash']
     assert post(rt,body('bad',14,b'\xfb'))[0]==400
-    assert snapshot.read_bytes()==before,'invalid batch changed accepted state'
+    assert assembly_state.retained_bytes(snapshot)==before,'invalid batch changed accepted state'
     runtime.docker('kill','--signal','KILL',rt['name']);runtime.docker('start',rt['name'])
     rt['port'],rt['context']=runtime.ready(rt['name'],rt['directory'])
     assert runtime.request(rt['port'],rt['context'],'ack',{'acks':[ack]})==(200,{'acks':{str(ack):False}})
@@ -143,8 +143,8 @@ def timestamp_probe(rt):
     source='assembly-time';first='START time first'
     for text,offset,seconds in ((first,0,FIRST_TIME),('trace',len(first.encode()),LATER_TIME)):
         status,response=post(rt,body(text,offset,seconds=seconds,source=source));assert status==200,(status,response)
-    snapshot=rt['directory']/'state/assembly/state'
-    pending=json.loads(snapshot.read_bytes()[65:])['pending']
+    snapshot=rt['directory']/'state/assembly'
+    pending=assembly_state.read(snapshot)['pending']
     assert any(p['text']==first+'\ntrace' for p in pending.values()),'both contributions must be durable before the kill'
     runtime.docker('kill','--signal','KILL',rt['name']);runtime.docker('start',rt['name'])
     rt['port'],rt['context']=runtime.ready(rt['name'],rt['directory'])

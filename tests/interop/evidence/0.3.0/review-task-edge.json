@@ -1,0 +1,13 @@
+{
+  "provider": "opencode-task",
+  "reviewer_session_id": "ses_e4409b1ebffemPSh6cVkg8Eeag",
+  "structured_output": {
+    "lens": "edge cases and migration integrity",
+    "source_sha256": "31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92",
+    "claims_sha256": "b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84",
+    "artifact_sha256": "ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a",
+    "verdict": "pass",
+    "findings": []
+  },
+  "text": "{\n  \"lens\": \"edge cases and migration integrity\",\n  \"source_sha256\": \"31d9c39508fff43e5e325cf65306f5c769845607d2a8c9d7b0a84c17560d2f92\",\n  \"claims_sha256\": \"b5c10c45f904ad3cc519025ed7ffd9f96fd6781d03cc18cf8c1e6b2077ae7a84\",\n  \"artifact_sha256\": \"ebb1379e32808445f80f1238801742d2d400ebd9a0b46e3673d0e6d535e0cf9a\",\n  \"verdict\": \"pass\",\n  \"findings\": []\n}\n\nLimits: scoped read-only review of the gate correction and regression tests. Independently recomputed digests match all supplied bindings. Native raw-review JSON must match the structured verdict; missing, conflicting, duplicated, or stale verdicts are rejected. Tests were inspected, not rerun. Prior implementation verdict remains scoped to the previously reviewed corrections."
+}
