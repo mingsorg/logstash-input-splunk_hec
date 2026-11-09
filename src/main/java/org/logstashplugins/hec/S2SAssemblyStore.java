@@ -24,6 +24,7 @@ final class S2SAssemblyStore implements AutoCloseable {
     interface Faults {void at(String boundary)throws IOException;}
     interface Validator {void validate(S2SStreamAssembler.State state)throws IOException;}
     private final Faults faults;
+    private final HecMetrics metrics;
     private static final int MAGIC=S2SAssemblyReader.MAGIC,HEADER=S2SAssemblyReader.HEADER;
     static final long SAFETY_MAXIMUM=67108863L;
     private static final long RECOVERY_HISTORY=2*SAFETY_MAXIMUM+4096,RECOVERY_PHYSICAL=8*SAFETY_MAXIMUM+32768;
@@ -36,14 +37,18 @@ final class S2SAssemblyStore implements AutoCloseable {
         this(directory,maximum,boundary->{});
     }
     S2SAssemblyStore(Path directory,long maximum,Faults faults)throws IOException{
+        this(directory,maximum,faults,HecMetrics.NONE);
+    }
+    S2SAssemblyStore(Path directory,long maximum,Faults faults,HecMetrics metrics)throws IOException{
         this.directory=directory;this.maximum=maximum;
+        this.metrics=metrics;
         this.faults=faults;historyLimit=Math.addExact(Math.multiplyExact(maximum,2),4096);
         physicalLimit=Math.addExact(Math.multiplyExact(maximum,8),32768);
         Files.createDirectories(directory);
         if(Files.isSymbolicLink(directory))throw new IOException("assembly directory must be private regular storage");
         Files.setPosixFilePermissions(directory,PosixFilePermissions.fromString("rwx------"));
         // Persist the assembly-directory entry itself before any first acknowledgement.
-        try(FileChannel parent=FileChannel.open(directory.toAbsolutePath().getParent(),StandardOpenOption.READ)){parent.force(true);}
+        try(FileChannel parent=FileChannel.open(directory.toAbsolutePath().getParent(),StandardOpenOption.READ)){force(parent);}
         state=directory.resolve("state");next=directory.resolve("next");
         Path lockPath=directory.resolve("lock");
         lockChannel=FileChannel.open(lockPath,StandardOpenOption.CREATE,StandardOpenOption.WRITE,LinkOption.NOFOLLOW_LINKS);
@@ -71,6 +76,7 @@ final class S2SAssemblyStore implements AutoCloseable {
                 current=replay.state();sequence=replay.sequence();
                 if(replay.prefix()<file.size())truncate(file,replay.prefix());
                 journalBytes=file.size();
+                metrics.set("assembly.journal_bytes_last_observed",journalBytes);
             }catch(RuntimeException error){throw new IOException("invalid assembly transaction",error);}
             return HecProtocol.JSON.writeValueAsBytes(current);
         }
@@ -127,6 +133,11 @@ final class S2SAssemblyStore implements AutoCloseable {
         return S2SAssemblyReader.checked(bytes);
     }
     void commit(S2SStreamAssembler.State value)throws IOException{
+        long start=metrics.begin("store.commit");boolean success=false;
+        try{commitValue(value);success=true;metrics.timestamp("last_commit_epoch_millis");}
+        finally{metrics.timed("store.commit",start,success);}
+    }
+    private void commitValue(S2SStreamAssembler.State value)throws IOException{
         if(failed)throw new IOException("assembly storage is blocked");
         byte[] payload=HecProtocol.JSON.writeValueAsBytes(delta(current,value));
         if(payload.length>historyLimit-HEADER)throw new IOException("assembly transaction quota exceeded");
@@ -143,9 +154,10 @@ final class S2SAssemblyStore implements AutoCloseable {
             header.put(digest(Arrays.copyOf(header.array(),24))).put(digest(payload));
             try(FileChannel file=FileChannel.open(journal(generation),StandardOpenOption.WRITE,StandardOpenOption.APPEND,LinkOption.NOFOLLOW_LINKS)){
                 faults.at("append-header");write(file,header.array());faults.at("append-payload");write(file,payload);
-                faults.at("append-sync");file.force(true);faults.at("append-durable");
+                force(file,"append-sync");faults.at("append-durable");
             }
             journalBytes+=HEADER+payload.length;sequence++;current=value;
+            metrics.set("assembly.journal_bytes_last_observed",journalBytes);
         }catch(IOException error){failed=true;throw new IOException("assembly commit failed; storage blocked",error);}
     }
     private Transaction delta(S2SStreamAssembler.State old,S2SStreamAssembler.State value){
@@ -181,6 +193,14 @@ final class S2SAssemblyStore implements AutoCloseable {
     private Path journal(long id){return directory.resolve("journal-v3-"+id);}
     void compact()throws IOException{publish(current);}
     private void publish(S2SStreamAssembler.State value)throws IOException{
+        long start=metrics.begin("store.publication");boolean success=false;
+        boolean compaction=generation>0;long compactStart=compaction?metrics.begin("store.compaction"):0;
+        try{publishValue(value);success=true;}finally{
+            metrics.timed("store.publication",start,success);
+            if(compaction)metrics.timed("store.compaction",compactStart,success);
+        }
+    }
+    private void publishValue(S2SStreamAssembler.State value)throws IOException{
         cleanup();long id=Math.addExact(generation,1);
         byte[] payload=HecProtocol.JSON.writeValueAsBytes(new Snapshot(sequence,value));
         if(payload.length>maximum+4096)throw new IOException("assembly snapshot quota exceeded");
@@ -188,7 +208,7 @@ final class S2SAssemblyStore implements AutoCloseable {
         durable(snapshot(id),wrap(payload),"snapshot");durable(journal(id),new byte[0],"journal");sync("generation-directory");
         durable(directory.resolve("pointer-next-v3"),wrap(HecProtocol.JSON.writeValueAsBytes(new Pointer(id,sequence,TokenStore.fingerprint(payload)))),"pointer");
         faults.at("pointer-move");Files.move(directory.resolve("pointer-next-v3"),directory.resolve("current-v3"),StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);
-        sync("pointer-directory");generation=id;journalBytes=0;faults.at("publication-durable");cleanup();
+        sync("pointer-directory");generation=id;journalBytes=0;metrics.set("assembly.journal_bytes_last_observed",0);faults.at("publication-durable");cleanup();
     }
     private void cleanup()throws IOException{
         try(var files=Files.newDirectoryStream(directory)){
@@ -205,11 +225,20 @@ final class S2SAssemblyStore implements AutoCloseable {
         if(physicalBytes()-existing+bytes.length>writePhysicalLimit())throw new IOException("assembly physical quota exceeded");
         faults.at(boundary+"-write");
         try(FileChannel file=FileChannel.open(path,StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE,LinkOption.NOFOLLOW_LINKS)){
-            Files.setPosixFilePermissions(path,PosixFilePermissions.fromString("rw-------"));write(file,bytes);faults.at(boundary+"-sync");file.force(true);
+            Files.setPosixFilePermissions(path,PosixFilePermissions.fromString("rw-------"));write(file,bytes);force(file,boundary+"-sync");
         }
         faults.at(boundary+"-durable");
     }
-    private void sync(String boundary)throws IOException{faults.at(boundary);try(FileChannel dir=FileChannel.open(directory,StandardOpenOption.READ)){dir.force(true);}}
+    private void sync(String boundary)throws IOException{
+        long start=metrics.begin("store.fsync");boolean success=false;
+        try{faults.at(boundary);try(FileChannel dir=FileChannel.open(directory,StandardOpenOption.READ)){dir.force(true);}success=true;}
+        finally{metrics.timed("store.fsync",start,success);}
+    }
+    private void force(FileChannel file)throws IOException{force(file,null);}
+    private void force(FileChannel file,String boundary)throws IOException{
+        long start=metrics.begin("store.fsync");boolean success=false;
+        try{if(boundary!=null)faults.at(boundary);file.force(true);success=true;}finally{metrics.timed("store.fsync",start,success);}
+    }
     private static byte[] refusal(){return S2SAssemblyReader.REFUSAL;}
     private static byte[] freshRefusal(){return S2SAssemblyReader.FRESH_REFUSAL;}
     private long writePhysicalLimit(){return recoveryCompaction?RECOVERY_PHYSICAL:physicalLimit;}
@@ -220,7 +249,7 @@ final class S2SAssemblyStore implements AutoCloseable {
             if(!markerEquals(established,new byte[]{3}))throw new IOException("invalid assembly established marker");
             // An interrupted first force may leave valid visible bytes without durable contents.
             try(FileChannel file=FileChannel.open(established,StandardOpenOption.WRITE,LinkOption.NOFOLLOW_LINKS)){
-                faults.at("established-recovery-sync");file.force(true);
+                force(file,"established-recovery-sync");
             }
         }
         sync("established-directory");
@@ -246,9 +275,9 @@ final class S2SAssemblyStore implements AutoCloseable {
     private static byte[] wrap(byte[] payload){byte[] prefix=(TokenStore.fingerprint(payload)+"\n").getBytes(StandardCharsets.US_ASCII);byte[] result=Arrays.copyOf(prefix,prefix.length+payload.length);System.arraycopy(payload,0,result,prefix.length,payload.length);return result;}
     private static byte[] digest(byte[] bytes){return java.util.HexFormat.of().parseHex(TokenStore.fingerprint(bytes));}
     private static void regular(Path path,long bound)throws IOException{if(!Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS)||Files.size(path)>bound)throw new IOException("invalid assembly snapshot/journal size/type");}
-    private long physicalBytes()throws IOException{long bytes=0;try(var files=Files.newDirectoryStream(directory)){for(Path path:files){if(!Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS))throw new IOException("invalid assembly storage file");bytes=Math.addExact(bytes,Files.size(path));}}return bytes;}
+    private long physicalBytes()throws IOException{long bytes=0;try(var files=Files.newDirectoryStream(directory)){for(Path path:files){if(!Files.isRegularFile(path,LinkOption.NOFOLLOW_LINKS))throw new IOException("invalid assembly storage file");bytes=Math.addExact(bytes,Files.size(path));}}metrics.set("assembly.physical_bytes_last_observed",bytes);return bytes;}
     private void checkPhysical()throws IOException{if(physicalBytes()>physicalLimit)throw new IOException("assembly physical quota exceeded");}
-    private void truncate(FileChannel file,long position)throws IOException{faults.at("recovery-truncate");file.truncate(position);file.force(true);}
+    private void truncate(FileChannel file,long position)throws IOException{faults.at("recovery-truncate");file.truncate(position);force(file);}
     private static void read(FileChannel channel,long position,byte[] bytes)throws IOException{ByteBuffer buffer=ByteBuffer.wrap(bytes);while(buffer.hasRemaining()){int n=channel.read(buffer,position+buffer.position());if(n<0)throw new EOFException();}}
     /** Count the actual JSON bytes without retaining another serialized snapshot. */
     long serializedSize(Object value)throws IOException{
@@ -266,7 +295,11 @@ final class S2SAssemblyStore implements AutoCloseable {
     void validateCapacity(Object value,long reserved)throws IOException{
         validateCapacity(serializedSize(value),reserved);
     }
-    void validateCapacity(long bytes,long reserved)throws IOException{if(bytes<0||reserved<0||reserved>maximum||bytes>maximum-reserved)throw new IOException("assembly finalization quota exceeded");}
+    void validateCapacity(long bytes,long reserved)throws IOException{
+        long start=metrics.begin("store.capacity");boolean success=false;
+        try{if(bytes<0||reserved<0||reserved>maximum||bytes>maximum-reserved)throw new IOException("assembly finalization quota exceeded");success=true;}
+        finally{metrics.timed("store.capacity",start,success);}
+    }
     private static void write(FileChannel channel,byte[] bytes)throws IOException{
         var buffer=ByteBuffer.wrap(bytes);while(buffer.hasRemaining())channel.write(buffer);
     }

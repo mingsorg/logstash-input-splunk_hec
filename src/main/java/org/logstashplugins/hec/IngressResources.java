@@ -15,6 +15,7 @@ import java.util.concurrent.Semaphore;
 final class IngressResources implements AutoCloseable{
     /** Aggregate accounting of bytes reserved for in-flight parsing and expansion (max_inflight_bytes). */
     final MemoryBudget memory;
+    HecMetrics metrics=HecMetrics.NONE;
     /**
      * {@code processing}: slots for requests/records being processed right now (max_concurrent_requests).
      * {@code connections}: permits for open sockets, idle ones included (max_connections).

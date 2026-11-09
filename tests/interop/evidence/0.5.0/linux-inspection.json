@@ -1,0 +1,41 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+    "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+  },
+  "validators": "f87943c7d0edc6f9443bdb408283ab734a7e276ada9cfca23e2f0fba395358b8",
+  "source_sha256": "f1f644b98d1024e3e6c994fed7f40ff9061119b0a8fdd6a947e2457e91a2ab65",
+  "run_id": "0768e48cf8e74d7ba8971c33103cd107",
+  "status": "pass",
+  "xml": "build/linux-inspection/test-results/test/TEST-org.logstashplugins.hec.S2SAssemblyInspectorTest.xml",
+  "xml_sha256": "5a35a8be2429d91a0afedf9f03e5951deb72dd2a3e3d4c88b7ed3812eb977ac6",
+  "main_classes_sha256": "032da55e8f61dfd07d1292b49abf88f0253ae8b0643b3680c406d9d53c2e3c17",
+  "test_classes_sha256": "080bef5325b70807b875cd2d8570ba75ee444ed88e0a23d996ea28aa24b7153b",
+  "tests": 20,
+  "cases": [
+    "publishedSummaryMatchesProductionCopyAndDoesNotDiscloseValues()",
+    "legacyOriginalIsReadWithoutMigrationAndPolicyIsNotEvaluated()",
+    "subprocessCliAndJavaSharedExclusiveLocksAreCompatible()",
+    "everyShortHeaderAndAuthenticatedShortPayloadReportsPrefixWithoutTruncation()",
+    "inputFilePinsAncestorsAndRefusesReplacementBeforeDataOpen()",
+    "terminatingLauncherReapsItsJavaLockHolder()",
+    "launcherBootstrapFailuresAreStructuredAndValueFree()",
+    "compactedNonemptySnapshotAndTornPrefixMatchProductionCopy()",
+    "physicalEntryJsonDepthAndStateBudgetsFailClosed()",
+    "checkedMalformedStatesRejectWithoutPolicyOrPayloadDisclosure()",
+    "cliSchemasInputPrecedenceStrictUsageAndValueFreeErrors()",
+    "timedOutCliChildIsTerminatedAndAwaited()",
+    "completeFramingChecksumSequenceOperationAndCodecCorruptionNeverFallback()",
+    "corruptPublishedPointerNeverUsesValidBackup()",
+    "capturesPublishedSchemasAndActualOutputFamilies()",
+    "replayRecordAndTaggedNumericBudgetsAreExplicit()",
+    "missingDirectoriesLocksLinksSpecialFilesAndPublicDirectoriesRefuse()",
+    "pinnedFileGrowthDoesNotChangeTheAdmittedAllocation()",
+    "storageFaultsAreValueFreeExitFiveAndCheckedCorruptionIsThree()",
+    "unpublishedCandidatesAndBackupAreNeverPromoted()"
+  ],
+  "execution": "fresh-pinned-linux-container",
+  "schema_captures": "build/linux-inspection/inspection-captures/0768e48cf8e74d7ba8971c33103cd107/captured.json",
+  "schema_captures_sha256": "7fb9c5a4c2c0e829930fadb827a32d8d6ba3622724346a04976c6eeba69dc46d",
+  "schema_outputs_validated": true
+}

@@ -21,8 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InputLifecycleTest {
     @TempDir Path directory;
+    RecordingMetrics metrics=new RecordingMetrics();
     SplunkHec input()throws Exception{return input(Map.of());}
     SplunkHec input(Map<String,Object> extra)throws Exception{
+        metrics=new RecordingMetrics();var instanceMetrics=metrics;
         int port;try(var listener=new ServerSocket(0)){port=listener.getLocalPort();}
         Map<String,Object> values=new HashMap<>(Map.of("host","127.0.0.1","port",(long)port,"ssl_enabled",false,
             "state_directory",directory.toString(),"shutdown_grace_ms",2000L,
@@ -38,7 +40,11 @@ class InputLifecycleTest {
             public Collection<String> allKeys(){return values.keySet();}
         };
         Context context=(Context)Proxy.newProxyInstance(Context.class.getClassLoader(),new Class<?>[]{Context.class},
-            (proxy,method,args)->method.getName().equals("getLogger")?LogManager.getLogger(InputLifecycleTest.class):null);
+            (proxy,method,args)->switch(method.getName()){
+                case "getLogger" -> LogManager.getLogger(InputLifecycleTest.class);
+                case "getMetric" -> {assertEquals("lifecycle-test",((Plugin)args[0]).getId());yield instanceMetrics.namespace("");}
+                default -> null;
+            });
         return new SplunkHec("lifecycle-test",configuration,context);
     }
     HecServer server(SplunkHec input)throws Exception{
@@ -77,6 +83,9 @@ class InputLifecycleTest {
             assertTrue(java.nio.file.Files.isRegularFile(directory.resolve("assembly/current-v3")));assertTrue(received.isEmpty());
             var poll=assemblyPost(client,server.port(),"ack",("{\"acks\":["+ack+"]}").getBytes());
             assertTrue(HecProtocol.JSON.readTree(poll.body()).path("acks").path(Long.toString(ack)).asBoolean());
+            assertEquals(1L,metrics.snapshot().get("hec.http.ack.success"));
+            assertEquals(1L,metrics.snapshot().get("hec.assembly.contributions"));
+            assertEquals(0L,metrics.snapshot().get("hec.handoff.http_s2s.returned"));
             byte[] before=S2SAssemblyTest.durableBytes(directory.resolve("assembly"));
             byte[] malformed=new S2STest.Body().meta().eventAt(0x0a,0,13,1).str("trace").op(0xfb).compressed();
             var bad=assemblyPost(client,server.port(),"s2s",malformed);assertEquals(400,bad.statusCode());assertFalse(bad.body().contains("ackId"));

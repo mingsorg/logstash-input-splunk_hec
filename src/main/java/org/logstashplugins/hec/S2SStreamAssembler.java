@@ -36,7 +36,7 @@ final class S2SStreamAssembler implements AutoCloseable {
                     S2SStreamAssembler.this.notifyAll();await(step.predecessors);
                 }
                 // Never hold the assembly monitor while a Logstash queue may apply backpressure.
-                for(var event:step.events){if(stopped||blocked||Thread.currentThread().isInterrupted())throw HecException.busy();sink.accept(event);}
+                for(var event:step.events){if(stopped||blocked||Thread.currentThread().isInterrupted())throw HecException.busy();metrics.handoff("assembly_direct",sink,event);}
             }
         }
         @Override public void close(){release(gate);}
@@ -52,6 +52,8 @@ final class S2SStreamAssembler implements AutoCloseable {
     private final int maxStreams;
     private final LongSupplier clock;
     private final Consumer<String> diagnostic;
+    private final HecMetrics metrics;
+    private final long maximum;
     private State state;
     private Thread worker;
     private volatile boolean stopped,blocked;
@@ -69,7 +71,12 @@ final class S2SStreamAssembler implements AutoCloseable {
     }
     S2SStreamAssembler(Path path,S2SLineBreakerPolicy policy,MetadataMode mode,S2SMetadataFields fields,
                        String metadataConfiguration,long maximum,int streams,MemoryBudget memory,Consumer<String> diagnostic,LongSupplier clock,S2SAssemblyStore.Faults faults)throws IOException{
+        this(path,policy,mode,fields,metadataConfiguration,maximum,streams,memory,diagnostic,clock,faults,HecMetrics.NONE);
+    }
+    S2SStreamAssembler(Path path,S2SLineBreakerPolicy policy,MetadataMode mode,S2SMetadataFields fields,
+                       String metadataConfiguration,long maximum,int streams,MemoryBudget memory,Consumer<String> diagnostic,LongSupplier clock,S2SAssemblyStore.Faults faults,HecMetrics metrics)throws IOException{
         this.policy=policy;this.mode=mode;metadataFields=fields;maxStreams=streams;this.clock=clock;this.diagnostic=diagnostic;
+        this.metrics=metrics;this.maximum=maximum;
         // Each SHA-256 key/value receipt occupies at most 134 JSON bytes including its comma.
         // Reserve at most a quarter of the snapshot for receipts, including the map's braces.
         receiptLimit=(int)Math.max(1,Math.min(4096,(maximum/4-2)/134));
@@ -77,7 +84,7 @@ final class S2SStreamAssembler implements AutoCloseable {
         reservation=memory.lease();reservation.charge(Math.multiplyExact(maximum,32));
         S2SAssemblyStore opened=null;
         try{
-            opened=new S2SAssemblyStore(path,maximum,faults);store=opened;
+            opened=new S2SAssemblyStore(path,maximum,faults,metrics);store=opened;
             String configuration=TokenStore.fingerprint("assembly-v2:"+policy.fingerprint+":"+mode+":"+metadataConfiguration);
             byte[] recovered=store.recover(value->{
                 if(!configuration.equals(value.configuration))throw new IOException("assembly policy mismatch; restore configuration or explicitly migrate retained state");
@@ -97,6 +104,7 @@ final class S2SStreamAssembler implements AutoCloseable {
             receiptSizes.clear();receiptSizes.put(state.receipts,2L+134L*state.receipts.size()-(state.receipts.isEmpty()?0:1));
             store.initialize(state);
             blocked=state.blocked;if(blocked)diagnostic.accept("S2S assembly blocked; retained oversized stream requires explicit operator recovery");
+            publishState();
         }catch(IOException|RuntimeException error){
             try{if(opened!=null)opened.close();}catch(IOException closeFailure){error.addSuppressed(closeFailure);}
             finally{reservation.close();}
@@ -230,10 +238,10 @@ final class S2SStreamAssembler implements AutoCloseable {
             if(validatedLines>limits.events())throw HecException.busy();
             mapped.add(new Mapped(legacy,effective));
         }
-        int number=0,produced=0;boolean changed=false;
+        int number=0,produced=0;boolean changed=false;long newContributions=0;var reasons=new ArrayList<String>();
         long now=clock.getAsLong();
         for(String key:new ArrayList<>(pending.keySet())){Pending value=pending.get(key);
-            if(now>=value.touched&&now-value.touched>=value.timeout){finish(key,pending,outbox,"timeout",memory);committed.remove(key);changed=true;}
+            if(now>=value.touched&&now-value.touched>=value.timeout){finish(key,pending,outbox,"timeout",memory,reasons);committed.remove(key);changed=true;}
         }
         for(var record:records){
             var legacy=mapped.get(number).legacy;
@@ -256,12 +264,12 @@ final class S2SStreamAssembler implements AutoCloseable {
                 if(retrySeen!=null){if(!retrySeen.equals(retryContent))throw new HecException(400,6,"Conflicting S2S retry coordinates");number++;continue;}
             }
             for(String other:new ArrayList<>(pending.keySet()))if(!other.equals(key)&&pending.get(other).origin.equals(origin)){
-                finish(other,pending,outbox,"metadata-conflict",memory);committed.remove(other);changed=true;
+                finish(other,pending,outbox,"metadata-conflict",memory,reasons);committed.remove(other);changed=true;
             }
             if(legacy.isEmpty()&&!record.structured()&&(record.flags()&S2SDecoder.METRIC)==0&&rule==null){number++;continue;} // nothing to order or emit
             if(record.structured()||(record.flags()&S2SDecoder.METRIC)!=0||rule==null){
                 if((record.structured()||(record.flags()&S2SDecoder.METRIC)!=0)&&pending.containsKey(key)){
-                    finish(key,pending,outbox,"structured-transition",memory);committed.remove(key);changed=true;
+                    finish(key,pending,outbox,"structured-transition",memory,reasons);committed.remove(key);changed=true;
                 }
                 Set<String> predecessors=new HashSet<>();
                 for(var output:outbox)if(sender.equals(output.sender()))predecessors.add(output.id);
@@ -294,7 +302,7 @@ final class S2SStreamAssembler implements AutoCloseable {
                 var comparable=new LinkedHashMap<>(base);comparable.remove("time");comparable.remove("@timestamp");comparable.remove("@metadata");
                 String reason=!old.equals(comparable)||!previous.attributes.equals(attributes)?"metadata-conflict":positioned&&record.offset()!=previous.offset?"coordinate-gap-or-reordering":
                     positioned&&record.sequence()<previous.sequence?"reordering":null;
-                if(reason!=null){finish(key,pending,outbox,reason,memory);committed.remove(key);}
+                if(reason!=null){finish(key,pending,outbox,reason,memory,reasons);committed.remove(key);}
             }
             String text=HecProtocol.utf8(record.raw());int start=0,line=0,legacyLine=0;long rawCursor=0;
             boolean emptyRecord=text.isEmpty();
@@ -306,7 +314,7 @@ final class S2SStreamAssembler implements AutoCloseable {
                 String value=text.substring(start,contentEnd);
                 if(++produced>limits.events())throw HecException.busy();
                 boolean begins=rule.start().matcher(value).find();
-                if(begins&&pending.containsKey(key)){finish(key,pending,outbox,"new-start",memory);committed.remove(key);}
+                if(begins&&pending.containsKey(key)){finish(key,pending,outbox,"new-start",memory,reasons);committed.remove(key);}
                 Pending current=pending.get(key);
                 if(current==null&&!begins){
                     if(!value.isEmpty())outbox.add(output(legacy.get(legacyLine),sender));
@@ -339,6 +347,7 @@ final class S2SStreamAssembler implements AutoCloseable {
                     pending.put(key,updated);
                 }
                 if(!value.isEmpty())legacyLine++;
+                newContributions++;
                 rawCursor+=(value+delimiter).getBytes(StandardCharsets.UTF_8).length;
                 start=lf<0?text.length():lf+1;line++;
             }
@@ -358,7 +367,10 @@ final class S2SStreamAssembler implements AutoCloseable {
         try{
             if(changed){
                 State next=new State(state.configuration,pending,outbox,receipts,false);
-                validateFinalizationCapacity(next);persist(next);notifyAll();
+                validateFinalizationCapacity(next);persist(next);
+                metrics.add("assembly.contributions",newContributions);
+                if(newContributions>0)metrics.timestamp("last_durable_acceptance_epoch_millis");
+                committedReasons(reasons);notifyAll();
             }
             // A structured transition preserves queue acceptance and follows its preceding completed tail.
             // Wait only for already completed output, never for a future source contribution.
@@ -436,20 +448,23 @@ final class S2SStreamAssembler implements AutoCloseable {
         if(!HecProtocol.logicalSizeFits(envelope,memory,pending.eventLimit))throw new AssembledEventTooLarge();
         return envelope;
     }
-    private void finish(String key,Map<String,Pending> pending,List<Output> outbox,String reason,MemoryBudget.Lease memory){
+    private void finish(String key,Map<String,Pending> pending,List<Output> outbox,String reason,MemoryBudget.Lease memory,List<String> reasons){
         Pending value=pending.get(key);if(value==null)return;
         outbox.add(output(completed(value,reason,memory),value.sender));pending.remove(key);
+        reasons.add(reason);
     }
     synchronized void expire(MemoryBudget.Lease memory)throws IOException{
         if(stopped||blocked)return;
         var pending=new LinkedHashMap<>(state.pending);var outbox=new ArrayList<>(state.outbox);
+        var reasons=new ArrayList<String>();
         long now=clock.getAsLong();
         for(String key:new ArrayList<>(pending.keySet())){Pending value=pending.get(key);
-            if(now>=value.touched&&now-value.touched>=value.timeout)finish(key,pending,outbox,"timeout",memory);
+            if(now>=value.touched&&now-value.touched>=value.timeout)finish(key,pending,outbox,"timeout",memory,reasons);
         }
         if(outbox.size()>maxStreams*4L)throw HecException.busy();
-        if(pending.size()!=state.pending.size())persist(new State(state.configuration,pending,outbox,state.receipts,false));
+        if(pending.size()!=state.pending.size()){persist(new State(state.configuration,pending,outbox,state.receipts,false));committedReasons(reasons);}
     }
+    private void committedReasons(List<String> reasons){for(String reason:reasons)metrics.increment("assembly.flush."+reason.replace('-','_'));}
     private void rejectOversize(String key,boolean durable)throws IOException{
         if(durable&&state.pending.containsKey(key)){
             persist(new State(state.configuration,state.pending,state.outbox,state.receipts,true));blocked=true;
@@ -458,11 +473,21 @@ final class S2SStreamAssembler implements AutoCloseable {
         throw HecException.busy();
     }
     private void persist(State next)throws IOException{
-        try{store.commit(next);state=next;pruneSizes();}
+        try{store.commit(next);state=next;pruneSizes();publishState();}
         catch(IOException error){
-            if(store.failed()){blocked=true;failure="S2S assembly storage blocked; accepted state retained";diagnostic.accept(failure);notifyAll();}
+            if(store.failed()){blocked=true;metrics.set("assembly.blocked",1);failure="S2S assembly storage blocked; accepted state retained";diagnostic.accept(failure);notifyAll();}
             throw error;
         }
+    }
+    /** Observational only: failure to compute a gauge cannot roll back or reject accepted work. */
+    private void publishState(){
+        if(!metrics.enabled())return;
+        metrics.set("assembly.enabled",1);metrics.set("assembly.blocked",blocked||state.blocked?1:0);
+        metrics.set("assembly.pending",state.pending.size());metrics.set("assembly.outbox",state.outbox.size());metrics.set("assembly.receipts",state.receipts.size());
+        metrics.set("assembly.quota_bytes",maximum);
+        try{var bytes=capacity(state);metrics.set("assembly.live_bytes",bytes.live);metrics.set("assembly.reserved_bytes",bytes.reserve);
+            metrics.set("assembly.utilization_basis_points",(bytes.live+bytes.reserve)*10000/maximum);
+        }catch(IOException|RuntimeException ignored){/* retain last observation */}
     }
     /**
      * Every subset of pending entries may become output before a single handoff frees space.
@@ -473,7 +498,10 @@ final class S2SStreamAssembler implements AutoCloseable {
         var capacity=capacity(next);store.validateCapacity(capacity.live,capacity.reserve);
     }
     private record Capacity(long live,long reserve) {}
+    private java.lang.ref.WeakReference<State> measuredState=new java.lang.ref.WeakReference<>(null);
+    private Capacity measuredCapacity;
     private Capacity capacity(State next)throws IOException{
+        if(next==measuredState.get())return measuredCapacity;
         if(next.outbox.size()+(long)next.pending.size()>maxStreams*4L)throw HecException.busy();
         long reserve=0;
         long live=store.serializedSize(new State(next.configuration,Map.of(),List.of(),Map.of(),next.blocked))-2+receiptBytes(next.receipts);
@@ -486,7 +514,7 @@ final class S2SStreamAssembler implements AutoCloseable {
             reserve=Math.addExact(reserve,Math.max(0,completedBytes(pending,true)+1-pendingBytes));
         }
         count=0;for(var output:next.outbox){Long bytes=outputSizes.get(output);if(bytes==null){bytes=store.serializedSize(output);outputSizes.put(output,bytes);}live=Math.addExact(live,bytes+(count++==0?0:1));}
-        return new Capacity(live,reserve);
+        measuredState=new java.lang.ref.WeakReference<>(next);measuredCapacity=new Capacity(live,reserve);return measuredCapacity;
     }
     private static Map<String,Object> decodedContribution(Object value){
         @SuppressWarnings("unchecked") var result=new LinkedHashMap<>((Map<String,Object>)value);
@@ -545,7 +573,7 @@ final class S2SStreamAssembler implements AutoCloseable {
                 if(output==null){try(var memory=scratch.lease()){expire(memory);}output=next();}
             }
             if(output==null){synchronized(this){if(!stopped)wait(50);}continue;}
-            sink.accept(S2SAssemblyStore.envelope(output.envelope));
+            metrics.handoff("outbox",sink,S2SAssemblyStore.envelope(output.envelope));
             synchronized(this){
                 if(stopped)break;
                 var remaining=new ArrayList<>(state.outbox);
@@ -555,7 +583,7 @@ final class S2SStreamAssembler implements AutoCloseable {
             }
         }catch(InterruptedException error){Thread.currentThread().interrupt();break;}
         catch(Exception error){
-            if(!stopped){blocked=true;failure="S2S assembly blocked; durable state retained ("+error.getClass().getSimpleName()+")";diagnostic.accept(failure);}
+            if(!stopped){blocked=true;metrics.set("assembly.blocked",1);failure="S2S assembly blocked; durable state retained ("+error.getClass().getSimpleName()+")";diagnostic.accept(failure);}
             break;
         }
     }

@@ -1,0 +1,2477 @@
+{
+  "traffic": [
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 12491,
+      "body_sha256": "7b996edc6cc6d360d8e73820cc327300b46668400f2fb5674b3c1a91f0d83c76",
+      "channel": null,
+      "fixture": "7b996edc6cc6d360d8e73820cc327300b46668400f2fb5674b3c1a91f0d83c76.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "injected_invalid_opcode": true,
+      "plugin": {
+        "status": 400,
+        "body": "{\"text\":\"Invalid data format\",\"code\":6}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 12491,
+      "body_sha256": "7b996edc6cc6d360d8e73820cc327300b46668400f2fb5674b3c1a91f0d83c76",
+      "channel": null,
+      "fixture": "7b996edc6cc6d360d8e73820cc327300b46668400f2fb5674b3c1a91f0d83c76.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "injected_invalid_opcode": true,
+      "plugin": {
+        "status": 400,
+        "body": "{\"text\":\"Invalid data format\",\"code\":6}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 12491,
+      "body_sha256": "7b996edc6cc6d360d8e73820cc327300b46668400f2fb5674b3c1a91f0d83c76",
+      "channel": null,
+      "fixture": "7b996edc6cc6d360d8e73820cc327300b46668400f2fb5674b3c1a91f0d83c76.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 27742,
+      "body_sha256": "9b639f155a9b4b99fe3cabd12724a739fa7dea6b72ef889d7735c6feb6903312",
+      "channel": null,
+      "fixture": "9b639f155a9b4b99fe3cabd12724a739fa7dea6b72ef889d7735c6feb6903312.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 12878,
+      "body_sha256": "69d0de8cabcfab76b8725b17934817f250cd8b7c2fb289f623e232e17a238c49",
+      "channel": null,
+      "fixture": "69d0de8cabcfab76b8725b17934817f250cd8b7c2fb289f623e232e17a238c49.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 15838,
+      "body_sha256": "ff7d3560f495692b4f02a26682dc730f6ad1b1e20538feb3ef654a9862662061",
+      "channel": null,
+      "fixture": "ff7d3560f495692b4f02a26682dc730f6ad1b1e20538feb3ef654a9862662061.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 16360,
+      "body_sha256": "82d6660604ccf330580296a1fbc9515d85fb43b03ee0abedb38dd7f36d8dc335",
+      "channel": null,
+      "fixture": "82d6660604ccf330580296a1fbc9515d85fb43b03ee0abedb38dd7f36d8dc335.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 102413,
+      "body_sha256": "c3dc4bb8e9e7ee3da798c7a53d648e3c6a704cd57b39e7ce67211cbc3727d4f7",
+      "channel": null,
+      "fixture": "c3dc4bb8e9e7ee3da798c7a53d648e3c6a704cd57b39e7ce67211cbc3727d4f7.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 503,
+        "body": "{\"text\":\"Server is busy\",\"code\":9}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 102413,
+      "body_sha256": "c3dc4bb8e9e7ee3da798c7a53d648e3c6a704cd57b39e7ce67211cbc3727d4f7",
+      "channel": null,
+      "fixture": "c3dc4bb8e9e7ee3da798c7a53d648e3c6a704cd57b39e7ce67211cbc3727d4f7.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 503,
+        "body": "{\"text\":\"Server is busy\",\"code\":9}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunkforwarder-10.6.1.1-b2ae2962645c",
+      "body_bytes": 102413,
+      "body_sha256": "c3dc4bb8e9e7ee3da798c7a53d648e3c6a704cd57b39e7ce67211cbc3727d4f7",
+      "channel": null,
+      "fixture": "c3dc4bb8e9e7ee3da798c7a53d648e3c6a704cd57b39e7ce67211cbc3727d4f7.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 503,
+        "body": "{\"text\":\"Server is busy\",\"code\":9}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 116770,
+      "body_sha256": "1b42dfe981f840c69170d4c9f622a854bcd5f217e92a10f9e11a5cd621fa06ee",
+      "channel": null,
+      "fixture": "1b42dfe981f840c69170d4c9f622a854bcd5f217e92a10f9e11a5cd621fa06ee.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 1152,
+      "body_sha256": "41ee9d84c2d036584f2b1ae2875ffc81cd9ad2c055ec8c57649389ec1af5dc35",
+      "channel": null,
+      "fixture": "41ee9d84c2d036584f2b1ae2875ffc81cd9ad2c055ec8c57649389ec1af5dc35.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 21789,
+      "body_sha256": "5dc5d9a1cf9b30d45742c503ada7e6698a8a427a944243342dbeb74170253d72",
+      "channel": null,
+      "fixture": "5dc5d9a1cf9b30d45742c503ada7e6698a8a427a944243342dbeb74170253d72.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 14037,
+      "body_sha256": "2bb6e484a92b483c7480ad9900391979e72d20fb6b6c058ca4b9e09001a32c71",
+      "channel": null,
+      "fixture": "2bb6e484a92b483c7480ad9900391979e72d20fb6b6c058ca4b9e09001a32c71.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 10433,
+      "body_sha256": "615d683be9ece0605c6d1aeadc047d19185a41fceba87aeb42a02e45106e8740",
+      "channel": null,
+      "fixture": "615d683be9ece0605c6d1aeadc047d19185a41fceba87aeb42a02e45106e8740.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 4464,
+      "body_sha256": "0e7c8a300c23c8180f25cbe2cbb593f76991ce48f9d5c97f0861827850030c52",
+      "channel": null,
+      "fixture": "0e7c8a300c23c8180f25cbe2cbb593f76991ce48f9d5c97f0861827850030c52.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 15634,
+      "body_sha256": "5dbc4966f361b3c98b29aee1eb5a2b3fb9a51350037518225c146f99a53bb9ef",
+      "channel": null,
+      "fixture": "5dbc4966f361b3c98b29aee1eb5a2b3fb9a51350037518225c146f99a53bb9ef.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 16420,
+      "body_sha256": "863fbd95a1f0d195cdcec94f4d1ba076a1c1fefc224788cad21d363d8594ee35",
+      "channel": null,
+      "fixture": "863fbd95a1f0d195cdcec94f4d1ba076a1c1fefc224788cad21d363d8594ee35.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 3239,
+      "body_sha256": "369a5e52eefe6e06752f5171f0613075a83a5902c65b440918d7a93416974f90",
+      "channel": null,
+      "fixture": "369a5e52eefe6e06752f5171f0613075a83a5902c65b440918d7a93416974f90.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 102376,
+      "body_sha256": "67ea021db9c6e4611f7cfad9640886b215246b4637b448c4b8791b72bdfeea52",
+      "channel": null,
+      "fixture": "67ea021db9c6e4611f7cfad9640886b215246b4637b448c4b8791b72bdfeea52.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 503,
+        "body": "{\"text\":\"Server is busy\",\"code\":9}"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/services/collector/s2s",
+      "user_agent": null,
+      "agent_build": "splunk-10.6.1.1-b2ae2962645c",
+      "body_bytes": 102376,
+      "body_sha256": "67ea021db9c6e4611f7cfad9640886b215246b4637b448c4b8791b72bdfeea52",
+      "channel": null,
+      "fixture": "67ea021db9c6e4611f7cfad9640886b215246b4637b448c4b8791b72bdfeea52.bin",
+      "oracle": {
+        "status": 200,
+        "body": "{\"text\":\"Success\",\"code\":0}"
+      },
+      "plugin": {
+        "status": 503,
+        "body": "{\"text\":\"Server is busy\",\"code\":9}"
+      }
+    }
+  ],
+  "events": [
+    {
+      "host": "66d953d5126e",
+      "event": "alpha",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:99a06b437efcfa6e58b80423157e1b76fcddd3af1740e122072d3afb628690e8"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "  indented remains separate",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 1,
+            "logical_offset": 6,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:8baf8d31e2be9c2b9f1e278dbbac4a0748bc961cba755cead6d183c825f6b5a5"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "\u91cd\u590d",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 2,
+            "logical_offset": 34,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:e633b76720f6d25b7dedc479c584a533b7325135a6db0c0c3e0dbcc81c2b6def"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 3,
+            "logical_offset": 41,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:bd78326ddb90a4387c5612018a17f06433e7adc9093669c78f15ca4c16c53b80"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 4,
+            "logical_offset": 48,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:4b3e7b290d4e16ccca908e857bc94c39a785270c03cce27ce70d8c6716b96666"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "@version": "1",
+      "@timestamp": "2026-09-21T14:13:20.123456Z",
+      "time": "1790000000.123456",
+      "fields": {
+        "host": "payload-host",
+        "a.b{}": [
+          "first",
+          "second"
+        ],
+        "time": "1790000000.123456789",
+        "message": "native"
+      },
+      "sourcetype": "hec_native_json",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": 4661084260136768751,
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "4",
+            "date_parts": [
+              {
+                "part": 0,
+                "value": 246913,
+                "tag": 66
+              },
+              {
+                "part": 1,
+                "value": 20,
+                "tag": 66
+              },
+              {
+                "part": 3,
+                "value": 14,
+                "tag": 66
+              },
+              {
+                "part": 2,
+                "value": 13,
+                "tag": 66
+              },
+              {
+                "part": 4,
+                "value": 2026,
+                "tag": 66
+              },
+              {
+                "part": 5,
+                "value": 24,
+                "tag": 74
+              },
+              {
+                "part": 6,
+                "value": 21,
+                "tag": 66
+              },
+              {
+                "part": 7,
+                "value": 10,
+                "tag": 74
+              },
+              {
+                "part": 8,
+                "value": 0,
+                "tag": 66
+              }
+            ],
+            "offset": 0,
+            "flags": 123,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.json",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:2b17290a412726a54086c39bb59e6b12ac0a62c7fe3199277a0ca3a11e8e800c"
+        }
+      },
+      "source": "/tmp/hec-source.json",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "@version": "1",
+      "@timestamp": "2026-09-21T14:13:20.123456Z",
+      "time": "1790000000.123456",
+      "fields": {
+        "host": "payload-host",
+        "a.b{}": [
+          "first",
+          "second"
+        ],
+        "time": "1790000000.123456789",
+        "message": "native"
+      },
+      "sourcetype": "hec_native_json",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": 4661084260136768751,
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "4",
+            "date_parts": [
+              {
+                "part": 0,
+                "value": 246913,
+                "tag": 66
+              },
+              {
+                "part": 1,
+                "value": 20,
+                "tag": 66
+              },
+              {
+                "part": 3,
+                "value": 14,
+                "tag": 66
+              },
+              {
+                "part": 2,
+                "value": 13,
+                "tag": 66
+              },
+              {
+                "part": 4,
+                "value": 2026,
+                "tag": 66
+              },
+              {
+                "part": 5,
+                "value": 24,
+                "tag": 74
+              },
+              {
+                "part": 6,
+                "value": 21,
+                "tag": 66
+              },
+              {
+                "part": 7,
+                "value": 10,
+                "tag": 74
+              },
+              {
+                "part": 8,
+                "value": 0,
+                "tag": 66
+              }
+            ],
+            "offset": 0,
+            "flags": 379,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.json",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:30fcf3b8aa78876aca78ac064d774107e1c74f3ac444d98f0dab239fcf573ca0"
+        }
+      },
+      "source": "/tmp/hec-source.json",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "alpha",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 379,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:626d78c4f5e1be06bedd1b4e2b96960647fe8798fd5888bb941020928cfcd44b"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "  indented remains separate",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 2
+          },
+          "id": "s2s-v1:7e7ad256b18698fc598a99fa44667526f12a0970f20ec16e2ee4b155478f4352"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "\u91cd\u590d",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 3
+          },
+          "id": "s2s-v1:29370b3126bd32a50bdf424384c55affbaa545f2d32043ac974a109130627330"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 4
+          },
+          "id": "s2s-v1:679d3e3184dbb0bf1446fde0115e8ce7aa49ba94168a729b7cdd73da5afd6903"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 5
+          },
+          "id": "s2s-v1:21ea16325fa2d66a5430eb71ef9830ec1b02d745a4201eae8a832376ed60dcf4"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "alpha",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:99a06b437efcfa6e58b80423157e1b76fcddd3af1740e122072d3afb628690e8"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "  indented remains separate",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 1,
+            "logical_offset": 6,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:8baf8d31e2be9c2b9f1e278dbbac4a0748bc961cba755cead6d183c825f6b5a5"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "\u91cd\u590d",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 2,
+            "logical_offset": 34,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:e633b76720f6d25b7dedc479c584a533b7325135a6db0c0c3e0dbcc81c2b6def"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 3,
+            "logical_offset": 41,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:bd78326ddb90a4387c5612018a17f06433e7adc9093669c78f15ca4c16c53b80"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:03:12.000Z",
+      "time": "1794243792",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 4,
+            "logical_offset": 48,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:4b3e7b290d4e16ccca908e857bc94c39a785270c03cce27ce70d8c6716b96666"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "66d953d5126e",
+      "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "@version": "1",
+      "@timestamp": "2026-09-21T14:13:20.123456Z",
+      "time": "1790000000.123456",
+      "fields": {
+        "host": "payload-host",
+        "a.b{}": [
+          "first",
+          "second"
+        ],
+        "time": "1790000000.123456789",
+        "message": "native"
+      },
+      "sourcetype": "hec_native_json",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": 4661084260136768751,
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "4",
+            "date_parts": [
+              {
+                "part": 0,
+                "value": 246913,
+                "tag": 66
+              },
+              {
+                "part": 1,
+                "value": 20,
+                "tag": 66
+              },
+              {
+                "part": 3,
+                "value": 14,
+                "tag": 66
+              },
+              {
+                "part": 2,
+                "value": 13,
+                "tag": 66
+              },
+              {
+                "part": 4,
+                "value": 2026,
+                "tag": 66
+              },
+              {
+                "part": 5,
+                "value": 24,
+                "tag": 74
+              },
+              {
+                "part": 6,
+                "value": 21,
+                "tag": 66
+              },
+              {
+                "part": 7,
+                "value": 10,
+                "tag": 74
+              },
+              {
+                "part": 8,
+                "value": 0,
+                "tag": 66
+              }
+            ],
+            "offset": 0,
+            "flags": 123,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.json",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:2b17290a412726a54086c39bb59e6b12ac0a62c7fe3199277a0ca3a11e8e800c"
+        }
+      },
+      "source": "/tmp/hec-source.json",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "@version": "1",
+      "@timestamp": "2026-09-21T14:13:20.123456Z",
+      "time": "1790000000.123456",
+      "fields": {
+        "host": "payload-host",
+        "a.b{}": [
+          "first",
+          "second"
+        ],
+        "time": "1790000000.123456789",
+        "message": "native"
+      },
+      "sourcetype": "hec_native_json",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": 4661084260136768751,
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "4",
+            "date_parts": [
+              {
+                "part": 0,
+                "value": 246913,
+                "tag": 66
+              },
+              {
+                "part": 1,
+                "value": 20,
+                "tag": 66
+              },
+              {
+                "part": 3,
+                "value": 14,
+                "tag": 66
+              },
+              {
+                "part": 2,
+                "value": 13,
+                "tag": 66
+              },
+              {
+                "part": 4,
+                "value": 2026,
+                "tag": 66
+              },
+              {
+                "part": 5,
+                "value": 24,
+                "tag": 74
+              },
+              {
+                "part": 6,
+                "value": 21,
+                "tag": 66
+              },
+              {
+                "part": 7,
+                "value": 10,
+                "tag": 74
+              },
+              {
+                "part": 8,
+                "value": 0,
+                "tag": 66
+              }
+            ],
+            "offset": 0,
+            "flags": 379,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.json",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:30fcf3b8aa78876aca78ac064d774107e1c74f3ac444d98f0dab239fcf573ca0"
+        }
+      },
+      "source": "/tmp/hec-source.json",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "alpha",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 379,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:626d78c4f5e1be06bedd1b4e2b96960647fe8798fd5888bb941020928cfcd44b"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "  indented remains separate",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 2
+          },
+          "id": "s2s-v1:7e7ad256b18698fc598a99fa44667526f12a0970f20ec16e2ee4b155478f4352"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "\u91cd\u590d",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 3
+          },
+          "id": "s2s-v1:29370b3126bd32a50bdf424384c55affbaa545f2d32043ac974a109130627330"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 4
+          },
+          "id": "s2s-v1:679d3e3184dbb0bf1446fde0115e8ce7aa49ba94168a729b7cdd73da5afd6903"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "7d6c14b71fc1",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:06.000Z",
+      "time": "1794243846",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 5
+          },
+          "id": "s2s-v1:21ea16325fa2d66a5430eb71ef9830ec1b02d745a4201eae8a832376ed60dcf4"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "f6fdc3f2ae1e",
+      "event": "alpha",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:29.000Z",
+      "time": "1794243869",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:dfaac6064c11159f9b4173dc9052151f8e802469618110759f3670e1c89bc828"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "f6fdc3f2ae1e",
+      "event": "  indented remains separate",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:29.000Z",
+      "time": "1794243869",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 1,
+            "logical_offset": 6,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:f52b43fda33b61efa3900ec54463b7513abb9d0eaccd1f455e8047f557774cad"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "f6fdc3f2ae1e",
+      "event": "\u91cd\u590d",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:29.000Z",
+      "time": "1794243869",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 2,
+            "logical_offset": 34,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:9e4e3fb760f84e0d784ddef28c78e6a71dc539b1c10e9a1a4333caf779411c58"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "f6fdc3f2ae1e",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:29.000Z",
+      "time": "1794243869",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 3,
+            "logical_offset": 41,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:92359b135598a437b866d5587c1f6f902ad19ad77cdda61e97e6b92ef9b9f484"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "f6fdc3f2ae1e",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:04:29.000Z",
+      "time": "1794243869",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 4,
+            "logical_offset": 48,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [],
+            "offset": 0,
+            "flags": 571,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:6c3e2d27e0c698f15c17973d66cc0d9e9951001177ec0dfd530f746b699d7ac6"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "f6fdc3f2ae1e",
+      "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "@version": "1",
+      "@timestamp": "2026-09-21T14:13:20.123456Z",
+      "time": "1790000000.123456",
+      "fields": {
+        "host": "payload-host",
+        "a.b{}": [
+          "first",
+          "second"
+        ],
+        "time": "1790000000.123456789",
+        "message": "native"
+      },
+      "sourcetype": "hec_native_json",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": 4661084260136768751,
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "timezone": "### SERIALIZED TIMEZONE FORMAT 1.0\nC0\nY0 NW 55 54 43\n@-576460752303423488 0\n$\n",
+            "csv_header": [],
+            "channel": "4",
+            "date_parts": [
+              {
+                "part": 0,
+                "value": 246913,
+                "tag": 66
+              },
+              {
+                "part": 1,
+                "value": 20,
+                "tag": 66
+              },
+              {
+                "part": 3,
+                "value": 14,
+                "tag": 66
+              },
+              {
+                "part": 2,
+                "value": 13,
+                "tag": 66
+              },
+              {
+                "part": 4,
+                "value": 2026,
+                "tag": 66
+              },
+              {
+                "part": 5,
+                "value": 24,
+                "tag": 74
+              },
+              {
+                "part": 6,
+                "value": 21,
+                "tag": 66
+              },
+              {
+                "part": 7,
+                "value": 10,
+                "tag": 74
+              },
+              {
+                "part": 8,
+                "value": 0,
+                "tag": 66
+              }
+            ],
+            "offset": 0,
+            "flags": 123,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.json",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:f3e6cd3370bccad6dba525fd4ae3857da05634cce7431d92dd7c504d211b3aba"
+        }
+      },
+      "source": "/tmp/hec-source.json",
+      "index": "main"
+    },
+    {
+      "host": "cd2a61197766",
+      "event": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "@version": "1",
+      "@timestamp": "2026-09-21T14:13:20.123456Z",
+      "time": "1790000000.123456",
+      "fields": {
+        "host": "payload-host",
+        "a.b{}": [
+          "first",
+          "second"
+        ],
+        "time": "1790000000.123456789",
+        "message": "native"
+      },
+      "sourcetype": "hec_native_json",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": 4661084260136768751,
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "4",
+            "date_parts": [
+              {
+                "part": 0,
+                "value": 246913,
+                "tag": 66
+              },
+              {
+                "part": 1,
+                "value": 20,
+                "tag": 66
+              },
+              {
+                "part": 3,
+                "value": 14,
+                "tag": 66
+              },
+              {
+                "part": 2,
+                "value": 13,
+                "tag": 66
+              },
+              {
+                "part": 4,
+                "value": 2026,
+                "tag": 66
+              },
+              {
+                "part": 5,
+                "value": 24,
+                "tag": 74
+              },
+              {
+                "part": 6,
+                "value": 21,
+                "tag": 66
+              },
+              {
+                "part": 7,
+                "value": 10,
+                "tag": 74
+              },
+              {
+                "part": 8,
+                "value": 0,
+                "tag": 66
+              }
+            ],
+            "offset": 0,
+            "flags": 379,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.json",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:b84b2b0fa4bfdea0ed8e42607683835ced1a2b8b71b8fc16be000b5008757a24"
+        }
+      },
+      "source": "/tmp/hec-source.json",
+      "index": "main"
+    },
+    {
+      "host": "cd2a61197766",
+      "event": "alpha",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:05:12.000Z",
+      "time": "1794243912",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 379,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 1
+          },
+          "id": "s2s-v1:e421579d78845509465fe053e6f02da4a649f93c474282c1c60ae5f2b43f2942"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "cd2a61197766",
+      "event": "  indented remains separate",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:05:12.000Z",
+      "time": "1794243912",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 2
+          },
+          "id": "s2s-v1:54ec957a97bab34e82a798372b048f39a1a467073c534392d67ef11142985e62"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "cd2a61197766",
+      "event": "\u91cd\u590d",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:05:12.000Z",
+      "time": "1794243912",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 3
+          },
+          "id": "s2s-v1:238b35fb098c229bb69c913a835a7644019d7a52ae1cb86a7e385af7297f3404"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "cd2a61197766",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:05:12.000Z",
+      "time": "1794243912",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 4
+          },
+          "id": "s2s-v1:654a3f1e06b5539d4659031f014d9c14c48005f92744dbc6ad3974d5e651a4ce"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    },
+    {
+      "host": "cd2a61197766",
+      "event": "repeat",
+      "@version": "1",
+      "@timestamp": "2026-11-09T17:05:12.000Z",
+      "time": "1794243912",
+      "sourcetype": "hec_native_text",
+      "verification_metadata": {
+        "splunk_hec": {
+          "s2s": {
+            "stream": "15977854335727242432",
+            "identity_scope": "source-coordinates",
+            "logical_line": 0,
+            "logical_offset": 0,
+            "csv_header": [],
+            "channel": "6",
+            "date_parts": [
+              {
+                "part": 46,
+                "value": 48,
+                "tag": 74
+              }
+            ],
+            "offset": 0,
+            "flags": 16763,
+            "wire_metadata": {
+              "crcSalt": "<SOURCE>",
+              "_path": "/tmp/hec-source.log",
+              "_MetaData:Index": "main"
+            },
+            "sequence": 5
+          },
+          "id": "s2s-v1:d453deca145856a4d1e14e6eb9d94bd3dc41d9411c225cb9e88b5075aff5013d"
+        }
+      },
+      "source": "/tmp/hec-source.log",
+      "index": "main"
+    }
+  ],
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+    "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+  },
+  "startup_mode": "direct",
+  "versions": {
+    "uf": {
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "architecture": "linux/amd64",
+      "host": "66d953d5126e",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)"
+    },
+    "hf": {
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "architecture": "linux/amd64",
+      "host": "7d6c14b71fc1",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)"
+    }
+  },
+  "status": "pass",
+  "direct_tls": [
+    {
+      "role": "uf",
+      "verified_trust_and_hostname": true,
+      "source_event_count": 6,
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67"
+    },
+    {
+      "role": "hf",
+      "verified_trust_and_hostname": true,
+      "source_event_count": 6,
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d"
+    }
+  ],
+  "oracle_indexed_events": [
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:59",
+      "_indextime": "1794243846",
+      "_raw": "repeat",
+      "_serial": "0",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:04:06.000 GMT",
+      "host": "7d6c14b71fc1",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:58",
+      "_indextime": "1794243846",
+      "_raw": "repeat",
+      "_serial": "1",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:04:06.000 GMT",
+      "host": "7d6c14b71fc1",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:57",
+      "_indextime": "1794243846",
+      "_raw": "\u91cd\u590d",
+      "_serial": "2",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:04:06.000 GMT",
+      "host": "7d6c14b71fc1",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:55",
+      "_indextime": "1794243846",
+      "_raw": "  indented remains separate",
+      "_serial": "3",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:04:06.000 GMT",
+      "host": "7d6c14b71fc1",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:54",
+      "_indextime": "1794243846",
+      "_raw": "alpha",
+      "_serial": "4",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:04:06.000 GMT",
+      "host": "7d6c14b71fc1",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:41",
+      "_indextime": "1794243808",
+      "_raw": "repeat",
+      "_serial": "5",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:28.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:40",
+      "_indextime": "1794243808",
+      "_raw": "repeat",
+      "_serial": "6",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:28.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:39",
+      "_indextime": "1794243808",
+      "_raw": "\u91cd\u590d",
+      "_serial": "7",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:28.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:37",
+      "_indextime": "1794243808",
+      "_raw": "  indented remains separate",
+      "_serial": "8",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:28.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:36",
+      "_indextime": "1794243808",
+      "_raw": "alpha",
+      "_serial": "9",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:28.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:29",
+      "_indextime": "1794243806",
+      "_raw": "repeat",
+      "_serial": "10",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:26.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:28",
+      "_indextime": "1794243806",
+      "_raw": "repeat",
+      "_serial": "11",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:26.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:27",
+      "_indextime": "1794243806",
+      "_raw": "\u91cd\u590d",
+      "_serial": "12",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:26.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:25",
+      "_indextime": "1794243806",
+      "_raw": "  indented remains separate",
+      "_serial": "13",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:26.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:24",
+      "_indextime": "1794243806",
+      "_raw": "alpha",
+      "_serial": "14",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:26.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:10",
+      "_indextime": "1794243805",
+      "_raw": "repeat",
+      "_serial": "15",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:25.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:9",
+      "_indextime": "1794243805",
+      "_raw": "repeat",
+      "_serial": "16",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:25.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:8",
+      "_indextime": "1794243805",
+      "_raw": "\u91cd\u590d",
+      "_serial": "17",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:25.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:6",
+      "_indextime": "1794243805",
+      "_raw": "  indented remains separate",
+      "_serial": "18",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:25.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:5",
+      "_indextime": "1794243805",
+      "_raw": "alpha",
+      "_serial": "19",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_text",
+      "_time": "2026-11-09 17:03:25.000 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.log",
+      "sourcetype": "hec_native_text",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:48",
+      "_indextime": "1794243846",
+      "_raw": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "_serial": "20",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_json",
+      "_subsecond": ".123456",
+      "_time": "2026-09-21 14:13:20.123 GMT",
+      "host": "7d6c14b71fc1",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.json",
+      "sourcetype": "hec_native_json",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:42",
+      "_indextime": "1794243808",
+      "_raw": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "_serial": "21",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_json",
+      "_subsecond": ".123456",
+      "_time": "2026-09-21 14:13:20.123 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.json",
+      "sourcetype": "hec_native_json",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:30",
+      "_indextime": "1794243806",
+      "_raw": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "_serial": "22",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_json",
+      "_subsecond": ".123456",
+      "_time": "2026-09-21 14:13:20.123 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.json",
+      "sourcetype": "hec_native_json",
+      "splunk_server": "04ef3c4af3f2"
+    },
+    {
+      "_bkt": "main~0~C15516A9-DC5B-4A5A-9F19-8322DE298AE3",
+      "_cd": "0:18",
+      "_indextime": "1794243805",
+      "_raw": "{\"time\":\"1790000000.123456789\",\"message\":\"native\",\"a.b\":[\"first\",\"second\"],\"host\":\"payload-host\"}",
+      "_serial": "23",
+      "_si": [
+        "04ef3c4af3f2",
+        "main"
+      ],
+      "_sourcetype": "hec_native_json",
+      "_subsecond": ".123456",
+      "_time": "2026-09-21 14:13:20.123 GMT",
+      "host": "66d953d5126e",
+      "index": "main",
+      "linecount": "1",
+      "source": "/tmp/hec-source.json",
+      "sourcetype": "hec_native_json",
+      "splunk_server": "04ef3c4af3f2"
+    }
+  ],
+  "initial_source_event_count": 12,
+  "identical_body_replay_source_event_count": 12,
+  "reconnect_ids_stable": true,
+  "resource_rejections": 5,
+  "scope": "live UF/HF traffic, deliberate invalid-batch retries, identical-body replay and direct verified HTTPS"
+}

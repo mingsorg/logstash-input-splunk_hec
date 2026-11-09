@@ -1,0 +1,13 @@
+{
+  "provider": "opencode-task",
+  "reviewer_session_id": "ses_e3efc5e85ffeAGVWBaKS41Y97f",
+  "text": "{\n  \"lens\": \"edge cases and migration integrity\",\n  \"source_sha256\": \"f05d0b7834d0818f7c0782a4c302c33b6da0e7a4f949270659c11faba1c5cb1c\",\n  \"claims_sha256\": \"73e823825ea969dcafb3e1af0fcc7b5cd67370150b74b7cf883586d859c4faf9\",\n  \"artifact_sha256\": \"bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63\",\n  \"verdict\": \"pass\",\n  \"findings\": []\n}",
+  "structured_output": {
+    "lens": "edge cases and migration integrity",
+    "source_sha256": "f05d0b7834d0818f7c0782a4c302c33b6da0e7a4f949270659c11faba1c5cb1c",
+    "claims_sha256": "73e823825ea969dcafb3e1af0fcc7b5cd67370150b74b7cf883586d859c4faf9",
+    "artifact_sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63",
+    "verdict": "pass",
+    "findings": []
+  }
+}

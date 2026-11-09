@@ -82,9 +82,10 @@ final class S2STcpServer implements AutoCloseable{
     private void accept(){
         while(!stopped)try{
             Socket socket=listener.accept();
-            if(!resources.connections.tryAcquire()){socket.close();continue;}
+            if(!resources.connections.tryAcquire()){resources.metrics.increment("tcp.connection_rejected");socket.close();continue;}
             synchronized(workers){
                 if(stopped){socket.close();resources.connections.release();continue;}
+                resources.metrics.increment("tcp.connection_accepted");
                 Thread worker=Thread.ofVirtual().name("s2s-tcp-peer").unstarted(()->handle(socket));workers.put(socket,worker);worker.start();
             }
         }catch(IOException error){if(!stopped){failure=error;stopAdmission();}}
@@ -136,7 +137,7 @@ final class S2STcpServer implements AutoCloseable{
                 requestedAck=S2STcpProtocol.capability(text,"ack");compressed=S2STcpProtocol.capability(text,"compression");
                 if(capabilities.compressed()&&!compressed)throw new IOException("inconsistent TCP compression request");
                 // Our answer: v4 compact records only, no heartbeats/tokens/certificate requests.
-                S2STcpProtocol.hello(output);
+                try{S2STcpProtocol.hello(output);}catch(IOException error){resources.metrics.increment("tcp.response_failures");throw error;}
             }
             // ForwarderInfo: the sender confirms the v4 compact format and identifies itself by GUID.
             var info=S2STcpProtocol.frame(input,limits,infoMemory);
@@ -180,9 +181,10 @@ final class S2STcpServer implements AutoCloseable{
                 // The first byte of every record is its opcode (FE/F8 metadata, FC event, FD close, FF timezone).
                 int opcode;
                 while(!stopped&&(opcode=records.read())>=0){
+                    String recordKind=opcode==0xfc?"data":"control";boolean recordAccepted=false;
                     // No detached writer or early ACK: a full queue keeps this
                     // owned worker blocked and stops reading further peer bytes.
-                    resources.processing.acquire();admitted=true;
+                    try{resources.processing.acquire();}catch(InterruptedException error){resources.metrics.increment("tcp."+recordKind+".failure");throw error;}admitted=true;
                     var memory=resources.memory.lease();boolean retained=false;
                     try{
                         if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();
@@ -192,6 +194,7 @@ final class S2STcpServer implements AutoCloseable{
                         // Metadata records return "retainsLease": their memory stays reserved while the
                         // channel exists and is released when the channel is replaced or closed.
                         var record=session.read(opcode,records,memory);retained=record.retainsLease();
+                        if(record.event()!=null&&record.event().control())recordKind="control";
                         io.cancel(false);io=null;socket.setSoTimeout(0);
                         // Metadata/control records produce no events. For an event record, build ALL envelopes
                         // first: if any of them is invalid nothing has been inserted yet.
@@ -224,16 +227,18 @@ final class S2STcpServer implements AutoCloseable{
                         // is full; that is the intended back-pressure. An interrupt (shutdown) aborts it
                         // without an ACK, so the sender resends after restart.
                         if(ordered!=null)ordered.enqueue(sink);
-                        else for(var event:events){if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();sink.accept(event);}
+                        else for(var event:events){if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();resources.metrics.handoff("tcp",sink,event);}
                         }finally{if(ordered!=null)ordered.close();}
+                        resources.metrics.increment("tcp."+recordKind+".success");recordAccepted=true;
                         // ACK only if the sender asked for acknowledgements and this record carried a real
                         // (non-zero) event ID. This line is reached strictly AFTER all inserts succeeded.
                         if(requestedAck&&record.eventId()!=null&&record.eventId()!=0){
                             // Latest peers' zero-ID terminal/heartbeat records have
                             // no reverse ACK in the real receiver captures.
-                            io=deadline(socket);S2STcpProtocol.ack(output,record.eventId());io.cancel(false);io=null;
+                            io=deadline(socket);try{S2STcpProtocol.ack(output,record.eventId());}catch(IOException error){resources.metrics.increment("tcp.response_failures");throw error;}io.cancel(false);io=null;
                         }
                     }finally{
+                        if(!recordAccepted)resources.metrics.increment("tcp."+recordKind+".failure");
                         // Per-record cleanup: stop the timer, free the record's memory (unless a channel
                         // keeps it) and give the processing slot back for other connections/HTTP requests.
                         if(io!=null){io.cancel(false);io=null;}
@@ -242,12 +247,14 @@ final class S2STcpServer implements AutoCloseable{
                 }
             }
         }catch(Exception error){
+            resources.metrics.increment("tcp.connection_failures");
             // Any exception ends THIS connection only (no ACK was sent for the failing record, so the
             // sender retries it). Log it at most once a minute, with the reason class and a hint, never
             // with event content. Ordinary peer closes/resets/timeouts are not diagnostics.
             if(!stopped&&!(error instanceof EOFException)&&!(error instanceof SocketException)){long now=System.currentTimeMillis(),before=lastWarning.get();if(now-before>=60000&&lastWarning.compareAndSet(before,now))diagnostic.accept("S2S TCP connection closed before further acceptance ("+error.getClass().getSimpleName()+(error instanceof HecException failure?": "+failure.getMessage()+"; queue/resource pressure, a malformed record or an event above s2s_tcp_max_event_bytes":
                 error.getClass().getSimpleName().equals("QueueRuntimeException")?": "+String.valueOf(error.getMessage()).substring(0,Math.min(160,String.valueOf(error.getMessage()).length()))+"; the sender will retry. A persistent queue rejects events larger than queue.page_capacity":"")+")");}
         }finally{
+            resources.metrics.increment("tcp.connection_closed");
             // Connection cleanup: runs for every exit path (normal close, error, shutdown).
             if(io!=null)io.cancel(false);
             if(admitted)resources.processing.release();

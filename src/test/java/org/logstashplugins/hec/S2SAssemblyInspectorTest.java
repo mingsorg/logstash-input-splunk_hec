@@ -317,7 +317,8 @@ class S2SAssemblyInspectorTest {
                     String name=classes.relativize(file).toString();names.add(name);output.putNextEntry(new java.util.jar.JarEntry(name));Files.copy(file,output);output.closeEntry();
                 }
             }
-            try(var dependencies=new java.util.jar.JarFile("vendor/jars/logstash-input-splunk_hec-0.4.0.jar")){
+            String version=Files.readString(Path.of("VERSION")).strip();
+            try(var dependencies=new java.util.jar.JarFile("vendor/jars/logstash-input-splunk_hec-"+version+".jar")){
                 for(var entry:Collections.list(dependencies.entries()))if(!entry.isDirectory()&&!entry.getName().startsWith("org/logstashplugins/")&&names.add(entry.getName())){
                     output.putNextEntry(new java.util.jar.JarEntry(entry.getName()));try(var input=dependencies.getInputStream(entry)){input.transferTo(output);}output.closeEntry();
                 }

@@ -1,0 +1,15 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+    "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+  },
+  "validators": "f87943c7d0edc6f9443bdb408283ab734a7e276ada9cfca23e2f0fba395358b8",
+  "source_sha256": "f05d0b7834d0818f7c0782a4c302c33b6da0e7a4f949270659c11faba1c5cb1c",
+  "claims_file": "docs/ingestion-metrics-0.5.0.md",
+  "claims_sha256": "73e823825ea969dcafb3e1af0fcc7b5cd67370150b74b7cf883586d859c4faf9",
+  "reports": [
+    {"lens": "adversarial correctness and durability", "file": "tests/interop/evidence/0.5.0/review-adversarial.json", "sha256": "6ac98f021e5ad1cddd01fd28525c22ddb8d926154347fb61f1a9467e98e51efe"},
+    {"lens": "edge cases and migration integrity", "file": "tests/interop/evidence/0.5.0/review-edge.json", "sha256": "06beb2b67378a32d9b1d079780acd35c6413299a55cd584c599b5ed5f66b6d7e"},
+    {"lens": "verification gaps and performance claims", "file": "tests/interop/evidence/0.5.0/review-verification.json", "sha256": "52d3deb40cf3c53437d4a0a1818b880e579fc42dc5aca213c838a38ef414e606"}
+  ]
+}

@@ -1,5 +1,7 @@
 # Configuration reference
 
+For per-input Node Stats, see [live ingestion and assembly metrics (0.5.0)](ingestion-metrics-0.5.0.md).
+
 To install the plugin first, see the [installation guide](installation.md). Everything you can configure for the `splunk_hec` input: the Logstash options, the
 token-policy file, TLS, the optional classic TCP listener, resource limits, and
 the matching UF/HF sender settings. Defaults below are the plugin's own, not

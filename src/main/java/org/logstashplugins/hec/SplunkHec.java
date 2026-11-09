@@ -144,6 +144,7 @@ public final class SplunkHec implements Input {
         tcpLimits=new Limits(limits.concurrency(),limits.connections(),limits.wire(),limits.expanded(),limits.aggregate(),(int)tcpEvent,
             limits.events(),limits.depth(),limits.readMillis(),limits.admissionMillis(),limits.shutdownMillis());
         resources=new IngressResources(limits,MetadataMode.parse(config.get(METADATA)),S2SMetadataFields.parse(config.get(S2SMETADATA)));resources.diagnostic=diagnostic;
+        resources.metrics=HecMetrics.create(!Boolean.FALSE.equals(config.get(PluginHelper.ENABLE_METRIC_CONFIG)),context,this,diagnostic);
         Path state=Path.of(config.get(STATE)).toAbsolutePath();
         tokens=new TokenStore(path(config.get(FILE)),config.get(TOKENS).getValue(),message->context.getLogger(this).warn(message));
         // --- Per-listener TLS -------------------------------------------------------------------------
@@ -172,7 +173,7 @@ public final class SplunkHec implements Input {
             resources.assemblyNamespace="input:"+id;
             if(policy.enabled()||Files.exists(state.resolve("assembly/state"),java.nio.file.LinkOption.NOFOLLOW_LINKS)||Files.exists(state.resolve("assembly/current-v3"),java.nio.file.LinkOption.NOFOLLOW_LINKS))
                 resources.assembly=new S2SStreamAssembler(state.resolve("assembly"),policy,resources.metadata,resources.metadataFields,
-                    HecProtocol.JSON.writeValueAsString(List.of(id,config.get(S2SMETADATA))),bytes,(int)streams,resources.memory,diagnostic);
+                    HecProtocol.JSON.writeValueAsString(List.of(id,config.get(S2SMETADATA))),bytes,(int)streams,resources.memory,diagnostic,System::currentTimeMillis,boundary->{},resources.metrics);
         }catch(Exception error){acks.close();resources.close();reload.shutdownNow();throw error;}
         if(!config.get(FILE).isEmpty())reload.scheduleWithFixedDelay(tokens::reload,1,1,TimeUnit.SECONDS);
     }

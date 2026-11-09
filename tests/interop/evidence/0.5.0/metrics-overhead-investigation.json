@@ -1,0 +1,23 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+    "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+  },
+  "validators": "f87943c7d0edc6f9443bdb408283ab734a7e276ada9cfca23e2f0fba395358b8",
+  "metrics_report_sha256": "c979e61b165cf44b9cda77e58a45bd9ececb3f0b9dddf72df8268f5875c8b2c0",
+  "status": "complete",
+  "investigated_roles": ["minimum", "latest"],
+  "trigger": {
+    "historical_artifact_sha256": "4902437c8b85f37d810974369dfffc564a49b4f338d7303db6830ea3f0611cdf",
+    "latest_single_round_median_overhead_percent": 8.556767204825988,
+    "threshold_percent": 5
+  },
+  "analysis": [
+    "Expanded the original 60-pair measurement to three retained rounds of 60 randomized pairs, after warmup, on each installed runtime. All raw samples are in metrics.json and the gate recomputes median/p99 and the threshold marker.",
+    "Review found the earlier disabled target also enabled assembly. Corrected the experiment to use otherwise identical dedicated HTTP-only enabled/disabled inputs, with assembly and TCP disabled in both. This removes configuration differences from the comparison; raw traffic still shares one controlled pipeline and output.",
+    "Final current-artifact aggregate enabled/disabled median: minimum 7.124/7.064 ms (+0.846%); latest 7.124/7.059 ms (+0.912%). Current p99: minimum 22.761/14.406 ms; latest 17.570/28.003 ms. Neither aggregate exceeds 5% in this run.",
+    "Final individual round overhead: minimum +0.023%, -0.790%, -1.932%; latest +4.255%, +0.692%, -0.567%. Earlier pre-correction rounds ranged from -16.867% to +9.154%. The original +8.557% observation is retained as the investigation trigger, not used as qualification for the final artifact. Queue backpressure, file-output latency, warmup and Docker Desktop scheduling remain part of the end-to-end measurement.",
+    "An independent host-JVM probe executes 100000 handoffs per sample, alternating enabled/disabled order across eight samples after warmup and checking exact call counts. Current enabled median is about 168 ns/call and disabled about 3 ns/call, an incremental approximately 5.3 microseconds per 32 calls in this isolated synthetic Consumer. This is JDK 23.0.2 host evidence, not a JDK 21 installed-runtime or contention benchmark; it isolates wrapper cost but does not establish causality for end-to-end latency.",
+    "Conclusion: the repeated end-to-end experiment does not reproduce a greater-than-5% aggregate median regression, while individual rounds remain noisy and isolated atomic work has measurable cost. No universal throughput/performance equivalence is claimed. Capacity planning still requires a representative workload and deployment-specific measurements. No ingestion semantics or metric counting boundaries were weakened to improve these results."
+  ]
+}

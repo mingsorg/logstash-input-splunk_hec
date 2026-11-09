@@ -1,0 +1,464 @@
+[
+  {
+    "role": "minimum",
+    "queue": "memory",
+    "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+    "artifact": {
+      "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+      "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+    },
+    "installed": true,
+    "verified_https": true,
+    "ack_consumed": true,
+    "event": {
+      "fields": {
+        "literal.name": [
+          "a",
+          "b"
+        ]
+      },
+      "index": "main",
+      "time": "1700000000.123456789",
+      "host": "original",
+      "source": "native-test",
+      "@timestamp": "2023-11-14T22:13:20.123456789Z",
+      "verification_metadata": {},
+      "event": {
+        "large": 9223372036854775807,
+        "a.b": [
+          1,
+          2.5,
+          true,
+          null
+        ],
+        "message": "native"
+      },
+      "@version": "1"
+    },
+    "black_box_http": {
+      "status": "pass",
+      "verified_https": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "health",
+          "status": 200,
+          "response": {
+            "text": "HEC is healthy",
+            "code": 17
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event/1.0",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 2
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": true
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": false
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "raw",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 3
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event",
+          "status": 400,
+          "response": {
+            "text": "Event field is required",
+            "code": 12,
+            "invalid-event-number": 1
+          }
+        },
+        {
+          "method": "POST",
+          "path": "s2s",
+          "status": 400,
+          "response": {
+            "text": "Invalid data format",
+            "code": 6
+          }
+        }
+      ]
+    },
+    "restart": null,
+    "java": "",
+    "logs": "Installing logstash-input-splunk_hec\nInstallation successful\nCould not find log4j2 configuration at path /run-hec/config/log4j2.properties. Using default config which logs errors to the console\n[INFO ] 2026-11-09 16:35:02.410 [main] WritableDirectorySetting - Creating directory for setting path.data: /run-hec/data\n[WARN ] 2026-11-09 16:35:02.421 [main] runner - The use of JAVA_HOME has been deprecated. Logstash 8.0 and later ignores JAVA_HOME and uses the bundled JDK. Running Logstash with the bundled JDK is recommended. The bundled JDK has been verified to work with each specific version of Logstash, and generally provides best performance and reliability. If you have compelling reasons for using your own JDK (organizational-specific compliance requirements, for example), you can configure LS_JAVA_HOME to use that version instead.\n[INFO ] 2026-11-09 16:35:02.422 [main] runner - Starting Logstash {\"logstash.version\" => \"9.5.0\", \"jruby.version\" => \"jruby 10.0.6.0 (3.4.5) 2026-06-11 716ad51f54 OpenJDK 64-Bit Server VM 21.0.11+10-LTS on 21.0.11+10-LTS +indy +jit [aarch64-linux]\"}\n[INFO ] 2026-11-09 16:35:02.423 [main] runner - JVM bootstrap flags: [-Xms1g, -Xmx1g, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -XX:+HeapDumpOnOutOfMemoryError, -Djava.security.egd=file:/dev/urandom, -Djruby.regexp.interruptible=true, -Djruby.compile.invokedynamic=true, -Djdk.io.File.enableADS=true, -Dlog4j2.isThreadContextMapInheritable=true, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.security=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.nio.channels=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.management/sun.management=ALL-UNNAMED, -Dio.netty.allocator.maxOrder=11]\n[INFO ] 2026-11-09 16:35:02.500 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-string-length` configured to `200000000` (logstash default)\n[INFO ] 2026-11-09 16:35:02.500 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-number-length` configured to `10000` (logstash default)\n[INFO ] 2026-11-09 16:35:02.500 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-nesting-depth` configured to `1000` (logstash default)\n[INFO ] 2026-11-09 16:35:02.504 [main] WritableDirectorySetting - Creating directory for setting path.queue: /run-hec/data/queue\n[INFO ] 2026-11-09 16:35:02.506 [main] WritableDirectorySetting - Creating directory for setting path.dead_letter_queue: /run-hec/data/dead_letter_queue\n[INFO ] 2026-11-09 16:35:02.633 [LogStash::Runner] agent - No persistent UUID file found. Generating new UUID {uuid: \"dc5688b2-87ba-4b10-9e9a-671db35020a9\", path: \"/run-hec/data/uuid\"}\n[INFO ] 2026-11-09 16:35:02.936 [Agent thread] agent - HTTP API is disabled (`api.enabled=false`); webserver will not be started.\n[WARN ] 2026-11-09 16:35:03.727 [Converge PipelineAction::Create<main>] jsonlines - The default value for `decode_size_limit_bytes`, currently at 512Mb, will be lowered in a future version to prevent Out of Memory errors from abnormally large messages or missing delimiters. Please set a value that reflects the largest expected message size (e.g. 20971520 for 20Mb)\n[INFO ] 2026-11-09 16:35:03.729 [Converge PipelineAction::Create<main>] jsonlines - ECS compatibility is enabled but `target` option was not specified. This may cause fields to be set at the top-level of the event where they are likely to clash with the Elastic Common Schema. It is recommended to set the `target` option to avoid potential schema conflicts (if your data is ECS compliant or non-conflicting, feel free to ignore this message)\n[INFO ] 2026-11-09 16:35:03.750 [Converge PipelineAction::Create<main>] javapipeline - Pipeline `main` is configured with `pipeline.ecs_compatibility: v8` setting. All plugins in this pipeline will default to `ecs_compatibility => v8` unless explicitly configured otherwise.\n[INFO ] 2026-11-09 16:35:03.759 [Converge PipelineAction::Create<main>] AbstractPipelineExt - Pipeline `main` batch metrics estimated memory consumption: 5191680 bytes\n[WARN ] 2026-11-09 16:35:03.766 [[main]-pipeline-manager] javapipeline - 'pipeline.ordered' is enabled and is likely less efficient, consider disabling if preserving event order is not necessary\n[INFO ] 2026-11-09 16:35:03.770 [[main]-pipeline-manager] javapipeline - Starting pipeline {pipeline_id: \"main\", \"pipeline.workers\" => 1, \"pipeline.batch.size\" => 1, \"pipeline.batch.delay\" => 50, \"pipeline.batch.output_chunking.growth_threshold_factor\" => 1000, \"pipeline.max_inflight\" => 1, \"batch_metric_sampling\" => \"minimal\", \"pipeline.sources\" => [\"/run-hec/config/pipeline.conf\"], \"pipeline.recoverable\" => false, thread: \"#<Thread:0x6b0161ec /usr/share/logstash/logstash-core/lib/logstash/java_pipeline.rb:149 run>\"}\n[INFO ] 2026-11-09 16:35:04.060 [[main]-pipeline-manager] javapipeline - Pipeline Java execution initialization time {\"seconds\" => 0.29}\n[INFO ] 2026-11-09 16:35:04.063 [[main]-pipeline-manager] javapipeline - Pipeline started {\"pipeline.id\" => \"main\"}\n[INFO ] 2026-11-09 16:35:04.067 [Agent thread] agent - Pipelines running {count: 1, running_pipelines: [:main], non_running_pipelines: []}\n[INFO ] 2026-11-09 16:35:05.109 [[main]>worker0] file - Opening file {path: \"/run-hec/events.ndjson\"}\n[WARN ] 2026-11-09 16:35:05.201 [hec-request] SplunkHec - HEC request rejected: route=event status=400 HEC code 12 \"Event field is required\" at HecProtocol:84"
+  },
+  {
+    "role": "minimum",
+    "queue": "persisted",
+    "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+    "artifact": {
+      "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+      "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+    },
+    "installed": true,
+    "verified_https": true,
+    "ack_consumed": true,
+    "event": {
+      "host": "original",
+      "source": "native-test",
+      "index": "main",
+      "@timestamp": "2023-11-14T22:13:20.123456789Z",
+      "@version": "1",
+      "verification_metadata": {},
+      "event": {
+        "a.b": [
+          1,
+          2.5,
+          true,
+          null
+        ],
+        "large": 9223372036854775807,
+        "message": "native"
+      },
+      "time": "1700000000.123456789",
+      "fields": {
+        "literal.name": [
+          "a",
+          "b"
+        ]
+      }
+    },
+    "black_box_http": {
+      "status": "pass",
+      "verified_https": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "health",
+          "status": 200,
+          "response": {
+            "code": 17,
+            "text": "HEC is healthy"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event/1.0",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 2
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": true
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": false
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "raw",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 3
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event",
+          "status": 400,
+          "response": {
+            "text": "Event field is required",
+            "code": 12,
+            "invalid-event-number": 1
+          }
+        },
+        {
+          "method": "POST",
+          "path": "s2s",
+          "status": 400,
+          "response": {
+            "text": "Invalid data format",
+            "code": 6
+          }
+        }
+      ]
+    },
+    "restart": null,
+    "java": "",
+    "logs": "Installing logstash-input-splunk_hec\nInstallation successful\nCould not find log4j2 configuration at path /run-hec/config/log4j2.properties. Using default config which logs errors to the console\n[INFO ] 2026-11-09 16:35:35.328 [main] WritableDirectorySetting - Creating directory for setting path.data: /run-hec/data\n[WARN ] 2026-11-09 16:35:35.337 [main] runner - The use of JAVA_HOME has been deprecated. Logstash 8.0 and later ignores JAVA_HOME and uses the bundled JDK. Running Logstash with the bundled JDK is recommended. The bundled JDK has been verified to work with each specific version of Logstash, and generally provides best performance and reliability. If you have compelling reasons for using your own JDK (organizational-specific compliance requirements, for example), you can configure LS_JAVA_HOME to use that version instead.\n[INFO ] 2026-11-09 16:35:35.338 [main] runner - Starting Logstash {\"logstash.version\" => \"9.5.0\", \"jruby.version\" => \"jruby 10.0.6.0 (3.4.5) 2026-06-11 716ad51f54 OpenJDK 64-Bit Server VM 21.0.11+10-LTS on 21.0.11+10-LTS +indy +jit [aarch64-linux]\"}\n[INFO ] 2026-11-09 16:35:35.339 [main] runner - JVM bootstrap flags: [-Xms1g, -Xmx1g, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -XX:+HeapDumpOnOutOfMemoryError, -Djava.security.egd=file:/dev/urandom, -Djruby.regexp.interruptible=true, -Djruby.compile.invokedynamic=true, -Djdk.io.File.enableADS=true, -Dlog4j2.isThreadContextMapInheritable=true, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.security=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.nio.channels=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.management/sun.management=ALL-UNNAMED, -Dio.netty.allocator.maxOrder=11]\n[INFO ] 2026-11-09 16:35:35.411 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-string-length` configured to `200000000` (logstash default)\n[INFO ] 2026-11-09 16:35:35.411 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-number-length` configured to `10000` (logstash default)\n[INFO ] 2026-11-09 16:35:35.411 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-nesting-depth` configured to `1000` (logstash default)\n[INFO ] 2026-11-09 16:35:35.415 [main] WritableDirectorySetting - Creating directory for setting path.queue: /run-hec/data/queue\n[INFO ] 2026-11-09 16:35:35.416 [main] WritableDirectorySetting - Creating directory for setting path.dead_letter_queue: /run-hec/data/dead_letter_queue\n[INFO ] 2026-11-09 16:35:35.522 [LogStash::Runner] agent - No persistent UUID file found. Generating new UUID {uuid: \"e4e4ec2c-eff1-49d1-9d6d-4edc6d606e19\", path: \"/run-hec/data/uuid\"}\n[INFO ] 2026-11-09 16:35:35.780 [Agent thread] agent - HTTP API is disabled (`api.enabled=false`); webserver will not be started.\n[WARN ] 2026-11-09 16:35:36.889 [Converge PipelineAction::Create<main>] jsonlines - The default value for `decode_size_limit_bytes`, currently at 512Mb, will be lowered in a future version to prevent Out of Memory errors from abnormally large messages or missing delimiters. Please set a value that reflects the largest expected message size (e.g. 20971520 for 20Mb)\n[INFO ] 2026-11-09 16:35:36.891 [Converge PipelineAction::Create<main>] jsonlines - ECS compatibility is enabled but `target` option was not specified. This may cause fields to be set at the top-level of the event where they are likely to clash with the Elastic Common Schema. It is recommended to set the `target` option to avoid potential schema conflicts (if your data is ECS compliant or non-conflicting, feel free to ignore this message)\n[INFO ] 2026-11-09 16:35:36.900 [Converge PipelineAction::Create<main>] QueueFactoryExt - compression support is enabled (read-only)\n[INFO ] 2026-11-09 16:35:36.906 [Converge PipelineAction::Create<main>] QueueUpgrade - No PQ version file found, upgrading to PQ v2.\n[INFO ] 2026-11-09 16:35:36.927 [Converge PipelineAction::Create<main>] javapipeline - Pipeline `main` is configured with `pipeline.ecs_compatibility: v8` setting. All plugins in this pipeline will default to `ecs_compatibility => v8` unless explicitly configured otherwise.\n[INFO ] 2026-11-09 16:35:36.937 [Converge PipelineAction::Create<main>] AbstractPipelineExt - Pipeline `main` batch metrics estimated memory consumption: 5191680 bytes\n[WARN ] 2026-11-09 16:35:36.943 [[main]-pipeline-manager] javapipeline - 'pipeline.ordered' is enabled and is likely less efficient, consider disabling if preserving event order is not necessary\n[INFO ] 2026-11-09 16:35:36.949 [[main]-pipeline-manager] javapipeline - Starting pipeline {pipeline_id: \"main\", \"pipeline.workers\" => 1, \"pipeline.batch.size\" => 1, \"pipeline.batch.delay\" => 50, \"pipeline.batch.output_chunking.growth_threshold_factor\" => 1000, \"pipeline.max_inflight\" => 1, \"batch_metric_sampling\" => \"minimal\", \"pipeline.sources\" => [\"/run-hec/config/pipeline.conf\"], \"pipeline.recoverable\" => false, thread: \"#<Thread:0x1513af99 /usr/share/logstash/logstash-core/lib/logstash/java_pipeline.rb:149 run>\"}\n[INFO ] 2026-11-09 16:35:37.272 [[main]-pipeline-manager] javapipeline - Pipeline Java execution initialization time {\"seconds\" => 0.32}\n[INFO ] 2026-11-09 16:35:37.276 [[main]-pipeline-manager] javapipeline - Pipeline started {\"pipeline.id\" => \"main\"}\n[INFO ] 2026-11-09 16:35:37.287 [Agent thread] agent - Pipelines running {count: 1, running_pipelines: [:main], non_running_pipelines: []}\n[INFO ] 2026-11-09 16:35:37.627 [[main]>worker0] file - Opening file {path: \"/run-hec/events.ndjson\"}\n[WARN ] 2026-11-09 16:35:37.724 [hec-request] SplunkHec - HEC request rejected: route=event status=400 HEC code 12 \"Event field is required\" at HecProtocol:84"
+  },
+  {
+    "role": "latest",
+    "queue": "memory",
+    "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+    "artifact": {
+      "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+      "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+    },
+    "installed": true,
+    "verified_https": true,
+    "ack_consumed": true,
+    "event": {
+      "fields": {
+        "literal.name": [
+          "a",
+          "b"
+        ]
+      },
+      "time": "1700000000.123456789",
+      "source": "native-test",
+      "index": "main",
+      "@timestamp": "2023-11-14T22:13:20.123456789Z",
+      "event": {
+        "a.b": [
+          1,
+          2.5,
+          true,
+          null
+        ],
+        "large": 9223372036854775807,
+        "message": "native"
+      },
+      "@version": "1",
+      "host": "original",
+      "verification_metadata": {}
+    },
+    "black_box_http": {
+      "status": "pass",
+      "verified_https": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "health",
+          "status": 200,
+          "response": {
+            "code": 17,
+            "text": "HEC is healthy"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event/1.0",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 2
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": true
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": false
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "raw",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 3
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event",
+          "status": 400,
+          "response": {
+            "text": "Event field is required",
+            "code": 12,
+            "invalid-event-number": 1
+          }
+        },
+        {
+          "method": "POST",
+          "path": "s2s",
+          "status": 400,
+          "response": {
+            "text": "Invalid data format",
+            "code": 6
+          }
+        }
+      ]
+    },
+    "restart": null,
+    "java": "",
+    "logs": "Installing logstash-input-splunk_hec\nInstallation successful\nCould not find log4j2 configuration at path /run-hec/config/log4j2.properties. Using default config which logs errors to the console\n[INFO ] 2026-11-09 16:36:04.749 [main] WritableDirectorySetting - Creating directory for setting path.data: /run-hec/data\n[WARN ] 2026-11-09 16:36:04.757 [main] runner - The use of JAVA_HOME has been deprecated. Logstash 8.0 and later ignores JAVA_HOME and uses the bundled JDK. Running Logstash with the bundled JDK is recommended. The bundled JDK has been verified to work with each specific version of Logstash, and generally provides best performance and reliability. If you have compelling reasons for using your own JDK (organizational-specific compliance requirements, for example), you can configure LS_JAVA_HOME to use that version instead.\n[INFO ] 2026-11-09 16:36:04.757 [main] runner - Starting Logstash {\"logstash.version\" => \"9.5.5\", \"jruby.version\" => \"jruby 10.0.7.0 (3.4.5) 2026-09-21 06989ab73b OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS on 21.0.12.1+1-LTS +indy +jit [aarch64-linux]\"}\n[INFO ] 2026-11-09 16:36:04.759 [main] runner - JVM bootstrap flags: [-Xms1g, -Xmx1g, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -XX:+HeapDumpOnOutOfMemoryError, -Djava.security.egd=file:/dev/urandom, -Djruby.regexp.interruptible=true, -Djruby.compile.invokedynamic=true, -Djdk.io.File.enableADS=true, -Dlog4j2.isThreadContextMapInheritable=true, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.security=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.nio.channels=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.management/sun.management=ALL-UNNAMED, -Dio.netty.allocator.maxOrder=11]\n[INFO ] 2026-11-09 16:36:04.825 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-string-length` configured to `200000000` (logstash default)\n[INFO ] 2026-11-09 16:36:04.825 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-number-length` configured to `10000` (logstash default)\n[INFO ] 2026-11-09 16:36:04.825 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-nesting-depth` configured to `1000` (logstash default)\n[INFO ] 2026-11-09 16:36:04.829 [main] WritableDirectorySetting - Creating directory for setting path.queue: /run-hec/data/queue\n[INFO ] 2026-11-09 16:36:04.830 [main] WritableDirectorySetting - Creating directory for setting path.dead_letter_queue: /run-hec/data/dead_letter_queue\n[INFO ] 2026-11-09 16:36:04.934 [LogStash::Runner] agent - No persistent UUID file found. Generating new UUID {uuid: \"a26d593d-80a5-446e-b13b-912d49ea4bd6\", path: \"/run-hec/data/uuid\"}\n[INFO ] 2026-11-09 16:36:05.182 [Agent thread] agent - HTTP API is disabled (`api.enabled=false`); webserver will not be started.\n[WARN ] 2026-11-09 16:36:06.104 [Converge PipelineAction::Create<main>] jsonlines - The default value for `decode_size_limit_bytes`, currently at 512Mb, will be lowered in a future version to prevent Out of Memory errors from abnormally large messages or missing delimiters. Please set a value that reflects the largest expected message size (e.g. 20971520 for 20Mb)\n[INFO ] 2026-11-09 16:36:06.106 [Converge PipelineAction::Create<main>] jsonlines - ECS compatibility is enabled but `target` option was not specified. This may cause fields to be set at the top-level of the event where they are likely to clash with the Elastic Common Schema. It is recommended to set the `target` option to avoid potential schema conflicts (if your data is ECS compliant or non-conflicting, feel free to ignore this message)\n[INFO ] 2026-11-09 16:36:06.127 [Converge PipelineAction::Create<main>] javapipeline - Pipeline `main` is configured with `pipeline.ecs_compatibility: v8` setting. All plugins in this pipeline will default to `ecs_compatibility => v8` unless explicitly configured otherwise.\n[INFO ] 2026-11-09 16:36:06.135 [Converge PipelineAction::Create<main>] AbstractPipelineExt - Pipeline `main` batch metrics estimated memory consumption: 5191680 bytes\n[WARN ] 2026-11-09 16:36:06.141 [[main]-pipeline-manager] javapipeline - 'pipeline.ordered' is enabled and is likely less efficient, consider disabling if preserving event order is not necessary\n[INFO ] 2026-11-09 16:36:06.147 [[main]-pipeline-manager] javapipeline - Starting pipeline {pipeline_id: \"main\", \"pipeline.workers\" => 1, \"pipeline.batch.size\" => 1, \"pipeline.batch.delay\" => 50, \"pipeline.batch.output_chunking.growth_threshold_factor\" => 1000, \"pipeline.max_inflight\" => 1, \"batch_metric_sampling\" => \"minimal\", \"pipeline.sources\" => [\"/run-hec/config/pipeline.conf\"], \"pipeline.recoverable\" => false, thread: \"#<Thread:0x5db4649f /usr/share/logstash/logstash-core/lib/logstash/java_pipeline.rb:149 run>\"}\n[INFO ] 2026-11-09 16:36:06.403 [[main]-pipeline-manager] javapipeline - Pipeline Java execution initialization time {\"seconds\" => 0.26}\n[INFO ] 2026-11-09 16:36:06.406 [[main]-pipeline-manager] javapipeline - Pipeline started {\"pipeline.id\" => \"main\"}\n[INFO ] 2026-11-09 16:36:06.411 [Agent thread] agent - Pipelines running {count: 1, running_pipelines: [:main], non_running_pipelines: []}\n[INFO ] 2026-11-09 16:36:06.973 [[main]>worker0] file - Opening file {path: \"/run-hec/events.ndjson\"}\n[WARN ] 2026-11-09 16:36:07.077 [hec-request] SplunkHec - HEC request rejected: route=event status=400 HEC code 12 \"Event field is required\" at HecProtocol:84"
+  },
+  {
+    "role": "latest",
+    "queue": "persisted",
+    "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+    "artifact": {
+      "file": "logstash-input-splunk_hec-0.5.0-java.gem",
+      "sha256": "bf2e1c9126e18650bad8232120ac92f5db2e5996f8214fad6f2329029654fa63"
+    },
+    "installed": true,
+    "verified_https": true,
+    "ack_consumed": true,
+    "event": {
+      "verification_metadata": {},
+      "source": "native-test",
+      "index": "main",
+      "@version": "1",
+      "host": "original",
+      "event": {
+        "a.b": [
+          1,
+          2.5,
+          true,
+          null
+        ],
+        "large": 9223372036854775807,
+        "message": "native"
+      },
+      "fields": {
+        "literal.name": [
+          "a",
+          "b"
+        ]
+      },
+      "time": "1700000000.123456789",
+      "@timestamp": "2023-11-14T22:13:20.123456789Z"
+    },
+    "black_box_http": {
+      "status": "pass",
+      "verified_https": true,
+      "observations": [
+        {
+          "method": "GET",
+          "path": "health",
+          "status": 200,
+          "response": {
+            "code": 17,
+            "text": "HEC is healthy"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event/1.0",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 2
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": true
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "ack",
+          "status": 200,
+          "response": {
+            "acks": {
+              "2": false
+            }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "raw",
+          "status": 200,
+          "response": {
+            "text": "Success",
+            "code": 0,
+            "ackId": 3
+          }
+        },
+        {
+          "method": "POST",
+          "path": "event",
+          "status": 400,
+          "response": {
+            "text": "Event field is required",
+            "code": 12,
+            "invalid-event-number": 1
+          }
+        },
+        {
+          "method": "POST",
+          "path": "s2s",
+          "status": 400,
+          "response": {
+            "text": "Invalid data format",
+            "code": 6
+          }
+        }
+      ]
+    },
+    "restart": {
+      "pq_unacked_event_recovered": true,
+      "old_ack_unknown": true,
+      "old_ack_id": 5,
+      "new_ack_id": 1024,
+      "certificate_reused": true
+    },
+    "java": "",
+    "logs": "Installing logstash-input-splunk_hec\nInstallation successful\nCould not find log4j2 configuration at path /run-hec/config/log4j2.properties. Using default config which logs errors to the console\n[INFO ] 2026-11-09 16:36:34.708 [main] WritableDirectorySetting - Creating directory for setting path.data: /run-hec/data\n[WARN ] 2026-11-09 16:36:34.718 [main] runner - The use of JAVA_HOME has been deprecated. Logstash 8.0 and later ignores JAVA_HOME and uses the bundled JDK. Running Logstash with the bundled JDK is recommended. The bundled JDK has been verified to work with each specific version of Logstash, and generally provides best performance and reliability. If you have compelling reasons for using your own JDK (organizational-specific compliance requirements, for example), you can configure LS_JAVA_HOME to use that version instead.\n[INFO ] 2026-11-09 16:36:34.719 [main] runner - Starting Logstash {\"logstash.version\" => \"9.5.5\", \"jruby.version\" => \"jruby 10.0.7.0 (3.4.5) 2026-09-21 06989ab73b OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS on 21.0.12.1+1-LTS +indy +jit [aarch64-linux]\"}\n[INFO ] 2026-11-09 16:36:34.720 [main] runner - JVM bootstrap flags: [-Xms1g, -Xmx1g, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -XX:+HeapDumpOnOutOfMemoryError, -Djava.security.egd=file:/dev/urandom, -Djruby.regexp.interruptible=true, -Djruby.compile.invokedynamic=true, -Djdk.io.File.enableADS=true, -Dlog4j2.isThreadContextMapInheritable=true, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.security=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.nio.channels=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.management/sun.management=ALL-UNNAMED, -Dio.netty.allocator.maxOrder=11]\n[INFO ] 2026-11-09 16:36:34.785 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-string-length` configured to `200000000` (logstash default)\n[INFO ] 2026-11-09 16:36:34.786 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-number-length` configured to `10000` (logstash default)\n[INFO ] 2026-11-09 16:36:34.786 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-nesting-depth` configured to `1000` (logstash default)\n[INFO ] 2026-11-09 16:36:34.789 [main] WritableDirectorySetting - Creating directory for setting path.queue: /run-hec/data/queue\n[INFO ] 2026-11-09 16:36:34.791 [main] WritableDirectorySetting - Creating directory for setting path.dead_letter_queue: /run-hec/data/dead_letter_queue\n[INFO ] 2026-11-09 16:36:34.908 [LogStash::Runner] agent - No persistent UUID file found. Generating new UUID {uuid: \"3a2787f9-98fd-4b89-84f8-25bf60f33aba\", path: \"/run-hec/data/uuid\"}\n[INFO ] 2026-11-09 16:36:35.185 [Agent thread] agent - HTTP API is disabled (`api.enabled=false`); webserver will not be started.\n[WARN ] 2026-11-09 16:36:35.963 [Converge PipelineAction::Create<main>] jsonlines - The default value for `decode_size_limit_bytes`, currently at 512Mb, will be lowered in a future version to prevent Out of Memory errors from abnormally large messages or missing delimiters. Please set a value that reflects the largest expected message size (e.g. 20971520 for 20Mb)\n[INFO ] 2026-11-09 16:36:35.965 [Converge PipelineAction::Create<main>] jsonlines - ECS compatibility is enabled but `target` option was not specified. This may cause fields to be set at the top-level of the event where they are likely to clash with the Elastic Common Schema. It is recommended to set the `target` option to avoid potential schema conflicts (if your data is ECS compliant or non-conflicting, feel free to ignore this message)\n[INFO ] 2026-11-09 16:36:35.973 [Converge PipelineAction::Create<main>] QueueFactoryExt - compression support is enabled (read-only)\n[INFO ] 2026-11-09 16:36:35.979 [Converge PipelineAction::Create<main>] QueueUpgrade - No PQ version file found, upgrading to PQ v2.\n[INFO ] 2026-11-09 16:36:35.999 [Converge PipelineAction::Create<main>] javapipeline - Pipeline `main` is configured with `pipeline.ecs_compatibility: v8` setting. All plugins in this pipeline will default to `ecs_compatibility => v8` unless explicitly configured otherwise.\n[INFO ] 2026-11-09 16:36:36.009 [Converge PipelineAction::Create<main>] AbstractPipelineExt - Pipeline `main` batch metrics estimated memory consumption: 5191680 bytes\n[WARN ] 2026-11-09 16:36:36.016 [[main]-pipeline-manager] javapipeline - 'pipeline.ordered' is enabled and is likely less efficient, consider disabling if preserving event order is not necessary\n[INFO ] 2026-11-09 16:36:36.022 [[main]-pipeline-manager] javapipeline - Starting pipeline {pipeline_id: \"main\", \"pipeline.workers\" => 1, \"pipeline.batch.size\" => 1, \"pipeline.batch.delay\" => 50, \"pipeline.batch.output_chunking.growth_threshold_factor\" => 1000, \"pipeline.max_inflight\" => 1, \"batch_metric_sampling\" => \"minimal\", \"pipeline.sources\" => [\"/run-hec/config/pipeline.conf\"], \"pipeline.recoverable\" => false, thread: \"#<Thread:0x7cef8213 /usr/share/logstash/logstash-core/lib/logstash/java_pipeline.rb:149 run>\"}\n[INFO ] 2026-11-09 16:36:36.278 [[main]-pipeline-manager] javapipeline - Pipeline Java execution initialization time {\"seconds\" => 0.26}\n[INFO ] 2026-11-09 16:36:36.281 [[main]-pipeline-manager] javapipeline - Pipeline started {\"pipeline.id\" => \"main\"}\n[INFO ] 2026-11-09 16:36:36.290 [Agent thread] agent - Pipelines running {count: 1, running_pipelines: [:main], non_running_pipelines: []}\n[INFO ] 2026-11-09 16:36:37.437 [[main]>worker0] file - Opening file {path: \"/run-hec/events.ndjson\"}\n[WARN ] 2026-11-09 16:36:37.538 [hec-request] SplunkHec - HEC request rejected: route=event status=400 HEC code 12 \"Event field is required\" at HecProtocol:84\nCould not find log4j2 configuration at path /run-hec/config/log4j2.properties. Using default config which logs errors to the console\n[WARN ] 2026-11-09 16:36:45.360 [main] runner - The use of JAVA_HOME has been deprecated. Logstash 8.0 and later ignores JAVA_HOME and uses the bundled JDK. Running Logstash with the bundled JDK is recommended. The bundled JDK has been verified to work with each specific version of Logstash, and generally provides best performance and reliability. If you have compelling reasons for using your own JDK (organizational-specific compliance requirements, for example), you can configure LS_JAVA_HOME to use that version instead.\n[INFO ] 2026-11-09 16:36:45.362 [main] runner - Starting Logstash {\"logstash.version\" => \"9.5.5\", \"jruby.version\" => \"jruby 10.0.7.0 (3.4.5) 2026-09-21 06989ab73b OpenJDK 64-Bit Server VM 21.0.12.1+1-LTS on 21.0.12.1+1-LTS +indy +jit [aarch64-linux]\"}\n[INFO ] 2026-11-09 16:36:45.363 [main] runner - JVM bootstrap flags: [-Xms1g, -Xmx1g, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -XX:+HeapDumpOnOutOfMemoryError, -Djava.security.egd=file:/dev/urandom, -Djruby.regexp.interruptible=true, -Djruby.compile.invokedynamic=true, -Djdk.io.File.enableADS=true, -Dlog4j2.isThreadContextMapInheritable=true, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.security=ALL-UNNAMED, --add-opens=java.base/java.io=ALL-UNNAMED, --add-opens=java.base/java.nio.channels=ALL-UNNAMED, --add-opens=java.base/sun.nio.ch=ALL-UNNAMED, --add-opens=java.management/sun.management=ALL-UNNAMED, -Dio.netty.allocator.maxOrder=11]\n[INFO ] 2026-11-09 16:36:45.425 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-string-length` configured to `200000000` (logstash default)\n[INFO ] 2026-11-09 16:36:45.425 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-number-length` configured to `10000` (logstash default)\n[INFO ] 2026-11-09 16:36:45.425 [main] StreamReadConstraintsUtil - Jackson default value override `logstash.jackson.stream-read-constraints.max-nesting-depth` configured to `1000` (logstash default)\n[INFO ] 2026-11-09 16:36:45.800 [Agent thread] agent - HTTP API is disabled (`api.enabled=false`); webserver will not be started.\n[WARN ] 2026-11-09 16:36:46.286 [Converge PipelineAction::Create<main>] jsonlines - The default value for `decode_size_limit_bytes`, currently at 512Mb, will be lowered in a future version to prevent Out of Memory errors from abnormally large messages or missing delimiters. Please set a value that reflects the largest expected message size (e.g. 20971520 for 20Mb)\n[INFO ] 2026-11-09 16:36:46.288 [Converge PipelineAction::Create<main>] jsonlines - ECS compatibility is enabled but `target` option was not specified. This may cause fields to be set at the top-level of the event where they are likely to clash with the Elastic Common Schema. It is recommended to set the `target` option to avoid potential schema conflicts (if your data is ECS compliant or non-conflicting, feel free to ignore this message)\n[INFO ] 2026-11-09 16:36:46.301 [Converge PipelineAction::Create<main>] QueueFactoryExt - compression support is enabled (read-only)\n[INFO ] 2026-11-09 16:36:46.336 [Converge PipelineAction::Create<main>] javapipeline - Pipeline `main` is configured with `pipeline.ecs_compatibility: v8` setting. All plugins in this pipeline will default to `ecs_compatibility => v8` unless explicitly configured otherwise.\n[INFO ] 2026-11-09 16:36:46.347 [Converge PipelineAction::Create<main>] AbstractPipelineExt - Pipeline `main` batch metrics estimated memory consumption: 5191680 bytes\n[WARN ] 2026-11-09 16:36:46.355 [[main]-pipeline-manager] javapipeline - 'pipeline.ordered' is enabled and is likely less efficient, consider disabling if preserving event order is not necessary\n[INFO ] 2026-11-09 16:36:46.361 [[main]-pipeline-manager] javapipeline - Starting pipeline {pipeline_id: \"main\", \"pipeline.workers\" => 1, \"pipeline.batch.size\" => 1, \"pipeline.batch.delay\" => 50, \"pipeline.batch.output_chunking.growth_threshold_factor\" => 1000, \"pipeline.max_inflight\" => 1, \"batch_metric_sampling\" => \"minimal\", \"pipeline.sources\" => [\"/run-hec/config/pipeline.conf\"], \"pipeline.recoverable\" => false, thread: \"#<Thread:0x710745ac /usr/share/logstash/logstash-core/lib/logstash/java_pipeline.rb:149 run>\"}\n[INFO ] 2026-11-09 16:36:46.614 [[main]-pipeline-manager] javapipeline - Pipeline Java execution initialization time {\"seconds\" => 0.25}\n[INFO ] 2026-11-09 16:36:46.617 [[main]-pipeline-manager] javapipeline - Pipeline started {\"pipeline.id\" => \"main\"}\n[INFO ] 2026-11-09 16:36:46.627 [Agent thread] agent - Pipelines running {count: 1, running_pipelines: [:main], non_running_pipelines: []}\n[INFO ] 2026-11-09 16:36:46.651 [[main]>worker0] file - Opening file {path: \"/run-hec/events.ndjson\"}"
+  }
+]

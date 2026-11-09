@@ -59,7 +59,7 @@ public final class HecServer implements AutoCloseable {
     private void accept(){
         while(!stopped)try{
             Socket socket=listener.accept();
-            if(!connections.tryAcquire()){socket.close();continue;}
+            if(!connections.tryAcquire()){resources.metrics.increment("http.connection_rejected");socket.close();continue;}
             synchronized(workers){
                 if(stopped){socket.close();connections.release();continue;}
                 Thread worker=Thread.ofVirtual().name("hec-request").unstarted(()->handle(socket));
@@ -68,7 +68,7 @@ public final class HecServer implements AutoCloseable {
         }catch(IOException e){if(!stopped){acceptFailure=e;stopAdmission();}}
     }
     private void handle(Socket socket){
-        boolean admitted=false, healthOnly=false;String rejectedRoute="unknown";
+        boolean admitted=false, healthOnly=false,outcomeRecorded=false;String rejectedRoute="unknown";
         ScheduledFuture<?> readDeadline=null;
         MemoryBudget.Lease lease=memory.lease();
         try{
@@ -89,6 +89,7 @@ public final class HecServer implements AutoCloseable {
             if(!request.method.equals(kind.equals("health")?"GET":"POST"))throw new HecException(405,404,"The requested URL was not found on this server.");
             if(kind.equals("health")){
                 boolean healthy=!healthOnly && !stopped && processing.availablePermits()>0 && memory.used()<limits.aggregate() && (resources.assembly==null||resources.assembly.healthy());
+                resources.metrics.http(kind,healthy?"success":"busy");outcomeRecorded=true;
                 respond(socket,healthy?200:503,Map.of("text",healthy?"HEC is healthy":"HEC is unhealthy","code",healthy?17:18));return;
             }
             if(healthOnly)throw HecException.busy();
@@ -107,8 +108,8 @@ public final class HecServer implements AutoCloseable {
             String expectation=request.headers.get("expect");
             if(expectation!=null){
                 if(!expectation.equalsIgnoreCase("100-continue"))throw new HecException(417,6,"Invalid data format");
-                OutputStream output=socket.getOutputStream();
-                output.write("HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.US_ASCII));output.flush();
+                try{OutputStream output=socket.getOutputStream();output.write("HTTP/1.1 100 Continue\r\n\r\n".getBytes(StandardCharsets.US_ASCII));output.flush();}
+                catch(IOException|RuntimeException error){resources.metrics.increment("http.response_failures");throw error;}
             }
             {
                 byte[] body=body(socket,input,request.headers,deadline,lease);
@@ -120,7 +121,8 @@ public final class HecServer implements AutoCloseable {
                 if(encoding.equalsIgnoreCase("gzip"))body=Compression.gzip(body,expansion);
                 else if(!encoding.equalsIgnoreCase("identity"))throw HecException.invalid();
                 if(kind.equals("ack")){
-                    respond(socket,200,Map.of("acks",acks.poll(policy,channel,protocol.acknowledgments(body,lease))));return;
+                    var response=Map.of("acks",acks.poll(policy,channel,protocol.acknowledgments(body,lease)));
+                    resources.metrics.http(kind,"success");outcomeRecorded=true;respond(socket,200,response);return;
                 }
                 // Dispatch is explicit, not sniffed from MIME type or body bytes:
                 // /event -> JSON envelopes; /raw -> UTF-8 lines; /s2s -> binary
@@ -147,7 +149,7 @@ public final class HecServer implements AutoCloseable {
                     else for(Map<String,Object> event:prepared.events()){
                         if(stopped||Thread.currentThread().isInterrupted())throw HecException.busy();
                         // No detached task: this is the worker we interrupt and join at stop.
-                        sink.accept(event);
+                        resources.metrics.handoff("http_"+kind,sink,event);
                     }
                     if(prepared.failure()!=null)throw prepared.failure();
                     success=true;
@@ -156,11 +158,12 @@ public final class HecServer implements AutoCloseable {
                 // acceptance, not Elasticsearch/Splunk indexing or PQ fsync proof.
                 Map<String,Object> response=new LinkedHashMap<>();response.put("text","Success");response.put("code",0);
                 if(ticket!=null)response.put("ackId",ticket.id());
+                resources.metrics.http(kind,"success");outcomeRecorded=true;
                 respond(socket,200,response);
             }
-        }catch(HecException e){if(e.status!=401&&e.status!=403)resources.rejected(rejectedRoute,e.status,e);quietResponse(socket,e.status,e.response());}
-        catch(InterruptedException e){Thread.currentThread().interrupt();quietResponse(socket,503,HecException.busy().response());}
-        catch(Exception e){resources.rejected(rejectedRoute,503,e);quietResponse(socket,503,HecException.busy().response());}
+        }catch(HecException e){if(!outcomeRecorded)resources.metrics.http(rejectedRoute,HecMetrics.outcome(e.status));if(e.status!=401&&e.status!=403)resources.rejected(rejectedRoute,e.status,e);quietResponse(socket,e.status,e.response());}
+        catch(InterruptedException e){if(!outcomeRecorded)resources.metrics.http(rejectedRoute,"busy");Thread.currentThread().interrupt();quietResponse(socket,503,HecException.busy().response());}
+        catch(Exception e){if(!outcomeRecorded)resources.metrics.http(rejectedRoute,"internal");resources.rejected(rejectedRoute,503,e);quietResponse(socket,503,HecException.busy().response());}
         finally{
             if(readDeadline!=null)readDeadline.cancel(false);
             lease.close();
@@ -264,6 +267,9 @@ public final class HecServer implements AutoCloseable {
         socket.setSoTimeout((int)Math.max(1,Math.min(Integer.MAX_VALUE,TimeUnit.NANOSECONDS.toMillis(remaining))));
     }
     private void respond(Socket socket,int status,Map<String,?> object)throws IOException{
+        try{writeResponse(socket,status,object);}catch(IOException|RuntimeException error){resources.metrics.increment("http.response_failures");throw error;}
+    }
+    private void writeResponse(Socket socket,int status,Map<String,?> object)throws IOException{
         ScheduledFuture<?> writeDeadline;
         try{writeDeadline=deadlines.schedule(()->{try{socket.close();}catch(IOException ignored){}},limits.readMillis(),TimeUnit.MILLISECONDS);}
         catch(RejectedExecutionException stopped){throw new IOException("HEC server stopping",stopped);}
