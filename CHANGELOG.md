@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 (unreleased)
+## 0.4.0
 
 - Add the installed, offline `lib/splunk-hec-inspect` assembly summary command,
   using bundled Logstash Java/core/plugin jars and compatible shared Java locks.
@@ -10,6 +10,8 @@
 - Add versioned JSON input/help/output, stable exit codes and value-free errors.
   Counts do not evaluate restart compatibility or finalization capacity.
 - See [inspection operations and qualification](docs/spool-inspection-0.4.0.md).
+- Qualified with 143 existing Java tests, 20 Linux inspection tests, 44 Python
+  tests, all 30 qualification checks, and three source/artifact-bound reviews.
 
 ## 0.3.0
 
