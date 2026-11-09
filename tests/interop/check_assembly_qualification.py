@@ -130,7 +130,15 @@ def main():
         java.append({'suite':root.get('name'),'tests':int(root.get('tests')),'failures':int(root.get('failures')),
                      'errors':int(root.get('errors')),'skipped':int(root.get('skipped')),
                      'cases':[case.get('name') for case in root.findall('testcase')]})
-    checks['java_tests']=len(java)>=9 and sum(s['tests'] for s in java)>=125 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in java)
+    inspection_suite='org.logstashplugins.hec.S2SAssemblyInspectorTest'
+    baseline_java=[s for s in java if s['suite']!=inspection_suite]
+    checks['java_tests']=len(baseline_java)>=9 and sum(s['tests'] for s in baseline_java)>=143 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in baseline_java)
+    if any(s['suite']==inspection_suite for s in java):
+        # Execute current Linux classes; names and counters from an old XML are not proof.
+        import linux_inspection_tests
+        linux_report=linux_inspection_tests.run_suite(host_fresh=True)
+        host_cases={name for suite in java if suite['suite']==inspection_suite for name in suite['cases']}
+        checks['linux_inspection_matrix']=linux_report['status']=='pass' and linux_report['artifact']==artifact and linux_report['validators']==validators and host_cases==set(linux_report['cases'])
     required_cases={'validationFailureRollsBackWholeBatchAndDefaultIdsRemainIdentical',
                     'concurrentStreamsRemainIsolatedUnderInterleavedCommits','inputNamespacesKeepIdenticalNativeSourcesAndAssembledIdsSeparate',
                     'emptyNativeRecordIsABlankLogicalLineAndUtf8CoordinatesAreRetained','metadataConflictGapReorderingAndStructuredTransitionDoNotOverwrite',

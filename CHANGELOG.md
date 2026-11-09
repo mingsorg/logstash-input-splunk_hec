@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 (unreleased)
+
+- Add the installed, offline `lib/splunk-hec-inspect` assembly summary command,
+  using bundled Logstash Java/core/plugin jars and compatible shared Java locks.
+- Share pure checksummed framing, native codec, replay and structural validation
+  with production recovery. Inspection reports committed prefixes, legacy v2,
+  incomplete/ambiguous publication, corruption and bounded resource refusals.
+- Add versioned JSON input/help/output, stable exit codes and value-free errors.
+  Counts do not evaluate restart compatibility or finalization capacity.
+- See [inspection operations and qualification](docs/spool-inspection-0.4.0.md).
+
 ## 0.3.0
 
 - Replace per-request assembly snapshots with authenticated append-only delta

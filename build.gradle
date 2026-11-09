@@ -3,6 +3,8 @@ def pins = new Properties()
 file('versions.properties').withInputStream { pins.load(it) }
 group = 'org.logstashplugins.hec'
 version = file('VERSION').text.trim()
+// Keep Linux secure-filesystem qualification separate from host test output.
+if (project.hasProperty('inspectionLinux')) { layout.buildDirectory = file('build/linux-inspection') }
 repositories { mavenCentral() }
 java { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
 tasks.withType(JavaCompile).configureEach { options.release = 21; options.encoding = 'UTF-8' }
@@ -22,6 +24,9 @@ dependencies {
 dependencyLocking { lockAllConfigurations() }
 test {
     useJUnitPlatform()
+    jvmArgs '--add-opens=java.base/sun.nio.fs=ALL-UNNAMED'
+    systemProperty 'inspection.runId', project.findProperty('inspectionRunId') ?: 'manual'
+    systemProperty 'inspection.captureFile', layout.buildDirectory.file("inspection-captures/${project.findProperty('inspectionRunId') ?: 'manual'}/captured.json").get().asFile.absolutePath
     testLogging { events 'passed', 'failed', 'skipped'; exceptionFormat 'full' }
     // Gradle 8.14's captured-output reader intermittently throws Kryo EOF while
     // embedding HttpTlsTest stdout. Keep every test/assertion/failure in XML;

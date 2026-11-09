@@ -121,20 +121,7 @@ final class S2SStreamAssembler implements AutoCloseable {
     }
     private void validateStructure(State value)throws IOException{
         try{
-            if(value.pending.size()>10000||value.outbox.size()>40000||value.receipts.size()>4096)throw new IOException("assembly safety bounds exceeded");
-            var ids=new HashSet<String>();
-            for(var entry:value.pending.entrySet()){
-                var pending=entry.getValue();
-                if(!entry.getKey().matches("[a-f0-9]{64}")||pending.contributions.isEmpty()||pending.timeout<1||pending.eventLimit<1||pending.touched<0||
-                    !pending.chain.matches("[a-f0-9]{64}")||!pending.rule.matches("[a-f0-9]{64}"))throw new IOException("invalid assembly pending state");
-                S2SAssemblyStore.envelope(pending.envelope);
-                // Validate only newly appended wire values; cached prefixes were already decoded.
-                if(!sizes.containsKey(pending)){
-                    for(Object contribution:pending.contributions.suffix)decodedContribution(contribution);
-                }
-            }
-            for(var output:value.outbox){if(!ids.add(output.id))throw new IOException("duplicate assembly output identity");S2SAssemblyStore.envelope(output.envelope);}
-            for(var receipt:value.receipts.entrySet())if(!receipt.getKey().matches("[a-f0-9]{64}")||!receipt.getValue().matches("[a-f0-9]{64}"))throw new IOException("invalid assembly receipt");
+            S2SAssemblyReader.validateStructure(value,sizes::containsKey);
             long bytes=store.serializedSize(new State(value.configuration,Map.of(),List.of(),Map.of(),value.blocked))-2+receiptBytes(value.receipts);
             int count=0;
             for(var entry:value.pending.entrySet()){

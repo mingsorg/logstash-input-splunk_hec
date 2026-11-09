@@ -24,7 +24,7 @@ final class S2SAssemblyStore implements AutoCloseable {
     interface Faults {void at(String boundary)throws IOException;}
     interface Validator {void validate(S2SStreamAssembler.State state)throws IOException;}
     private final Faults faults;
-    private static final int MAGIC=0x53325333,HEADER=88;
+    private static final int MAGIC=S2SAssemblyReader.MAGIC,HEADER=S2SAssemblyReader.HEADER;
     static final long SAFETY_MAXIMUM=67108863L;
     private static final long RECOVERY_HISTORY=2*SAFETY_MAXIMUM+4096,RECOVERY_PHYSICAL=8*SAFETY_MAXIMUM+32768;
     record Pointer(long generation,long sequence,String snapshot) {}
@@ -60,30 +60,16 @@ final class S2SAssemblyStore implements AutoCloseable {
         if(physicalBytes()>RECOVERY_PHYSICAL)throw new IOException("assembly recovery physical safety bound exceeded");
         Path pointer=directory.resolve("current-v3");
         if(Files.exists(pointer,LinkOption.NOFOLLOW_LINKS)){
-            Pointer published=mapper().readValue(checked(pointer,4096),Pointer.class);
-            if(published.generation<1||published.sequence<0||!published.snapshot.matches("[a-f0-9]{64}"))throw new IOException("invalid assembly generation pointer");
+            Pointer published=S2SAssemblyReader.pointer(checked(pointer,4096),mapper());
             generation=published.generation;
             byte[] snapshotBytes=checked(snapshot(generation),SAFETY_MAXIMUM+4096);
-            if(!TokenStore.fingerprint(snapshotBytes).equals(published.snapshot))throw new IOException("assembly generation mismatch");
-            Snapshot snapshot=mapper().readValue(snapshotBytes,Snapshot.class);
-            if(snapshot.sequence!=published.sequence)throw new IOException("assembly snapshot sequence mismatch");
-            sequence=snapshot.sequence;current=snapshot.state;validator.validate(current);
+            Snapshot snapshot=S2SAssemblyReader.snapshot(snapshotBytes,published,mapper());
+            sequence=snapshot.sequence;current=snapshot.state;
             Path journal=journal(generation);regular(journal,RECOVERY_HISTORY);
             try(FileChannel file=FileChannel.open(journal,StandardOpenOption.READ,StandardOpenOption.WRITE,LinkOption.NOFOLLOW_LINKS)){
-                long position=0,total=file.size();
-                while(position<total){
-                    if(total-position<HEADER){truncate(file,position);break;}
-                    byte[] header=new byte[HEADER];read(file,position,header);
-                    ByteBuffer framing=ByteBuffer.wrap(header);
-                    int magic=framing.getInt(),version=framing.getInt();long ordinal=framing.getLong(),length=framing.getLong();
-                    if(magic!=MAGIC||version!=3||ordinal!=sequence+1||length<0||length>RECOVERY_HISTORY-HEADER||
-                        !Arrays.equals(Arrays.copyOfRange(header,24,56),digest(Arrays.copyOfRange(header,0,24))))throw new IOException("corrupt assembly transaction framing/sequence");
-                    if(total-position-HEADER<length){truncate(file,position);break;}
-                    byte[] payload=new byte[(int)length];read(file,position+HEADER,payload);
-                    if(!Arrays.equals(Arrays.copyOfRange(header,56,88),digest(payload)))throw new IOException("assembly transaction checksum mismatch");
-                    Transaction transaction=mapper().readValue(payload,Transaction.class);
-                    current=apply(current,transaction);validator.validate(current);sequence=ordinal;position+=HEADER+length;
-                }
+                var replay=S2SAssemblyReader.replay(file,current,sequence,mapper(),validator,Long.MAX_VALUE);
+                current=replay.state();sequence=replay.sequence();
+                if(replay.prefix()<file.size())truncate(file,replay.prefix());
                 journalBytes=file.size();
             }catch(RuntimeException error){throw new IOException("invalid assembly transaction",error);}
             return HecProtocol.JSON.writeValueAsBytes(current);
@@ -138,10 +124,7 @@ final class S2SAssemblyStore implements AutoCloseable {
     }
     private byte[] checked(Path path,long bound)throws IOException{
         regular(path,bound+65);byte[] bytes=Files.readAllBytes(path);
-        if(bytes.length<65||bytes[64]!='\n')throw new IOException("corrupt assembly snapshot");
-        byte[] payload=Arrays.copyOfRange(bytes,65,bytes.length);
-        if(!TokenStore.fingerprint(payload).equals(new String(bytes,0,64,StandardCharsets.US_ASCII)))throw new IOException("assembly checksum mismatch");
-        return payload;
+        return S2SAssemblyReader.checked(bytes);
     }
     void commit(S2SStreamAssembler.State value)throws IOException{
         if(failed)throw new IOException("assembly storage is blocked");
@@ -192,39 +175,7 @@ final class S2SAssemblyStore implements AutoCloseable {
             old.receipts().keySet().stream().filter(key->!value.receipts().containsKey(key)).toList(),receipts,receiptOrder,pendingOrder,value.blocked());
     }
     static S2SStreamAssembler.State apply(S2SStreamAssembler.State old,Transaction transaction)throws IOException{
-        if(!old.configuration().equals(transaction.configuration))throw new IOException("assembly transaction configuration mismatch");
-        var pending=new LinkedHashMap<>(old.pending());var outbox=new ArrayList<>(old.outbox());var receipts=new LinkedHashMap<>(old.receipts());
-        var touched=new HashSet<String>();
-        for(String key:transaction.removePending)if(!touched.add(key)||pending.remove(key)==null)throw new IOException("invalid pending removal");
-        for(Change change:transaction.pending){
-            if(!touched.add(change.key))throw new IOException("duplicate pending operation");
-            var value=change.value;
-            if(change.prior!=null){
-                var before=pending.get(change.key);
-                if(before==null||!before.chain().equals(change.prior)||value.text().length()!=0||!value.contributions().isEmpty()||
-                    value.envelope()!=null||!before.rule().equals(value.rule())||!before.origin().equals(value.origin())||!before.attributes().equals(value.attributes())||
-                    before.timeout()!=value.timeout()||before.eventLimit()!=value.eventLimit()||!Objects.equals(before.sender(),value.sender()))throw new IOException("invalid pending append");
-                value=new S2SStreamAssembler.Pending(before.envelope(),new AssemblyChunks.Text(before.text(),change.text),value.delimiter(),value.rule(),value.chain(),value.attributes(),value.origin(),
-                    new AssemblyChunks.Contributions(before.contributions(),change.contributions),value.touched(),value.timeout(),value.offset(),value.sequence(),value.eventLimit(),value.sender());
-            }else if(change.text!=null||change.contributions!=null)throw new IOException("invalid pending replacement");
-            pending.put(change.key,value);
-        }
-        if(transaction.pendingOrder!=null){
-            if(transaction.pendingOrder.size()!=pending.size()||!new HashSet<>(transaction.pendingOrder).equals(pending.keySet()))throw new IOException("invalid pending order");
-            var ordered=new LinkedHashMap<String,S2SStreamAssembler.Pending>();for(String key:transaction.pendingOrder)ordered.put(key,pending.get(key));pending=ordered;
-        }
-        touched.clear();for(String id:transaction.removeOutputs){if(!touched.add(id)||!outbox.removeIf(output->output.id().equals(id)))throw new IOException("invalid output removal");}
-        var ids=new HashSet<String>();for(var output:outbox)if(!ids.add(output.id()))throw new IOException("duplicate output identity");
-        for(var output:transaction.outputs){if(!ids.add(output.id())||touched.contains(output.id()))throw new IOException("duplicate output operation");outbox.add(output);}
-        touched.clear();for(String key:transaction.removeReceipts)if(!touched.add(key)||receipts.remove(key)==null)throw new IOException("invalid receipt removal");
-        for(var entry:transaction.receipts.entrySet()){
-            if(touched.contains(entry.getKey())||receipts.containsKey(entry.getKey())||!entry.getKey().matches("[a-f0-9]{64}")||!entry.getValue().matches("[a-f0-9]{64}"))throw new IOException("invalid receipt operation");receipts.put(entry.getKey(),entry.getValue());
-        }
-        if(transaction.receiptOrder!=null){
-            if(transaction.receiptOrder.size()!=receipts.size()||!new HashSet<>(transaction.receiptOrder).equals(receipts.keySet()))throw new IOException("invalid receipt order");
-            var ordered=new LinkedHashMap<String,String>();for(String key:transaction.receiptOrder)ordered.put(key,receipts.get(key));receipts=ordered;
-        }
-        return new S2SStreamAssembler.State(old.configuration(),pending,outbox,receipts,transaction.blocked);
+        return S2SAssemblyReader.apply(old,transaction);
     }
     private Path snapshot(long id){return directory.resolve("snapshot-v3-"+id);}
     private Path journal(long id){return directory.resolve("journal-v3-"+id);}
@@ -259,8 +210,8 @@ final class S2SAssemblyStore implements AutoCloseable {
         faults.at(boundary+"-durable");
     }
     private void sync(String boundary)throws IOException{faults.at(boundary);try(FileChannel dir=FileChannel.open(directory,StandardOpenOption.READ)){dir.force(true);}}
-    private static byte[] refusal(){return "S2S assembly migrated to v3; restore backup-v2 to downgrade\n".getBytes(StandardCharsets.US_ASCII);}
-    private static byte[] freshRefusal(){return "S2S assembly v3; downgrade requires explicit state recovery\n".getBytes(StandardCharsets.US_ASCII);}
+    private static byte[] refusal(){return S2SAssemblyReader.REFUSAL;}
+    private static byte[] freshRefusal(){return S2SAssemblyReader.FRESH_REFUSAL;}
     private long writePhysicalLimit(){return recoveryCompaction?RECOVERY_PHYSICAL:physicalLimit;}
     private void establish()throws IOException{
         Path established=directory.resolve("established-v3");
@@ -325,41 +276,10 @@ final class S2SAssemblyStore implements AutoCloseable {
     // Explicit tagged values preserve numeric types (including negative zero) and native Timestamp.
     // ALL maps are represented as pairs so application keys cannot collide with codec tags.
     static Object encode(Object value){
-        if(value instanceof Map<?,?> map)return Map.of("map",map.entrySet().stream().map(e->Arrays.asList(e.getKey(),encode(e.getValue()))).toList());
-        if(value instanceof List<?> list)return Map.of("list",list.stream().map(S2SAssemblyStore::encode).toList());
-        if(value instanceof org.logstash.Timestamp timestamp)return Map.of("timestamp",timestamp.toString());
-        if(value instanceof Number number)return Map.of("number",List.of(number.getClass().getSimpleName(),number.toString()));
-        return value;
+        return S2SAssemblyReader.encode(value);
     }
     static Object decode(Object value){
-        if(!(value instanceof Map<?,?> map)){
-            if(value==null||value instanceof String||value instanceof Boolean)return value;
-            throw new IllegalArgumentException("untagged assembly value");
-        }
-        if(map.size()!=1)throw new IllegalArgumentException("ambiguous assembly tag");
-        if(map.containsKey("map")){
-            Map<String,Object> result=new LinkedHashMap<>();
-            if(!(map.get("map") instanceof List<?> pairs))throw new IllegalArgumentException("invalid assembly map");
-            for(Object item:pairs){
-                if(!(item instanceof List<?> pair)||pair.size()!=2||!(pair.get(0) instanceof String key)||result.containsKey(key))throw new IllegalArgumentException("invalid assembly map pair/key");
-                result.put(key,decode(pair.get(1)));
-            }return result;
-        }
-        if(map.containsKey("list")){
-            if(!(map.get("list") instanceof List<?> list))throw new IllegalArgumentException("invalid assembly list");
-            return list.stream().map(S2SAssemblyStore::decode).toList();
-        }
-        if(map.containsKey("timestamp")){
-            if(!(map.get("timestamp") instanceof String text))throw new IllegalArgumentException("invalid assembly timestamp");
-            return new org.logstash.Timestamp(java.time.Instant.parse(text));
-        }
-        if(!(map.get("number") instanceof List<?> pair)||pair.size()!=2||!(pair.get(0) instanceof String)||!(pair.get(1) instanceof String text))throw new IllegalArgumentException("invalid assembly number");
-        return switch((String)pair.get(0)){
-            case "Long" -> Long.valueOf(text);case "Integer" -> Integer.valueOf(text);
-            case "Double" -> {double number=Double.parseDouble(text);if(!Double.isFinite(number))throw new IllegalArgumentException("nonfinite assembly number");yield number;}
-            case "BigInteger" -> new java.math.BigInteger(text);case "BigDecimal" -> new java.math.BigDecimal(text);
-            default -> throw new IllegalArgumentException("invalid assembly numeric type");
-        };
+        return S2SAssemblyReader.decode(value);
     }
-    @SuppressWarnings("unchecked") static Map<String,Object> envelope(Object value){Object decoded=decode(value);if(!(decoded instanceof Map<?,?>))throw new IllegalArgumentException("invalid assembly envelope");return (Map<String,Object>)decoded;}
+    static Map<String,Object> envelope(Object value){return S2SAssemblyReader.envelope(value);}
 }

@@ -5,3 +5,5 @@ vendor/
 *.gem
 __pycache__/
 .DS_Store
+# 0.4.0 qualification working spools/classes/jars; retain digest-bound report JSON.
+tests/interop/evidence/0.4.0/journal-runs/

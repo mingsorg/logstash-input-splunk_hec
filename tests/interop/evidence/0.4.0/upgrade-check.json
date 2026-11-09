@@ -1,0 +1,27 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.4.0-java.gem",
+    "sha256": "9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c"
+  },
+  "validators": "0f9f81b9bca52544388cada4b5d44cb7360e4342d7956d228e903135b1f4b01b",
+  "baseline": {
+    "file": "logstash-input-splunk_hec-0.2.0-java.gem",
+    "sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11",
+    "pinned_sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11"
+  },
+  "runtimes": [
+    {
+      "role": "minimum",
+      "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "status": "pass",
+      "output": "Installing logstash-input-splunk_hec\nInstallation successful\nlogstash-input-splunk_hec (0.2.0)\nConfiguration OK\nBEFORE_RESPONSE {\"text\":\"Success\",\"code\":0,\"ackId\":0}\n{\"acks\":{\"0\":true}}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1}\nLIVE_BEFORE_OK\nInstalling logstash-input-splunk_hec\nInstallation successful\nlogstash-input-splunk_hec (0.4.0)\nConfiguration OK\n/tmp/hec-upgrade/ack-high-water-v1: OK\n/tmp/hec-upgrade/ack.lock: OK\n{\"text\":\"Success\",\"code\":0,\"ackId\":1024}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1025}\n{\"source\":\"upgrade-assembly\",\"event\":\"START migrated\\ntrace\",\"time\":\"1700000000\",\"index\":\"main\",\"@version\":\"1\",\"host\":\"assembly-probe\",\"sourcetype\":\"hec_assembly_selected\",\"@timestamp\":\"2023-11-14T22:13:20.000Z\"}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1026}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1027}\nASSEMBLY_MIGRATION_OK\nOLD_ACK_AFTER {\"acks\":{\"0\":false}}\n{\"acks\":{\"0\":false}}\nAFTER_RESPONSE {\"text\":\"Success\",\"code\":0,\"ackId\":1028}\n{\"acks\":{\"1028\":true}}\nLIVE_AFTER_OK\nONE_CORRECTLY_NAMED_JAR"
+    },
+    {
+      "role": "latest",
+      "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "status": "pass",
+      "output": "Installing logstash-input-splunk_hec\nInstallation successful\nlogstash-input-splunk_hec (0.2.0)\nConfiguration OK\nBEFORE_RESPONSE {\"text\":\"Success\",\"code\":0,\"ackId\":0}\n{\"acks\":{\"0\":true}}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1}\nLIVE_BEFORE_OK\nInstalling logstash-input-splunk_hec\nInstallation successful\nlogstash-input-splunk_hec (0.4.0)\nConfiguration OK\n/tmp/hec-upgrade/ack-high-water-v1: OK\n/tmp/hec-upgrade/ack.lock: OK\n{\"text\":\"Success\",\"code\":0,\"ackId\":1024}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1025}\n{\"@timestamp\":\"2023-11-14T22:13:20.000Z\",\"sourcetype\":\"hec_assembly_selected\",\"host\":\"assembly-probe\",\"index\":\"main\",\"source\":\"upgrade-assembly\",\"@version\":\"1\",\"time\":\"1700000000\",\"event\":\"START migrated\\ntrace\"}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1026}\n{\"text\":\"Success\",\"code\":0,\"ackId\":1027}\nASSEMBLY_MIGRATION_OK\nOLD_ACK_AFTER {\"acks\":{\"0\":false}}\n{\"acks\":{\"0\":false}}\nAFTER_RESPONSE {\"text\":\"Success\",\"code\":0,\"ackId\":1028}\n{\"acks\":{\"1028\":true}}\nLIVE_AFTER_OK\nONE_CORRECTLY_NAMED_JAR"
+    }
+  ],
+  "status": "pass"
+}

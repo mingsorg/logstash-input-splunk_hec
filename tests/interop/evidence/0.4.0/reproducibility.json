@@ -1,0 +1,10 @@
+{
+  "artifact": "logstash-input-splunk_hec-0.4.0-java.gem",
+  "sha256s": [
+    "9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c",
+    "9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c"
+  ],
+  "byte_identical": true,
+  "source_date_epoch": 1792972800,
+  "clean_builds": 2
+}

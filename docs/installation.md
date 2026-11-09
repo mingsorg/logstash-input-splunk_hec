@@ -1,6 +1,12 @@
 # Installation guide
 
-Current source identity is selected by `VERSION` (**0.3.0**, unreleased, built from source).
+Current source identity is selected by `VERSION` (**0.4.0**, unreleased, built from source).
+Build with `./gradlew test gem` and install
+`logstash-input-splunk_hec-0.4.0-java.gem`. The installed read-only command and
+0.4.0 qualification procedure are in [spool inspection](spool-inspection-0.4.0.md).
+The 0.3.0 examples and verification labels below describe that earlier version;
+use `0.4.0` in artifact/image names for a current-source installation.
+Current evidence is isolated under `tests/interop/evidence/0.4.0/`.
 Examples below are **expected output/behavior**, not current-artifact proof. Historical
 verification labels describe earlier runs. Current assertions require matching artifact
 and validator digests in `tests/interop/evidence/0.3.0/install-check.json`,

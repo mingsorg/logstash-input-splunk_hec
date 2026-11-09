@@ -1,6 +1,11 @@
 # Logstash Splunk HEC input
 
-**0.3.0 (unreleased):** efficient append-only durable assembly with bounded compaction
+**0.4.0 (unreleased):** installed offline assembly diagnostics via
+`sh <installed-plugin>/lib/splunk-hec-inspect --assembly-directory PATH --json`.
+See [read-only spool inspection](docs/spool-inspection-0.4.0.md) for locking,
+schemas, exit codes and current-artifact qualification.
+
+Efficient append-only durable assembly retains bounded compaction
 and validated 0.2.0 migration. Opt-in sourcetype-specific unstructured S2S
 assembly is configured with `s2s_line_breaker_rules_json`. Matched-mode ACKs mean
 durable assembly-stage acceptance. With assembly enabled, unmatched and structured
@@ -16,8 +21,8 @@ troubleshooting, is [docs/installation.md](docs/installation.md)):
 
 ```sh
 ./gradlew test gem
-bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.3.0-java.gem
-bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.3.0)
+bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.4.0-java.gem
+bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.4.0)
 ```
 
 Installation needs access to rubygems.org (Logstash resolves dependencies even for a local gem) and a Logstash of

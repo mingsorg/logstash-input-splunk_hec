@@ -1,0 +1,36 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.4.0-java.gem",
+    "sha256": "9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c"
+  },
+  "validators": "0f9f81b9bca52544388cada4b5d44cb7360e4342d7956d228e903135b1f4b01b",
+  "runs": [
+    {
+      "role": "minimum",
+      "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "status": "pass",
+      "injection": "64KiB tmpfs; 100000-byte continuation exceeds actual filesystem capacity",
+      "accepted_state_sha256": "662eb48693eb101c0049277b981542ddfb75872811df22c43818a3cb65fefd33",
+      "response": {
+        "text": "Server is busy",
+        "code": 9
+      },
+      "rejected_status": 503,
+      "health_status": 503
+    },
+    {
+      "role": "latest",
+      "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "status": "pass",
+      "injection": "64KiB tmpfs; 100000-byte continuation exceeds actual filesystem capacity",
+      "accepted_state_sha256": "0eccbb8e8f2c650c3bf16da39dfbc3b285e93827dc117081553486e5d9d3e39f",
+      "response": {
+        "text": "Server is busy",
+        "code": 9
+      },
+      "rejected_status": 503,
+      "health_status": 503
+    }
+  ],
+  "status": "pass"
+}

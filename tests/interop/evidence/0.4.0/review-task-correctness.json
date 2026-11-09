@@ -1,0 +1,6 @@
+{
+  "provider": "opencode-task",
+  "reviewer_session_id": "ses_e42df2c29ffeG9En02ikICJbNj",
+  "structured_output": {"lens":"adversarial correctness and durability","source_sha256":"86e2550f29ffbb2ba5d4fe87f55f7d121c306a1c6bc6c2fe6f884a0d80194ca1","claims_sha256":"9dbb0dbad550c198287a381d59a8ef7263877f72dd9fc9e140577c0562f438d2","artifact_sha256":"9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c","verdict":"pass","findings":[]},
+  "text": "```json\n{\n  \"lens\": \"adversarial correctness and durability\",\n  \"source_sha256\": \"86e2550f29ffbb2ba5d4fe87f55f7d121c306a1c6bc6c2fe6f884a0d80194ca1\",\n  \"claims_sha256\": \"9dbb0dbad550c198287a381d59a8ef7263877f72dd9fc9e140577c0562f438d2\",\n  \"artifact_sha256\": \"9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c\",\n  \"verdict\": \"pass\",\n  \"findings\": []\n}\n```\n\nAll three recomputed digests match. Verified admitted-size allocation and termination forwarding/reaping in current source, corresponding regression tests, and recorded evidence showing 20 passing Linux tests and non-root read-only spool checks on both runtimes.\n\nLimits: read-only scoped review; existing execution evidence inspected without rerunning tests or Docker."
+}

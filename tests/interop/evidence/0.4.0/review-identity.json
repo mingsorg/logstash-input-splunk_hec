@@ -1,0 +1,27 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.4.0-java.gem",
+    "sha256": "9e011618a1294346e40d23e87ca154ef647ae524e0736538d503ccb13a8fb40c"
+  },
+  "validators": "0f9f81b9bca52544388cada4b5d44cb7360e4342d7956d228e903135b1f4b01b",
+  "source_sha256": "86e2550f29ffbb2ba5d4fe87f55f7d121c306a1c6bc6c2fe6f884a0d80194ca1",
+  "claims_file": "docs/spool-inspection-0.4.0.md",
+  "claims_sha256": "9dbb0dbad550c198287a381d59a8ef7263877f72dd9fc9e140577c0562f438d2",
+  "reports": [
+    {
+      "lens": "adversarial correctness and durability",
+      "file": "tests/interop/evidence/0.4.0/review-task-correctness.json",
+      "sha256": "5475f598543bce0e09b71349b20009c1f0c0988c640d3408b58336693d07abda"
+    },
+    {
+      "lens": "edge cases and migration integrity",
+      "file": "tests/interop/evidence/0.4.0/review-task-edge.json",
+      "sha256": "223866bb65b93949c406671e4bbbbbfffea8ec0518bfaac88c465ed3bb249207"
+    },
+    {
+      "lens": "verification gaps and performance claims",
+      "file": "tests/interop/evidence/0.4.0/review-task-verification.json",
+      "sha256": "eac2c9deef8e8dffee9845f5504d7b078bf1e4f319c5cd0c978a2406bed55771"
+    }
+  ]
+}
