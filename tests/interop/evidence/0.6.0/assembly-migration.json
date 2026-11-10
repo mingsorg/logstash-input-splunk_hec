@@ -1,0 +1,310 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.6.0-java.gem",
+    "sha256": "69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c"
+  },
+  "validators": "3f0f9d496db77a0a097dd363f3dc552797cc784bd42b98af2cbe12ad95a00f8c",
+  "run_id": "003d5b33fda54cbd9c5f12dca1fdbc40",
+  "baseline": {
+    "file": "logstash-input-splunk_hec-0.2.0-java.gem",
+    "sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11",
+    "pinned_sha256": "3dbc0a7162c10d3c666562b274200cca487f2d96176b683bb8a6f598b06cdc11"
+  },
+  "runs": [
+    {
+      "role": "minimum",
+      "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "status": "pass",
+      "pending_retained": true,
+      "outbox_retained": true,
+      "receipts_retained": true,
+      "backup_exact": true,
+      "old_reader_refused": true,
+      "continuation_matches": true,
+      "retry_suppressed": true,
+      "outputs": [
+        {
+          "host": "host",
+          "source": "source",
+          "sourcetype": "test",
+          "index": "main",
+          "time": "1700000000.123456789",
+          "fields": {
+            "large": 18446744073709551615,
+            "decimal": 1.2345678901234567,
+            "zero": -0.0
+          },
+          "@timestamp": "2023-11-14T22:13:20.123456789Z",
+          "@metadata": {
+            "splunk_hec": {
+              "s2s": {
+                "flags": 10,
+                "stream": 7,
+                "offset": 0,
+                "sequence": 1,
+                "logical_offset": 0,
+                "logical_line": 0,
+                "channel": "channel",
+                "date_parts": [],
+                "csv_header": [],
+                "wire_metadata": {},
+                "identity_scope": "source-coordinates"
+              },
+              "id": "s2s-assembled-v1:e4dc8ff64ec24ac15ca0c2509feac69626e60c3ef58af0d1e84709ef7fcf0827",
+              "assembly": {
+                "contributions": [
+                  {
+                    "offset": 0,
+                    "sequence": 1,
+                    "line": 0,
+                    "logical_offset": 0,
+                    "sha256": "cce0389aea89c1c2c7faf1741e7b791e04a797efb0ac7501db00d474be1626e6",
+                    "wire": {
+                      "flags": 10,
+                      "stream": "7",
+                      "offset": 0,
+                      "sequence": 1,
+                      "time": "1700000000.123456789",
+                      "channel": "channel",
+                      "date_parts": [],
+                      "timezone": null,
+                      "csv_header": [],
+                      "wire_metadata": {}
+                    }
+                  }
+                ],
+                "rule": "3d6445b02a93db3ae9491848e19b769bc0909138b03e30f937dc5c5e0da85b47",
+                "flush_reason": "new-start"
+              }
+            }
+          },
+          "event": "START queued\n"
+        },
+        {
+          "host": "host",
+          "source": "source",
+          "sourcetype": "test",
+          "index": "main",
+          "time": "1700000000.123456789",
+          "fields": {
+            "large": 18446744073709551615,
+            "decimal": 1.2345678901234567,
+            "zero": -0.0
+          },
+          "@timestamp": "2023-11-14T22:13:20.123456789Z",
+          "@metadata": {
+            "splunk_hec": {
+              "s2s": {
+                "flags": 10,
+                "stream": 7,
+                "offset": 0,
+                "sequence": 1,
+                "logical_offset": 0,
+                "logical_line": 0,
+                "channel": "channel",
+                "date_parts": [],
+                "csv_header": [],
+                "wire_metadata": {},
+                "identity_scope": "source-coordinates"
+              },
+              "id": "s2s-assembled-v1:3c4a670135e640e1903f9296990da78622b8315bab6c3887f69bd58ab85a48ab",
+              "assembly": {
+                "contributions": [
+                  {
+                    "offset": 0,
+                    "sequence": 1,
+                    "line": 1,
+                    "logical_offset": 13,
+                    "sha256": "14a32ab44fb982c0b864bea4b95257ca8acd2f1ffd46dc4c399bea280619d78f",
+                    "wire": {
+                      "flags": 10,
+                      "stream": "7",
+                      "offset": 0,
+                      "sequence": 1,
+                      "time": "1700000000.123456789",
+                      "channel": "channel",
+                      "date_parts": [],
+                      "timezone": null,
+                      "csv_header": [],
+                      "wire_metadata": {}
+                    }
+                  },
+                  {
+                    "offset": 26,
+                    "sequence": 1,
+                    "line": 0,
+                    "logical_offset": 26,
+                    "sha256": "eafe895eb8119e6e5d06463590b2ef81b3651c157d5c8e18f1889186c7fd0ac0",
+                    "wire": {
+                      "flags": 10,
+                      "stream": "7",
+                      "offset": 26,
+                      "sequence": 1,
+                      "time": "1700000000.123456789",
+                      "channel": "channel",
+                      "date_parts": [],
+                      "timezone": null,
+                      "csv_header": [],
+                      "wire_metadata": {}
+                    }
+                  }
+                ],
+                "flush_reason": "timeout",
+                "rule": "3d6445b02a93db3ae9491848e19b769bc0909138b03e30f937dc5c5e0da85b47"
+              }
+            }
+          },
+          "event": "START pending\ntrace"
+        }
+      ]
+    },
+    {
+      "role": "latest",
+      "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "status": "pass",
+      "pending_retained": true,
+      "outbox_retained": true,
+      "receipts_retained": true,
+      "backup_exact": true,
+      "old_reader_refused": true,
+      "continuation_matches": true,
+      "retry_suppressed": true,
+      "outputs": [
+        {
+          "host": "host",
+          "source": "source",
+          "sourcetype": "test",
+          "index": "main",
+          "time": "1700000000.123456789",
+          "fields": {
+            "large": 18446744073709551615,
+            "decimal": 1.2345678901234567,
+            "zero": -0.0
+          },
+          "@timestamp": "2023-11-14T22:13:20.123456789Z",
+          "@metadata": {
+            "splunk_hec": {
+              "s2s": {
+                "flags": 10,
+                "stream": 7,
+                "offset": 0,
+                "sequence": 1,
+                "logical_offset": 0,
+                "logical_line": 0,
+                "channel": "channel",
+                "date_parts": [],
+                "csv_header": [],
+                "wire_metadata": {},
+                "identity_scope": "source-coordinates"
+              },
+              "id": "s2s-assembled-v1:e4dc8ff64ec24ac15ca0c2509feac69626e60c3ef58af0d1e84709ef7fcf0827",
+              "assembly": {
+                "flush_reason": "new-start",
+                "contributions": [
+                  {
+                    "offset": 0,
+                    "sequence": 1,
+                    "line": 0,
+                    "logical_offset": 0,
+                    "sha256": "cce0389aea89c1c2c7faf1741e7b791e04a797efb0ac7501db00d474be1626e6",
+                    "wire": {
+                      "flags": 10,
+                      "stream": "7",
+                      "offset": 0,
+                      "sequence": 1,
+                      "time": "1700000000.123456789",
+                      "channel": "channel",
+                      "date_parts": [],
+                      "timezone": null,
+                      "csv_header": [],
+                      "wire_metadata": {}
+                    }
+                  }
+                ],
+                "rule": "3d6445b02a93db3ae9491848e19b769bc0909138b03e30f937dc5c5e0da85b47"
+              }
+            }
+          },
+          "event": "START queued\n"
+        },
+        {
+          "host": "host",
+          "source": "source",
+          "sourcetype": "test",
+          "index": "main",
+          "time": "1700000000.123456789",
+          "fields": {
+            "large": 18446744073709551615,
+            "decimal": 1.2345678901234567,
+            "zero": -0.0
+          },
+          "@timestamp": "2023-11-14T22:13:20.123456789Z",
+          "@metadata": {
+            "splunk_hec": {
+              "s2s": {
+                "flags": 10,
+                "stream": 7,
+                "offset": 0,
+                "sequence": 1,
+                "logical_offset": 0,
+                "logical_line": 0,
+                "channel": "channel",
+                "date_parts": [],
+                "csv_header": [],
+                "wire_metadata": {},
+                "identity_scope": "source-coordinates"
+              },
+              "id": "s2s-assembled-v1:3c4a670135e640e1903f9296990da78622b8315bab6c3887f69bd58ab85a48ab",
+              "assembly": {
+                "rule": "3d6445b02a93db3ae9491848e19b769bc0909138b03e30f937dc5c5e0da85b47",
+                "contributions": [
+                  {
+                    "offset": 0,
+                    "sequence": 1,
+                    "line": 1,
+                    "logical_offset": 13,
+                    "sha256": "14a32ab44fb982c0b864bea4b95257ca8acd2f1ffd46dc4c399bea280619d78f",
+                    "wire": {
+                      "flags": 10,
+                      "stream": "7",
+                      "offset": 0,
+                      "sequence": 1,
+                      "time": "1700000000.123456789",
+                      "channel": "channel",
+                      "date_parts": [],
+                      "timezone": null,
+                      "csv_header": [],
+                      "wire_metadata": {}
+                    }
+                  },
+                  {
+                    "offset": 26,
+                    "sequence": 1,
+                    "line": 0,
+                    "logical_offset": 26,
+                    "sha256": "eafe895eb8119e6e5d06463590b2ef81b3651c157d5c8e18f1889186c7fd0ac0",
+                    "wire": {
+                      "flags": 10,
+                      "stream": "7",
+                      "offset": 26,
+                      "sequence": 1,
+                      "time": "1700000000.123456789",
+                      "channel": "channel",
+                      "date_parts": [],
+                      "timezone": null,
+                      "csv_header": [],
+                      "wire_metadata": {}
+                    }
+                  }
+                ],
+                "flush_reason": "timeout"
+              }
+            }
+          },
+          "event": "START pending\ntrace"
+        }
+      ]
+    }
+  ],
+  "status": "pass"
+}

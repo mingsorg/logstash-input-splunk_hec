@@ -1,0 +1,12 @@
+{
+  "provider": "opencode-task",
+  "reviewer_session_id": "ses_e3b6a46faffeEKksoRUWlJ1Rll",
+  "text": "{\n  \"lens\": \"verification gaps and performance claims\",\n  \"source_sha256\": \"9a27463c20ce363316cb9dca4df40724f29ed2b08e67facd6e0753532d5fbec9\",\n  \"claims_sha256\": \"75dc67196ab3ca289d8f62d53cd994b71214d4a996982bdcd940522d166fc15b\",\n  \"artifact_sha256\": \"69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c\",\n  \"verdict\": \"pass\",\n  \"findings\": []\n}",
+  "structured_output": {
+    "lens": "verification gaps and performance claims",
+    "source_sha256": "9a27463c20ce363316cb9dca4df40724f29ed2b08e67facd6e0753532d5fbec9",
+    "claims_sha256": "75dc67196ab3ca289d8f62d53cd994b71214d4a996982bdcd940522d166fc15b",
+    "artifact_sha256": "69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c",
+    "verdict": "pass", "findings": []
+  }
+}

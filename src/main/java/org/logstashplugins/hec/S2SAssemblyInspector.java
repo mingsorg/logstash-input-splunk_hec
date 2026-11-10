@@ -25,7 +25,10 @@ public final class S2SAssemblyInspector {
         case "corrupt_state" -> "Assembly state is corrupt or unsupported.";
         default -> "Assembly inspection failed internally.";
     };}
-    record Result(int status,Map<String,Object> summary) {}
+    record Result(int status,Map<String,Object> summary,S2SStreamAssembler.State state) {
+        Result(int status,Map<String,Object> summary){this(status,summary,null);}
+    }
+    interface LockedOperation<T> {T apply(Result result,S2SSecureFiles.RunnableIO verify,Object directoryKey)throws IOException;}
     interface Faults {void at(String boundary)throws IOException;}
     static final Faults NO_FAULTS=boundary->{};
     private record Identity(Object key,long size,java.nio.file.attribute.FileTime mtime,Set<PosixFilePermission> permissions) {}
@@ -128,7 +131,7 @@ public final class S2SAssemblyInspector {
             chain.clear();if(failure!=null)throw S2SSecureFiles.unsafe();
         }
     }
-    private static ObjectMapper mapper(){
+    static ObjectMapper mapper(){
         var mapper=S2SStreamAssembler.recoveryMapper(S2SAssemblyReader.HISTORY);
         mapper.getFactory().setStreamReadConstraints(StreamReadConstraints.builder().maxNestingDepth(64)
             .maxStringLength((int)S2SAssemblyStore.SAFETY_MAXIMUM).maxNumberLength(1024).build());
@@ -136,13 +139,13 @@ public final class S2SAssemblyInspector {
             .disable(DeserializationFeature.ACCEPT_FLOAT_AS_INT).disable(MapperFeature.ALLOW_COERCION_OF_SCALARS);
     }
     /** Preflight tokens before databinding collections; aggregate parser work is also bounded by physical bytes. */
-    private static byte[] json(byte[] payload,ObjectMapper mapper)throws IOException{
+    static byte[] json(byte[] payload,ObjectMapper mapper)throws IOException{
         try(var parser=mapper.createParser(payload)){
             int tokens=0;while(parser.nextToken()!=null)if(++tokens>MAX_TOKENS)throw new S2SAssemblyReader.BudgetException();
         }
         return payload;
     }
-    private static final class InspectionMapper extends ObjectMapper {
+    static final class InspectionMapper extends ObjectMapper {
         private final ObjectMapper bounded=mapper();
         @Override public <T> T readValue(byte[] bytes,Class<T> type)throws IOException{return bounded.readValue(json(bytes,bounded),type);}
         byte[] readPayload(byte[] bytes)throws IOException{return S2SAssemblyReader.checked(bytes);}
@@ -151,6 +154,9 @@ public final class S2SAssemblyInspector {
         return inspect(path,NO_FAULTS);
     }
     static Result inspect(Path path,Faults faults)throws IOException{
+        return withLocked(path,faults,(result,verify,key)->result);
+    }
+    static <T> T withLocked(Path path,Faults faults,LockedOperation<T> operation)throws IOException{
         try(var storage=new Storage(path,faults);var lockFile=storage.open("lock",S2SAssemblyReader.HISTORY)){
             FileLock acquired;
             try{acquired=lockFile.tryLock(0,Long.MAX_VALUE,true);}
@@ -161,7 +167,14 @@ public final class S2SAssemblyInspector {
                 if(!lock.isShared())throw new Refusal(4,"locking_unsupported");
                 var lockIdentity=storage.before.get(Path.of("lock"));storage.before=storage.inventory();
                 if(!lockIdentity.equals(storage.before.get(Path.of("lock"))))throw new Refusal(5,"unsafe_storage");
-                try{return summarize(storage);}
+                try{
+                    if(storage.has("recovery-incomplete"))throw new Refusal(3,"corrupt_state");
+                    var result=summarize(storage);
+                    if(result.summary().get("recovery_origin") instanceof S2SAssemblyRecovery.Origin origin){
+                        if(!origin.completeness().classification().equals("complete"))result=new Result(2,result.summary(),result.state());
+                    }
+                    return operation.apply(result,storage::unchanged,storage.directoryIdentity.key());
+                }
                 finally{storage.unchanged();}
             }
         }catch(Refusal error){throw error;}
@@ -201,6 +214,8 @@ public final class S2SAssemblyInspector {
                 .filter(name->name.matches("(snapshot|journal)-v3-[0-9]+|pointer-next-v3|backup-next-v2|next"))
                 .filter(name->!name.equals(selectedSnapshot)&&!name.equals(selectedJournal)).count());
             var snapshot=S2SAssemblyReader.snapshot(mapper.readPayload(storage.bytes("snapshot-v3-"+pointer.generation(),S2SAssemblyStore.SAFETY_MAXIMUM+4161)),pointer,mapper);
+            var origin=S2SAssemblyStore.checkRecoveryOrigin(snapshot,storage.has("recovery-origin-v1")?storage.bytes("recovery-origin-v1",16384):null);
+            if(origin!=null)result.put("recovery_origin",origin);
             try(var journal=storage.open("journal-v3-"+pointer.generation(),S2SAssemblyReader.HISTORY)){
                 try{storage.faults.at("storage.journal-read");}catch(IOException error){throw S2SSecureFiles.unsafe();}
                 var replay=S2SAssemblyReader.replay(journal,snapshot.state(),snapshot.sequence(),mapper,new S2SAssemblyReader.Validation(),MAX_RECORDS);
@@ -211,7 +226,7 @@ public final class S2SAssemblyInspector {
                 boolean incomplete=replay.prefix()!=journalSize;
                 result.put("incomplete_suffix",incomplete?Map.of("offset",replay.prefix(),"length",journalSize-replay.prefix()):null);
                 if(marker.equals("invalid"))throw new Refusal(3,"corrupt_state");
-                counts(result,replay.state());result.put("classification",incomplete?"incomplete_suffix":"complete");return new Result(incomplete?2:0,result);
+                counts(result,replay.state());result.put("classification",incomplete?"incomplete_suffix":"complete");return new Result(incomplete?2:0,result,replay.state());
             }
         }
         if(marker.equals("legacy_snapshot")&&established.equals("absent")){
@@ -219,7 +234,7 @@ public final class S2SAssemblyInspector {
             new S2SAssemblyReader.Validation().validate(state);
             result.put("format","v2");result.put("authority","original_v2");result.put("classification","complete");
             result.put("generation",null);result.put("snapshot_sequence",null);result.put("sequence",null);result.put("transactions",0);
-            result.put("journal_bytes",0);result.put("journal_prefix_bytes",0);result.put("incomplete_suffix",null);counts(result,state);return new Result(0,result);
+            result.put("journal_bytes",0);result.put("journal_prefix_bytes",0);result.put("incomplete_suffix",null);counts(result,state);return new Result(0,result,state);
         }
         if(marker.equals("invalid"))throw new Refusal(3,"corrupt_state");
         result.put("format","unpublished");result.put("authority","none");
@@ -246,6 +261,7 @@ public final class S2SAssemblyInspector {
         for(String field:List.of("physical_bytes","entries","publication_candidates","pending","outbox","receipts","contributions","transactions","journal_bytes","journal_prefix_bytes"))properties.put(field,Map.of("type","integer","minimum",0));
         for(String field:List.of("generation","snapshot_sequence","sequence"))properties.put(field,Map.of("type",List.of("integer","null"),"minimum",0));
         properties.put("blocked",Map.of("type","boolean"));
+        properties.put("recovery_origin",S2SAssemblyRecovery.originSchema());
         properties.put("incomplete_suffix",Map.of("type",List.of("object","null"),"additionalProperties",false,"required",List.of("offset","length"),"properties",Map.of("offset",Map.of("type","integer","minimum",0),"length",Map.of("type","integer","minimum",1))));
         var workFields=List.of("pending","outbox","receipts","contributions","transactions","blocked","generation","snapshot_sequence","sequence","journal_bytes","journal_prefix_bytes","incomplete_suffix");
         var legacy=new LinkedHashMap<String,Object>();

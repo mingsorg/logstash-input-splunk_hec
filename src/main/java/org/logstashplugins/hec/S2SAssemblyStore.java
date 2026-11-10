@@ -17,6 +17,7 @@ final class S2SAssemblyStore implements AutoCloseable {
     private final FileLock lock;
     private boolean failed;
     private long generation,sequence,journalBytes;
+    private String recoveryOrigin;
     private S2SStreamAssembler.State current;
     private byte[] legacy;
     private boolean migration;
@@ -29,7 +30,16 @@ final class S2SAssemblyStore implements AutoCloseable {
     static final long SAFETY_MAXIMUM=67108863L;
     private static final long RECOVERY_HISTORY=2*SAFETY_MAXIMUM+4096,RECOVERY_PHYSICAL=8*SAFETY_MAXIMUM+32768;
     record Pointer(long generation,long sequence,String snapshot) {}
-    record Snapshot(long sequence,S2SStreamAssembler.State state) {}
+    record Snapshot(long sequence,S2SStreamAssembler.State state,
+                    @com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL) String recoveryOrigin) {
+        Snapshot(long sequence,S2SStreamAssembler.State state){this(sequence,state,null);}
+    }
+    static S2SAssemblyRecovery.Origin checkRecoveryOrigin(Snapshot snapshot,byte[] metadata)throws IOException{
+        String expected=snapshot.recoveryOrigin();
+        if(expected==null){if(metadata!=null)throw new IOException("unbound assembly recovery provenance");return null;}
+        if(!expected.matches("[a-f0-9]{64}")||metadata==null||!expected.equals(TokenStore.fingerprint(metadata)))throw new IOException("assembly recovery provenance missing or mismatched");
+        return S2SAssemblyRecovery.readOrigin(metadata);
+    }
     record Change(String key,String prior,S2SStreamAssembler.Pending value,String text,List<Object> contributions) {}
     record Transaction(String configuration,List<String> removePending,List<Change> pending,List<String> removeOutputs,
                        List<S2SStreamAssembler.Output> outputs,List<String> removeReceipts,Map<String,String> receipts,List<String> receiptOrder,List<String> pendingOrder,boolean blocked) {}
@@ -62,6 +72,7 @@ final class S2SAssemblyStore implements AutoCloseable {
         return recover(value->{});
     }
     byte[] recover(Validator validator)throws IOException{
+        if(Files.exists(directory.resolve("recovery-incomplete"),LinkOption.NOFOLLOW_LINKS))throw new IOException("incomplete operator rebuild; explicit recovery required");
         if(physicalBytes()>RECOVERY_PHYSICAL)throw new IOException("assembly recovery physical safety bound exceeded");
         Path pointer=directory.resolve("current-v3");
         if(Files.exists(pointer,LinkOption.NOFOLLOW_LINKS)){
@@ -69,6 +80,10 @@ final class S2SAssemblyStore implements AutoCloseable {
             generation=published.generation;
             byte[] snapshotBytes=checked(snapshot(generation),SAFETY_MAXIMUM+4096);
             Snapshot snapshot=S2SAssemblyReader.snapshot(snapshotBytes,published,mapper());
+            Path origin=directory.resolve("recovery-origin-v1");
+            byte[] metadata=null;
+            if(Files.exists(origin,LinkOption.NOFOLLOW_LINKS)){regular(origin,16384);metadata=Files.readAllBytes(origin);}
+            checkRecoveryOrigin(snapshot,metadata);recoveryOrigin=snapshot.recoveryOrigin();
             sequence=snapshot.sequence;current=snapshot.state;
             Path journal=journal(generation);regular(journal,RECOVERY_HISTORY);
             try(FileChannel file=FileChannel.open(journal,StandardOpenOption.READ,StandardOpenOption.WRITE,LinkOption.NOFOLLOW_LINKS)){
@@ -94,6 +109,21 @@ final class S2SAssemblyStore implements AutoCloseable {
         }
         if(Files.exists(backup,LinkOption.NOFOLLOW_LINKS))throw new IOException("assembly migration backup without original state");
         return null;
+    }
+    /** Fresh destination only. No ingestion admission, delta, policy check, or source recovery. */
+    static void publishRecovered(S2SSecureFiles.Destination destination,S2SStreamAssembler.State value,
+                                 byte[] origin,S2SAssemblyInspector.Faults faults)throws IOException{
+        new S2SAssemblyReader.Validation().validate(value);
+        destination.write("lock",new byte[0],faults);
+        destination.write("state",freshRefusal(),faults);
+        byte[] metadata=wrap(origin);
+        byte[] snapshot=HecProtocol.JSON.writeValueAsBytes(new Snapshot(0,value,TokenStore.fingerprint(metadata)));
+        destination.write("snapshot-v3-1",wrap(snapshot),faults);
+        destination.write("journal-v3-1",new byte[0],faults);
+        destination.write("recovery-origin-v1",metadata,faults);
+        destination.write("established-v3",new byte[]{3},faults);
+        destination.write("current-v3",wrap(HecProtocol.JSON.writeValueAsBytes(new Pointer(1,0,TokenStore.fingerprint(snapshot)))),faults);
+        destination.finish(faults);
     }
     void initialize(S2SStreamAssembler.State validated)throws IOException{
         current=validated;
@@ -202,7 +232,7 @@ final class S2SAssemblyStore implements AutoCloseable {
     }
     private void publishValue(S2SStreamAssembler.State value)throws IOException{
         cleanup();long id=Math.addExact(generation,1);
-        byte[] payload=HecProtocol.JSON.writeValueAsBytes(new Snapshot(sequence,value));
+        byte[] payload=HecProtocol.JSON.writeValueAsBytes(new Snapshot(sequence,value,recoveryOrigin));
         if(payload.length>maximum+4096)throw new IOException("assembly snapshot quota exceeded");
         if(physicalBytes()+payload.length+8192>writePhysicalLimit())throw new IOException("assembly compaction physical quota exceeded");
         durable(snapshot(id),wrap(payload),"snapshot");durable(journal(id),new byte[0],"journal");sync("generation-directory");

@@ -12,6 +12,7 @@ import runtime
 from inspection_contract import validate
 
 SUITE = 'org.logstashplugins.hec.S2SAssemblyInspectorTest'
+RECOVERY_SUITE = 'org.logstashplugins.hec.S2SAssemblyRecoveryTest'
 
 
 def tree_digest(root):
@@ -48,7 +49,7 @@ def run_suite(host_fresh=False):
                 '-w', str(runtime.ROOT), '--entrypoint', '/bin/bash', runtime.P['logstash.latest.image'],
                 str(gradle), '--offline', '--no-daemon', '--rerun-tasks', '--max-workers=1',
                 '-PinspectionLinux', '-PinspectionRunId='+run_id,
-                'test', '--tests', SUITE, timeout=1800)
+                'test', '--tests', SUITE, '--tests', RECOVERY_SUITE, timeout=1800)
             log.write_text(output)
         xml = build/'test-results/test'/('TEST-'+SUITE+'.xml')
         suite = ET.fromstring(xml.read_bytes())
@@ -60,6 +61,12 @@ def run_suite(host_fresh=False):
             test_classes_sha256=tree_digest(build/'classes/java/test'),
             tests=int(suite.get('tests')), cases=[case.get('name') for case in suite.findall('testcase')],
             execution='fresh-host-linux' if native else 'fresh-pinned-linux-container')
+        recovery_xml=build/'test-results/test'/('TEST-'+RECOVERY_SUITE+'.xml')
+        assert recovery_xml.is_file(), 'missing fresh recovery test results'
+        recovery=ET.fromstring(recovery_xml.read_bytes())
+        assert int(recovery.get('tests'))>=10 and all(int(recovery.get(field))==0 for field in ('failures','errors','skipped'))
+        report['recovery']={'xml':recovery_xml.relative_to(runtime.ROOT).as_posix(),'sha256':hashlib.sha256(recovery_xml.read_bytes()).hexdigest(),
+            'tests':int(recovery.get('tests')),'cases':[case.get('name') for case in recovery.findall('testcase')]}
         captures=build/'inspection-captures'/('manual' if native else run_id)/'captured.json'
         captured=json.loads(captures.read_text())
         assert captured['run_id']==('manual' if native else run_id)

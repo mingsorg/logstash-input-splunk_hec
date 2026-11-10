@@ -1,0 +1,1301 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.6.0-java.gem",
+    "sha256": "69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c"
+  },
+  "validators": "3f0f9d496db77a0a097dd363f3dc552797cc784bd42b98af2cbe12ad95a00f8c",
+  "run_id": "0d6d7ba1121f4756b3bf3ec0a452c9ab",
+  "status": "pass",
+  "runs": [
+    {
+      "role": "minimum",
+      "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+      "status": "pass",
+      "cases": [
+        {
+          "case": "published-v3",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "59a90836fde0106eefc33fd949904ac1c0c7e127b86691a0b7b097e318e56cb5",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "published-v3-rebuild",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "59a90836fde0106eefc33fd949904ac1c0c7e127b86691a0b7b097e318e56cb5",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "original-v2",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4041,
+            "sha256": "93df467d06637fd20176307438839d476dd75f5359b5374d0e8dbc70fa13e62f",
+            "archive_bytes": 4166,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "original-v2-rebuild",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4041,
+            "sha256": "93df467d06637fd20176307438839d476dd75f5359b5374d0e8dbc70fa13e62f",
+            "archive_bytes": 4166,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "typed-blocked-incompatible",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 3725,
+            "sha256": "4b3110b459a0360e103463a88d04ee114a9706aa9aca9e112819b2eb531a4a20",
+            "archive_bytes": 3850,
+            "pending": 1,
+            "outbox": 3,
+            "receipts": 2,
+            "blocked": true,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "typed-blocked-incompatible-rebuild",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 3725,
+            "sha256": "4b3110b459a0360e103463a88d04ee114a9706aa9aca9e112819b2eb531a4a20",
+            "archive_bytes": 3850,
+            "pending": 1,
+            "outbox": 3,
+            "receipts": 2,
+            "blocked": true,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-header",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 4
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4064,
+            "sha256": "835444e7a1644f543cce3aa4bcbe70264402fd7bd60d99271832e250863f89d6",
+            "archive_bytes": 4189,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-header-rebuild",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 4
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4064,
+            "sha256": "835444e7a1644f543cce3aa4bcbe70264402fd7bd60d99271832e250863f89d6",
+            "archive_bytes": 4189,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "reexport-incomplete",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 0
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": null
+              },
+              "previous": {
+                "source": {
+                  "format": "v3",
+                  "authority": "published_v3",
+                  "generation": 1,
+                  "snapshot_sequence": 0,
+                  "sequence": 1
+                },
+                "completeness": {
+                  "classification": "incomplete_prefix",
+                  "omitted_range": {
+                    "offset": 4077,
+                    "length": 4
+                  }
+                },
+                "previous": null
+              }
+            },
+            "byte_count": 4254,
+            "sha256": "2dbe1f3812317dbaec3ebb28451f9d9bbf3d26692e0cbe70490750e7f060154f",
+            "archive_bytes": 4379,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-payload",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 324
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4066,
+            "sha256": "612ace63f2828a644a7da155511cf157e642685b713f14b94d616aa2a2480bb1",
+            "archive_bytes": 4191,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-payload-rebuild",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 324
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4066,
+            "sha256": "612ace63f2828a644a7da155511cf157e642685b713f14b94d616aa2a2480bb1",
+            "archive_bytes": 4191,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "reexport-incomplete",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 0
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": null
+              },
+              "previous": {
+                "source": {
+                  "format": "v3",
+                  "authority": "published_v3",
+                  "generation": 1,
+                  "snapshot_sequence": 0,
+                  "sequence": 1
+                },
+                "completeness": {
+                  "classification": "incomplete_prefix",
+                  "omitted_range": {
+                    "offset": 4077,
+                    "length": 324
+                  }
+                },
+                "previous": null
+              }
+            },
+            "byte_count": 4256,
+            "sha256": "ee584e680ac4f5291d0125064c71d048164405596b1f7b83641744e25e92a171",
+            "archive_bytes": 4381,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "complete-corrupt",
+          "exit_code": 3,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "no-authority",
+          "exit_code": 3,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "symlink",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "fifo",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "archive-existing",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "directory-existing",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "archive-tampered",
+          "exit_code": 3,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "locked",
+          "exit_code": 4,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "shared-lock",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "59a90836fde0106eefc33fd949904ac1c0c7e127b86691a0b7b097e318e56cb5",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "read-only-owner",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "59a90836fde0106eefc33fd949904ac1c0c7e127b86691a0b7b097e318e56cb5",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "missing-runtime",
+          "exit_code": 70,
+          "inventory_unchanged": true,
+          "summary": null
+        }
+      ],
+      "adoptions": [
+        {
+          "case": "published-v3",
+          "sender_order": true,
+          "compatible_adoption": true,
+          "preserved_ids": true,
+          "finalized_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54",
+            "fe7c3256-23e1-4507-8790-98ebfe75a6e0"
+          ],
+          "retry_suppression": true,
+          "original_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54"
+          ],
+          "drained": true,
+          "continuation": true
+        },
+        {
+          "case": "original-v2",
+          "original_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54"
+          ],
+          "drained": true,
+          "continuation": true,
+          "sender_order": true,
+          "compatible_adoption": true,
+          "preserved_ids": true,
+          "finalized_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54",
+            "b00bb4bc-7d63-49f8-95b3-a9c1285a670d"
+          ],
+          "retry_suppression": true
+        },
+        {
+          "case": "short-header",
+          "preserved_ids": true,
+          "compatible_adoption": true,
+          "sender_order": true,
+          "continuation": true,
+          "drained": true,
+          "original_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54"
+          ],
+          "retry_suppression": true,
+          "finalized_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54",
+            "57a30577-8483-4a22-91bc-bbc2cebde137"
+          ]
+        },
+        {
+          "case": "short-payload",
+          "finalized_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54",
+            "1b2a722b-1169-428e-8971-6b33c954c045"
+          ],
+          "retry_suppression": true,
+          "original_ids": [
+            "2ae49640-dbc2-4fe6-89d0-50cdac2aee54"
+          ],
+          "drained": true,
+          "continuation": true,
+          "sender_order": true,
+          "compatible_adoption": true,
+          "preserved_ids": true
+        }
+      ],
+      "independent_full_state": true,
+      "isolated_copy_full_state": true,
+      "types_order": true,
+      "read_only_source": true,
+      "unprivileged_owner": true,
+      "schemas_validated": true,
+      "parent_ack_tls_unchanged": true,
+      "no_checkout": true,
+      "no_compiler_at_runtime": true,
+      "no_python_at_runtime": true,
+      "network": "none",
+      "installed_launcher": "/usr/share/logstash/vendor/local_gems/ae67996c/plugin/lib/splunk-hec-recover"
+    },
+    {
+      "role": "latest",
+      "image": "docker.elastic.co/logstash/logstash@sha256:d170c92166492ff82433395734121dcd2c73140038a03e252299384a01c9aae5",
+      "status": "pass",
+      "cases": [
+        {
+          "case": "published-v3",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "c6564a79c493174f5ffc0f13fd6488289c5dd4a0efa5bb935b82d55cf7456c48",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "published-v3-rebuild",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "c6564a79c493174f5ffc0f13fd6488289c5dd4a0efa5bb935b82d55cf7456c48",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "original-v2",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4041,
+            "sha256": "809fe2cd9c04f929c38b78f6c0c1c7ed5b382578a70a9fbdfe977bf8fa95f87b",
+            "archive_bytes": 4166,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "original-v2-rebuild",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4041,
+            "sha256": "809fe2cd9c04f929c38b78f6c0c1c7ed5b382578a70a9fbdfe977bf8fa95f87b",
+            "archive_bytes": 4166,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "typed-blocked-incompatible",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 3725,
+            "sha256": "1a48e9c2e588446738e578842ac277d75f828d167686b9ff51dbfcceea6a3853",
+            "archive_bytes": 3850,
+            "pending": 1,
+            "outbox": 3,
+            "receipts": 2,
+            "blocked": true,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "typed-blocked-incompatible-rebuild",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v2",
+                "authority": "original_v2",
+                "generation": null,
+                "snapshot_sequence": null,
+                "sequence": null
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 3725,
+            "sha256": "1a48e9c2e588446738e578842ac277d75f828d167686b9ff51dbfcceea6a3853",
+            "archive_bytes": 3850,
+            "pending": 1,
+            "outbox": 3,
+            "receipts": 2,
+            "blocked": true,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-header",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 4
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4064,
+            "sha256": "4bb2638c50f27b88b332197b29636c8da9ee36845b07650fa57aa8af8d0ad7fe",
+            "archive_bytes": 4189,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-header-rebuild",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 4
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4064,
+            "sha256": "4bb2638c50f27b88b332197b29636c8da9ee36845b07650fa57aa8af8d0ad7fe",
+            "archive_bytes": 4189,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "reexport-incomplete",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 0
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": null
+              },
+              "previous": {
+                "source": {
+                  "format": "v3",
+                  "authority": "published_v3",
+                  "generation": 1,
+                  "snapshot_sequence": 0,
+                  "sequence": 1
+                },
+                "completeness": {
+                  "classification": "incomplete_prefix",
+                  "omitted_range": {
+                    "offset": 4077,
+                    "length": 4
+                  }
+                },
+                "previous": null
+              }
+            },
+            "byte_count": 4254,
+            "sha256": "8763b774c16ad70524ba99faf97b466c17b1d1bf068adff5bb430afc32d17333",
+            "archive_bytes": 4379,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-payload",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 324
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4066,
+            "sha256": "c8eec635162097b378bbea0ce1b3145d9480f0892d5da3dd22baacc220945a45",
+            "archive_bytes": 4191,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "short-payload-rebuild",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "rebuild",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": {
+                  "offset": 4077,
+                  "length": 324
+                }
+              },
+              "previous": null
+            },
+            "byte_count": 4066,
+            "sha256": "c8eec635162097b378bbea0ce1b3145d9480f0892d5da3dd22baacc220945a45",
+            "archive_bytes": 4191,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "reexport-incomplete",
+          "exit_code": 2,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "incomplete_prefix",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 0
+              },
+              "completeness": {
+                "classification": "incomplete_prefix",
+                "omitted_range": null
+              },
+              "previous": {
+                "source": {
+                  "format": "v3",
+                  "authority": "published_v3",
+                  "generation": 1,
+                  "snapshot_sequence": 0,
+                  "sequence": 1
+                },
+                "completeness": {
+                  "classification": "incomplete_prefix",
+                  "omitted_range": {
+                    "offset": 4077,
+                    "length": 324
+                  }
+                },
+                "previous": null
+              }
+            },
+            "byte_count": 4256,
+            "sha256": "2de5b56b52a09eac919a8065e64a6aab0e386bfe7b9f91eb909257baecbee858",
+            "archive_bytes": 4381,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "complete-corrupt",
+          "exit_code": 3,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "no-authority",
+          "exit_code": 3,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "symlink",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "fifo",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "archive-existing",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "directory-existing",
+          "exit_code": 5,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "archive-tampered",
+          "exit_code": 3,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "locked",
+          "exit_code": 4,
+          "inventory_unchanged": true,
+          "summary": null
+        },
+        {
+          "case": "shared-lock",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "c6564a79c493174f5ffc0f13fd6488289c5dd4a0efa5bb935b82d55cf7456c48",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "read-only-owner",
+          "exit_code": 0,
+          "inventory_unchanged": true,
+          "summary": {
+            "schema_version": 1,
+            "command": "export",
+            "classification": "complete",
+            "restart_compatibility": "not_evaluated",
+            "origin": {
+              "source": {
+                "format": "v3",
+                "authority": "published_v3",
+                "generation": 1,
+                "snapshot_sequence": 0,
+                "sequence": 1
+              },
+              "completeness": {
+                "classification": "complete",
+                "omitted_range": null
+              },
+              "previous": null
+            },
+            "byte_count": 4033,
+            "sha256": "c6564a79c493174f5ffc0f13fd6488289c5dd4a0efa5bb935b82d55cf7456c48",
+            "archive_bytes": 4158,
+            "pending": 1,
+            "outbox": 1,
+            "receipts": 1,
+            "blocked": false,
+            "contributions": 1
+          }
+        },
+        {
+          "case": "missing-runtime",
+          "exit_code": 70,
+          "inventory_unchanged": true,
+          "summary": null
+        }
+      ],
+      "adoptions": [
+        {
+          "case": "published-v3",
+          "retry_suppression": true,
+          "finalized_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b",
+            "c22b72e4-628c-4409-992a-8d4e9ef2da83"
+          ],
+          "preserved_ids": true,
+          "compatible_adoption": true,
+          "sender_order": true,
+          "continuation": true,
+          "drained": true,
+          "original_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b"
+          ]
+        },
+        {
+          "case": "original-v2",
+          "sender_order": true,
+          "compatible_adoption": true,
+          "preserved_ids": true,
+          "finalized_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b",
+            "47bfdc9d-1f73-4b4a-9f03-08b13ad23433"
+          ],
+          "retry_suppression": true,
+          "original_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b"
+          ],
+          "drained": true,
+          "continuation": true
+        },
+        {
+          "case": "short-header",
+          "continuation": true,
+          "drained": true,
+          "original_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b"
+          ],
+          "retry_suppression": true,
+          "finalized_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b",
+            "509e1b16-0bae-4d78-b1b9-7c58154ece39"
+          ],
+          "preserved_ids": true,
+          "compatible_adoption": true,
+          "sender_order": true
+        },
+        {
+          "case": "short-payload",
+          "finalized_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b",
+            "225edfff-46e8-4c81-a9c5-ffb75b8c88d1"
+          ],
+          "preserved_ids": true,
+          "compatible_adoption": true,
+          "sender_order": true,
+          "continuation": true,
+          "drained": true,
+          "original_ids": [
+            "dcc226ba-fdf9-4c17-b4da-9aebaadb782b"
+          ],
+          "retry_suppression": true
+        }
+      ],
+      "independent_full_state": true,
+      "isolated_copy_full_state": true,
+      "types_order": true,
+      "read_only_source": true,
+      "unprivileged_owner": true,
+      "schemas_validated": true,
+      "parent_ack_tls_unchanged": true,
+      "no_checkout": true,
+      "no_compiler_at_runtime": true,
+      "no_python_at_runtime": true,
+      "network": "none",
+      "installed_launcher": "/usr/share/logstash/vendor/local_gems/2c4a8fef/plugin/lib/splunk-hec-recover"
+    }
+  ]
+}

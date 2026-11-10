@@ -1,0 +1,909 @@
+{
+  "matrix": [
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "aa455729d4eb",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=aa455729d4eb guid=D81E4156-28A9-4C04-A067-B3928C7FE1D6 fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319150",
+          "_done": "_done",
+          "_guid": "D81E4156-28A9-4C04-A067-B3928C7FE1D6",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "d81e4156-28a9-4c04-a067-b3928c7fe1d6",
+        "sender_hostname": "aa455729d4eb",
+        "compression_requested": false,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": true,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:477e0ff7a9d7ad0259d56566d5fc26981558d5a33f2e60745d77bd158a88c95f",
+        "s2s-v1:3fadaf6ddccadfbbe8bca09f0d5819d800afb8feb544809790916022c38a1839",
+        "s2s-v1:c3a16a0e707e041c5bb7d7b37b20a365282836386fd7fbdc838ab56050e69134",
+        "s2s-v1:4fe55bb12762f1552eaede72a89d15f6d115e30bcb5a77b4684f6de236d56fa7",
+        "s2s-v1:4c678f91d8d22b9b6059b87b091c9c19a6d10006c8dac615cc8daf6512a35da2",
+        "s2s-v1:b785af5c1f83917aa5d26a4ab79619708abf89c4b16e86081241cee8a38b5417"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "9c953ca9d23a",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=9c953ca9d23a guid=09F41A78-BF2D-4B48-BBEB-774C660834ED fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319190",
+          "_done": "_done",
+          "_guid": "09F41A78-BF2D-4B48-BBEB-774C660834ED",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "09f41a78-bf2d-4b48-bbeb-774c660834ed",
+        "sender_hostname": "9c953ca9d23a",
+        "compression_requested": false,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": false,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:5acf6e08e82e75706fb825b06be7c00bbf8c8d160834e075d5cfd8dff6a2c586",
+        "s2s-v1:03797e78eb209c657b572cf339ddae8a3cab5542f4a20e6bbadb0601b76a8612",
+        "s2s-v1:9b9df5c57bb4726b50012a1309cda1f265da4b2fdf42736ae54ad2ab733d86ec",
+        "s2s-v1:f090d9a16762698a9689689107364b75066c81d89a23cb1b7165d16647e84b2e",
+        "s2s-v1:ba803343efdabe6c3ffd746c0b9533ae2226ce08d3b8993b387077342c7b3f94",
+        "s2s-v1:04a7f9c2b37bab42830d4209100546979648f7674a3a5dca920ff89800a73bc0"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "08b85f0f4eb0",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=08b85f0f4eb0 guid=FA8F8AE9-6FEB-42FB-B488-A034CA905C04 fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319224",
+          "_done": "_done",
+          "_guid": "FA8F8AE9-6FEB-42FB-B488-A034CA905C04",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "fa8f8ae9-6feb-42fb-b488-a034ca905c04",
+        "sender_hostname": "08b85f0f4eb0",
+        "compression_requested": true,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": true,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:9492618f32261986de048f1e3cfc77129a432129124350d90f93126b9690073c",
+        "s2s-v1:ea8c2a8c6d341f20a30984d2c8c33e512b24c0a01d9dd0fa37863e1f04ffa0c7",
+        "s2s-v1:022078d8a9a742d2fbdd317793341777c9c3dc99c8997847611996a0af877e46",
+        "s2s-v1:6c46eec13b91604d040ff7ecf084d9f3ea9c26dc81869752e830e676d77ca1d5",
+        "s2s-v1:f16dfabea3ee6b7d737c69411046b45fdaaa998442acf2c2c1529ca2185820c6",
+        "s2s-v1:1910e0b4f250b10de4dcebb92f54fc8fd1736b34956d45098cbcee41bfac2870"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "53173af05520",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=53173af05520 guid=680BFB29-F7C0-4D1E-8411-0FB6B73A1998 fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319289",
+          "_done": "_done",
+          "_guid": "680BFB29-F7C0-4D1E-8411-0FB6B73A1998",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "680bfb29-f7c0-4d1e-8411-0fb6b73a1998",
+        "sender_hostname": "53173af05520",
+        "compression_requested": true,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": false,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:6baa7e5992d3d5d91aece43890b51da500609001bc289dc51a088d0073d08418",
+        "s2s-v1:2887e0316d03be0fa8a18ad45ce8d947ae32a6d1fb592571dc4ddeb91fd92ec9",
+        "s2s-v1:72dc70fec606d1c9be8cfd1bc69234e4f9bb87b4baee44ababcd296078f041f2",
+        "s2s-v1:0f2fc0fec940e09b7e35a0e78dc0d97c53cebb5218010083d43825c3cc6f106a",
+        "s2s-v1:3788fbd6c77f2562c7cdbf365a2c22bd3c10b82b047de9bb69209510a4ff3119",
+        "s2s-v1:391a94436414606125644e3b6d5937ad984a62a35ef39d8c6347c00221a7e0b0"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "0a0743ce2144",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=0a0743ce2144 guid=ED70F883-DE68-4B53-9ADD-794FBB8F399B fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319175",
+          "_done": "_done",
+          "_guid": "ED70F883-DE68-4B53-9ADD-794FBB8F399B",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "ed70f883-de68-4b53-9add-794fbb8f399b",
+        "sender_hostname": "0a0743ce2144",
+        "compression_requested": false,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": true,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:8514e817e426fe9db2a4983cb202616f36d9d48b7eab7ace59741448751d40ae",
+        "s2s-v1:e49e8aaf98cc36feb7fd4e68ad935706c088fd3575e4220de1fe91fb460abb6f",
+        "s2s-v1:0fa617caf68d137c70e11eb17fce2fa49769a56654ce68c719d0a580d9c170f3",
+        "s2s-v1:f48f8d4d7225603011d077c3f5d40e5ef1c8cd437840ba652f9a84d58637c4fe",
+        "s2s-v1:4784cbf958bf154bd80f966cbe39000ec4c8db5d8f14e034e27fd1119d30811a",
+        "s2s-v1:677ba31ef6bb06c5d2c3cf3d28ed14f1fd2e51631f987dbe445c4ecdb452812b"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "10ad0ed47b25",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=10ad0ed47b25 guid=81EDA273-2FE8-4A17-9DBD-814A048A21BC fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319236",
+          "_done": "_done",
+          "_guid": "81EDA273-2FE8-4A17-9DBD-814A048A21BC",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "81eda273-2fe8-4a17-9dbd-814a048a21bc",
+        "sender_hostname": "10ad0ed47b25",
+        "compression_requested": false,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": false,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:8603c9c535dfb1a67d185b45882b2465d7a08a6136689413d4ec2fb981bbad71",
+        "s2s-v1:cea7c3e9fead686937a701c181149cfca3b9c6d3860412ec9f5ed0c39ea7d834",
+        "s2s-v1:d06ed5dc2a35372623c62806aa5e3c65b49e4513b15db1bae326a5be6ff14de7",
+        "s2s-v1:31977f7875f6f6a0f5ce131e1612dee25fdaf35211db5138f40daca60ebd3324",
+        "s2s-v1:13b5084344e83e7cc0c6cdfcd3cf8dfa6edd16bc7d3be2910f265ebb65cfe3aa",
+        "s2s-v1:470cc9b2e588ffe4eede4ec450ae19568b474d9c9ffa722025f167da38515418"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "406e2b36c29e",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=406e2b36c29e guid=03C542B7-187A-4DE9-8F5B-3338CE287499 fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319320",
+          "_done": "_done",
+          "_guid": "03C542B7-187A-4DE9-8F5B-3338CE287499",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "03c542b7-187a-4de9-8f5b-3338ce287499",
+        "sender_hostname": "406e2b36c29e",
+        "compression_requested": true,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": true,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:116e697570bb304c947163a93aff5ddfd7f881e07687315486b42be6d08cafbc",
+        "s2s-v1:e1cf6690f7412397020da4bb795ef2ba1cbc5ea34df2f7528328d46762cd20dc",
+        "s2s-v1:3ccd1540040fd50b0199c0c61d08aa0572895cc0612e2c810b629afe07e76d31",
+        "s2s-v1:9ebc983bf9f916010eae7ffc510af8d41e482726e2ebb51da3c7e04883a4bd57",
+        "s2s-v1:bf7b60bd9d32162fe14c60bd76d154c67ce8ae4d203ebce9c8fa2808485bc347",
+        "s2s-v1:a7b97fe2d9cc1ce953adc5d3193a66b35c55efe39eb448082dbe52cbbaa9738e"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": true,
+      "source_event_count": 6,
+      "sender_hostname": "cbe163daecbb",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "management_port": "8089",
+        "forwarder_info": {
+          "MetaData:Host": "host::$decideOnStartup",
+          "__s2s_eventId": "0",
+          "_ingLatColor": "green",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=cbe163daecbb guid=9ABB68EF-8510-424C-BEB0-1C861A51150D fwdType=full lastIndexer=None ssl=true protocolLevel=7",
+          "_MetaData:Index": "_internal",
+          "_time": "1794319370",
+          "_done": "_done",
+          "_guid": "9ABB68EF-8510-424C-BEB0-1C861A51150D",
+          "MetaData:Source": "source::fwd",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_ingLatChained": "{\"green\":{\"count\":0}}"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "9abb68ef-8510-424c-beb0-1c861a51150d",
+        "sender_hostname": "cbe163daecbb",
+        "compression_requested": true,
+        "peer_ip": "172.17.0.1",
+        "ack_requested": false,
+        "event_id": "4"
+      },
+      "ids": [
+        "s2s-v1:83b552b8a49eb797ecb34cab1772fc07c6feffd3d4d247c79fa4a0b988d35187",
+        "s2s-v1:bff08923d8da044657c8f6fcefd457a262159d256316e153032ab3a23fc121ec",
+        "s2s-v1:25e73f1e9ca590b969a213025407210a2d20256d83919e8c43cc5c4b8706a767",
+        "s2s-v1:1085dbac933f805a8a9d254da84d080f41844276ad173fc6ef4c4a5cda76270f",
+        "s2s-v1:4c7d01b8933eda0c88406e7ea205170efe7d9ec0469234e2e39fb35310735ea1",
+        "s2s-v1:9e0b622ec58058ece9d923529be6f13a08edac7049de066f79b1b8148f1fdd2c"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "929f5ff4bef7",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "929f5ff4bef7",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": true,
+        "compression_requested": false,
+        "forwarder_info": {
+          "_guid": "DD7CF94D-9C2F-498F-8400-586B6742E4F2",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319540",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=929f5ff4bef7 guid=DD7CF94D-9C2F-498F-8400-586B6742E4F2 fwdType=uf lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": false,
+        "protocol": "s2s-v4",
+        "sender_guid": "dd7cf94d-9c2f-498f-8400-586b6742e4f2"
+      },
+      "ids": [
+        "s2s-v1:758639af12189718f6992dc5ed069d963d2022c10a5b1e8a56a3262c8ef9d727",
+        "s2s-v1:f53701945811984c90a6067bf034ad6a76825325c53b539949492bf4ef0a2d96",
+        "s2s-v1:c3ae7a2ef49bff2e173c28cf6c27b2fcd0ddfb2e845011b3b0398d38912422d3",
+        "s2s-v1:f940560292c22b6256d85022f485685b188240007d7ac5673fa815a832b2f116",
+        "s2s-v1:a739e60dc85831162fa0dd809d7ddc97cc7d92306afbfaad92f58fb3a0debac5",
+        "s2s-v1:937b2be2cac767fc492d59b38d2ebc905f4a40e78686b955a6c19577016c6f5e"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "99bfa84f8bc5",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "99bfa84f8bc5",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": false,
+        "compression_requested": false,
+        "forwarder_info": {
+          "_guid": "3E7F4EDE-E1DE-4312-A9AA-C10204B3E46A",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319581",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=99bfa84f8bc5 guid=3E7F4EDE-E1DE-4312-A9AA-C10204B3E46A fwdType=uf lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": false,
+        "protocol": "s2s-v4",
+        "sender_guid": "3e7f4ede-e1de-4312-a9aa-c10204b3e46a"
+      },
+      "ids": [
+        "s2s-v1:28709c14e75c8018a0a30604916b59b911f5192a3e51df6444fa5a4d7f67c675",
+        "s2s-v1:c9973520d4f617d7e5a93e834a84b89cc772096c9a86737b4f5ebf2fc1f08ccf",
+        "s2s-v1:64417e08c7b30b57f48bfac49688d9dfa1bf54598db3d065ec1e0579766fecec",
+        "s2s-v1:f12862b82c17a9539f12c69bd05a1e4d7e04cc0199a29547dffede9eb5e11b63",
+        "s2s-v1:eaaa712b50309c2a9c604c0b452a5e88dfafe1f2a2f09349e73c4d392ad6780d",
+        "s2s-v1:5e61d873aa1bfdb304737274cdb16674928ae2946c8133c6e2985fe6468fbeb5"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "b4f6ac4ee8b8",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "b4f6ac4ee8b8",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": true,
+        "compression_requested": true,
+        "forwarder_info": {
+          "_guid": "1B01180F-5D31-467E-A490-6ED343907D11",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319619",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=b4f6ac4ee8b8 guid=1B01180F-5D31-467E-A490-6ED343907D11 fwdType=uf lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "1b01180f-5d31-467e-a490-6ed343907d11"
+      },
+      "ids": [
+        "s2s-v1:cc4d1af698a8e116346f36e58fce397ad14433e8cadcee0f03870f7825341c61",
+        "s2s-v1:6cfc5f5933d33072b590347e5bcaf805af9d1b5ef7668d445d3b9b6f5acf98e4",
+        "s2s-v1:b87481830c8f58dc1c44f53e3615f4f8d541e747004cb9acb18d105e94ce3982",
+        "s2s-v1:fc0af8b5b983ee16bac5c717d9fd015f31658eaea5bfe7e6931334d955f6a4db",
+        "s2s-v1:f6c5a71f9bcd0fb9cbd7d1185b33a87e19efb1da9b18ac65c791945ad83081ce",
+        "s2s-v1:95d5109ebc3f92c6bde9d90bb1ca51926aeb63c28a55038a05cdb4ba8e94ab25"
+      ]
+    },
+    {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "d7a02f818461",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "d7a02f818461",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": false,
+        "compression_requested": true,
+        "forwarder_info": {
+          "_guid": "DBDCA4A6-3EC0-4A77-95F3-7FEAA6E3A6CA",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319659",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=d7a02f818461 guid=DBDCA4A6-3EC0-4A77-95F3-7FEAA6E3A6CA fwdType=uf lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "dbdca4a6-3ec0-4a77-95f3-7feaa6e3a6ca"
+      },
+      "ids": [
+        "s2s-v1:bdcabede2288c507ec3e9e7e61b80fe60bc350eec03b7dc389b6ba7c58d01982",
+        "s2s-v1:c12d36e2f9cbbfceb4b9a0840203ef689175dba5d89ec969b9d3a0a02d0a4a57",
+        "s2s-v1:0f4c3b0ad2eeda74eea044ddae53a62bf4ffb772139a537652b8e0eddfc7b085",
+        "s2s-v1:4d67b79572d3709cfc4cf0f00375879ab1aac794b250428e09cea5f534abbb8e",
+        "s2s-v1:6a65ffd1b46320026755515e37d4c77cacb423b6b6c8208d69dd10387f62fed8",
+        "s2s-v1:7b880d202a954f7def17a383f1d629c1a227942630dafca59aed10c3b03af476"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "653ac10f5930",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "653ac10f5930",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": true,
+        "compression_requested": false,
+        "forwarder_info": {
+          "_guid": "04FC5617-6EF0-4322-883B-23564E2C4843",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319565",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=653ac10f5930 guid=04FC5617-6EF0-4322-883B-23564E2C4843 fwdType=full lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": false,
+        "protocol": "s2s-v4",
+        "sender_guid": "04fc5617-6ef0-4322-883b-23564e2c4843"
+      },
+      "ids": [
+        "s2s-v1:ad4288e70d2cfc086c7aeaffd8bfa7d2d6097d635bfb1d52a23be066ce725a2c",
+        "s2s-v1:61b64d159e4363501dd31ee4d30fcc932c6b4b9ce67a02fb6256027f18f86212",
+        "s2s-v1:cadedc3d0a4b7e0c416228aca8f2ac18d787afeb0feaa1d7fcfb921fcf4cb9f8",
+        "s2s-v1:e82735858d210fb454a1a8880d35b25311534a75268146229aac4d9adfbe76dc",
+        "s2s-v1:8f20af2287142ac77ae9dab856bcd1b0e4d4d96cd378cb0c2b57d68ad043457f",
+        "s2s-v1:e62a9b637f33ad4063451664212fb2040628a39db9d496d81adcb868630f45cf"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "37929d4c182b",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "37929d4c182b",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": false,
+        "compression_requested": false,
+        "forwarder_info": {
+          "_guid": "8457A675-B04C-4BAA-A1C6-2DB572A54C3D",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319630",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=37929d4c182b guid=8457A675-B04C-4BAA-A1C6-2DB572A54C3D fwdType=full lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": false,
+        "protocol": "s2s-v4",
+        "sender_guid": "8457a675-b04c-4baa-a1c6-2db572a54c3d"
+      },
+      "ids": [
+        "s2s-v1:4f46e5abbe93fc49bbfadcbfd69b2f99ef404329d9d64152029a94c801360fad",
+        "s2s-v1:3629a01e409a1db51a01dd7c206e3553181963ead5cfa7d81c30afb4c4f382a4",
+        "s2s-v1:1c8a7db8413c759d1ca427e687652297cc5bf3d9d61aca7a5cabdf5ebd939a33",
+        "s2s-v1:cd47ee7a0b46c9bcc0a94d13446bad91d36b9e0e1255b46f20eb496f8618f86e",
+        "s2s-v1:b47c7e5c77b55ddc356f2dc6ac9066f25126b614056134413941310db6b7aaf5",
+        "s2s-v1:f2b686c14c3b081255920fab73efdd0c4954edeea652ba5f090c0d243f8fb367"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "8cf71c33a2f5",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "8cf71c33a2f5",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": true,
+        "compression_requested": true,
+        "forwarder_info": {
+          "_guid": "B7B06EE3-7A38-4997-A27C-3E9C2CC92FD9",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319681",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=8cf71c33a2f5 guid=B7B06EE3-7A38-4997-A27C-3E9C2CC92FD9 fwdType=full lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "b7b06ee3-7a38-4997-a27c-3e9c2cc92fd9"
+      },
+      "ids": [
+        "s2s-v1:1bfb09924123d780acc5822dd3551bd88cdceec4a8b335038ffb54c5079592db",
+        "s2s-v1:3ee83f5404eaaf797340a15d3fe35e506c6077a35bb0b0d39cd9322b95880d96",
+        "s2s-v1:f2e6f66e2f35b6bffa2032817453f9d248bedceabd036b5d6741b74c1cef7725",
+        "s2s-v1:71f4734d4f98f2d9e0a287c38c1c8720341601ed12adcd336ac126d8bd58a5e5",
+        "s2s-v1:e1f39ab5df5f68970bff96b69c6df3f18d4a2de114de4623db50c96c9fe30201",
+        "s2s-v1:27e118a6cd8fee2d8343c986876234760b96b2cd0ddfac4bb6aa77f25cc65a41"
+      ]
+    },
+    {
+      "role": "hf",
+      "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+      "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+      "compressed": true,
+      "useACK": false,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "994f604ebc09",
+      "hec_metadata": "full",
+      "tcp_transport": {
+        "peer_ip": "172.17.0.1",
+        "sender_hostname": "994f604ebc09",
+        "management_port": "8089",
+        "event_id": "4",
+        "ack_requested": false,
+        "compression_requested": true,
+        "forwarder_info": {
+          "_guid": "EDF2157A-006E-4749-9BC8-DA320AE8F78E",
+          "MetaData:Host": "host::$decideOnStartup",
+          "MetaData:Source": "source::fwd",
+          "_ingLatColor": "green",
+          "_time": "1794319728",
+          "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+          "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=994f604ebc09 guid=EDF2157A-006E-4749-9BC8-DA320AE8F78E fwdType=full lastIndexer=None ssl=false protocolLevel=7",
+          "_done": "_done",
+          "_MetaData:Index": "_internal",
+          "__s2s_eventId": "0",
+          "_ingLatChained": "{\"green\":{\"count\":0}}",
+          "MetaData:Sourcetype": "sourcetype::fwdinfo"
+        },
+        "stream_compressed": true,
+        "protocol": "s2s-v4",
+        "sender_guid": "edf2157a-006e-4749-9bc8-da320ae8f78e"
+      },
+      "ids": [
+        "s2s-v1:80a8c4eb6dcd148306e887d5c129bd2a7c2b5e09e821f2913cbc683a6107b423",
+        "s2s-v1:0dde4daa40fc654e5093987030c5129a4590b3c006ebcf2604f9112b1a65e8e4",
+        "s2s-v1:6ac01c5c62eee60fb8b5b84441e6eaa9ca8aa3171692b3c5aee8b1b0b305a84c",
+        "s2s-v1:76c143fed56afff274a96680cb91b12f8690b46080f7aa6c78deaea6df7821c4",
+        "s2s-v1:9c204d6c5d5eb955d5f0a84815b5f77435605d6712dd49496fbe81db3c9d57cc",
+        "s2s-v1:52ec536b1b8fdc18af502af16e0d3c89756e7c4d1f3b3afddf2a3f91f4776e39"
+      ]
+    }
+  ],
+  "status": "pass",
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.6.0-java.gem",
+    "sha256": "69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c"
+  },
+  "startup_mode": "direct",
+  "restart": {
+    "role": "uf",
+    "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+    "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+    "compressed": true,
+    "useACK": true,
+    "tls_verified_hostname_and_trust": true,
+    "source_event_count": 6,
+    "sender_hostname": "d4b9d73b2c06",
+    "hec_metadata": "full",
+    "tcp_transport": {
+      "management_port": "8089",
+      "forwarder_info": {
+        "MetaData:Host": "host::$decideOnStartup",
+        "__s2s_eventId": "0",
+        "_ingLatColor": "green",
+        "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=d4b9d73b2c06 guid=55F51444-2D5C-4DC6-B2C1-543F16F0C3C7 fwdType=uf lastIndexer=None ssl=true protocolLevel=7",
+        "_MetaData:Index": "_internal",
+        "_time": "1794319400",
+        "_done": "_done",
+        "_guid": "55F51444-2D5C-4DC6-B2C1-543F16F0C3C7",
+        "MetaData:Source": "source::fwd",
+        "MetaData:Sourcetype": "sourcetype::fwdinfo",
+        "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+        "_ingLatChained": "{\"green\":{\"count\":0}}"
+      },
+      "stream_compressed": true,
+      "protocol": "s2s-v4",
+      "sender_guid": "55f51444-2d5c-4dc6-b2c1-543f16f0c3c7",
+      "sender_hostname": "d4b9d73b2c06",
+      "compression_requested": true,
+      "peer_ip": "172.17.0.1",
+      "ack_requested": true,
+      "event_id": "4"
+    },
+    "ids": [
+      "s2s-v1:9fe7f0d9ba3e0697ec1a5aa104d3954fa5b6a4c29b27d554fde00e6223b68ae8",
+      "s2s-v1:8e4d2352b37de1eb10b8d1d1d32b06a67e89cb5ee1a7254c4eb571995bbf4581",
+      "s2s-v1:4754a2d6659083c0f9c297c299928360a1e729da0afc7c104e29c552d02ecf37",
+      "s2s-v1:f9b28b96fb5a92195518ec3f056513ca89415d2588cbb15b00c57b301521e4c9",
+      "s2s-v1:a4200d758808caf0f2f49df151f7d2311e4c5341b292b92d1bbe3752fe35b0a5",
+      "s2s-v1:f7cf8661ad1c099428612dc7654d5d43b66f983355d84fb6c3a348656458930c"
+    ],
+    "restart": {
+      "receiver_killed_with_sigkill": true,
+      "appended_while_down": 3,
+      "all_delivered_after_restart": true,
+      "certificate_reused": true,
+      "duplicates_possible_ids_stable": true,
+      "delivery_counts": {
+        "outage-1-aa8600": 1,
+        "outage-2-3244f5": 1,
+        "outage-3-8cf301": 1
+      }
+    }
+  },
+  "receiver_warnings": {
+    "tls": [],
+    "plaintext": []
+  },
+  "plaintext_startup_warning_logged": {
+    "tls": false,
+    "plaintext": true
+  },
+  "largest_event_line_bytes": {
+    "tls": 1503553,
+    "plaintext": 1503555
+  },
+  "hec_metadata_modes": {
+    "id_only": {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "e4dc62ecddfe",
+      "hec_metadata": "id_only",
+      "ids": [
+        "s2s-v1:9e8ddce0052c15fa680dc0940781f395d4c031cbddfacbc8e3d7551e51dd1ee2",
+        "s2s-v1:2be1f9151158d3fdf1a5c1a4c10c064d8007e6b9cab636ad4efd31982a7814e1",
+        "s2s-v1:20fd78cd043bb637220584ea3b7ff8c48045d971f9a26686fe78860621aa523c",
+        "s2s-v1:f808006878b123e4e2166fd3389813303e4fa421f11f7ad1db3dd12a54473936",
+        "s2s-v1:a539aa872e66b6e2f3fbaa7e15c1b09e447158f9288e1c22782c6b688fcbe8f0",
+        "s2s-v1:fcee9575784873354ed78eee8c0871e47120364eda15e7cd6401dcd70b33eb23"
+      ]
+    },
+    "none": {
+      "role": "uf",
+      "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+      "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+      "compressed": false,
+      "useACK": true,
+      "tls_verified_hostname_and_trust": false,
+      "source_event_count": 6,
+      "sender_hostname": "51fca3867ad1",
+      "hec_metadata": "none"
+    }
+  },
+  "minimum_logstash": {
+    "image": "docker.elastic.co/logstash/logstash@sha256:b08a2b7767573295e6a53b72214ca42522c4c7a8edbbc7e0af8ef470dcf2f2d3",
+    "version": "9.5.0",
+    "runs": [
+      {
+        "role": "uf",
+        "image": "splunk/universalforwarder@sha256:aa85cb120d4042c70e6fbba096fded69cd438679c9684d47eb442a003ef05e67",
+        "version": "Warning: Attempting to revert the SPLUNK_HOME ownership\nWarning: Executing \"chown -R splunk:splunk /opt/splunkforwarder\"\nSplunk Universal Forwarder 10.6.1.1 (build b2ae2962645c)",
+        "compressed": true,
+        "useACK": true,
+        "tls_verified_hostname_and_trust": true,
+        "source_event_count": 6,
+        "sender_hostname": "d32c3c653e45",
+        "hec_metadata": "full",
+        "tcp_transport": {
+          "management_port": "8089",
+          "compression_requested": true,
+          "protocol": "s2s-v4",
+          "stream_compressed": true,
+          "event_id": "4",
+          "sender_hostname": "d32c3c653e45",
+          "peer_ip": "172.17.0.1",
+          "forwarder_info": {
+            "MetaData:Sourcetype": "sourcetype::fwdinfo",
+            "__s2s_capabilities": "cli_can_rcv_hb=1;compression=1;pl=7;v4=1",
+            "__s2s_eventId": "0",
+            "_time": "1794319958",
+            "MetaData:Host": "host::$decideOnStartup",
+            "MetaData:Source": "source::fwd",
+            "_ingLatColor": "green",
+            "_ingLatChained": "{\"green\":{\"count\":0}}",
+            "_done": "_done",
+            "_MetaData:Index": "_internal",
+            "_guid": "198E8F44-EB0A-401F-9C2C-1E93A030D87F",
+            "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=d32c3c653e45 guid=198E8F44-EB0A-401F-9C2C-1E93A030D87F fwdType=uf lastIndexer=None ssl=true protocolLevel=7"
+          },
+          "sender_guid": "198e8f44-eb0a-401f-9c2c-1e93a030d87f",
+          "ack_requested": true
+        },
+        "ids": [
+          "s2s-v1:753a87ea2b5b0fce3d83f311d8fafa902acb35c8d258cafa2ddd392d203feb0c",
+          "s2s-v1:13dcc1f93ae925ce30a99755688763e2bca0d5421192a19119df26ab4c7a7c2a",
+          "s2s-v1:211f3953a8ae672dd9156753edd3105a3e902e57d0cc2b74fb55cae66cc336d9",
+          "s2s-v1:a2defafb30b7142d5f4647136b9aa0f4027697010f2b0639d522984a32b75bfb",
+          "s2s-v1:2537bca93714189d5e99df93db6589139f426790ce4f68e6a9d39b4c429f3ce2",
+          "s2s-v1:c7f901866a45b634858ec3bdded5a450cba7b11bbf19c03451208d87fd0030c5"
+        ]
+      },
+      {
+        "role": "hf",
+        "image": "splunk/splunk@sha256:2a7cf9d2e8a2226773a9fac95b5e0e2cc8752496abfb134a21bdf8f67c9ee44d",
+        "version": "Splunk 10.6.1.1 (build b2ae2962645c)",
+        "compressed": false,
+        "useACK": true,
+        "tls_verified_hostname_and_trust": true,
+        "source_event_count": 6,
+        "sender_hostname": "b4b8a3eb8a1d",
+        "hec_metadata": "full",
+        "tcp_transport": {
+          "management_port": "8089",
+          "compression_requested": false,
+          "protocol": "s2s-v4",
+          "stream_compressed": true,
+          "event_id": "4",
+          "sender_hostname": "b4b8a3eb8a1d",
+          "peer_ip": "172.17.0.1",
+          "forwarder_info": {
+            "MetaData:Sourcetype": "sourcetype::fwdinfo",
+            "__s2s_capabilities": "cli_can_rcv_hb=1;compression=0;pl=7;v4=1",
+            "__s2s_eventId": "0",
+            "_time": "1794319979",
+            "MetaData:Host": "host::$decideOnStartup",
+            "MetaData:Source": "source::fwd",
+            "_ingLatColor": "green",
+            "_ingLatChained": "{\"green\":{\"count\":0}}",
+            "_done": "_done",
+            "_MetaData:Index": "_internal",
+            "_guid": "2872203F-527F-46F7-B382-C62FD3EED919",
+            "_raw": "ForwarderInfo build=b2ae2962645c version=10.6.1.1 os=Linux arch=x86_64 hostname=b4b8a3eb8a1d guid=2872203F-527F-46F7-B382-C62FD3EED919 fwdType=full lastIndexer=None ssl=true protocolLevel=7"
+          },
+          "sender_guid": "2872203f-527f-46f7-b382-c62fd3eed919",
+          "ack_requested": true
+        },
+        "ids": [
+          "s2s-v1:c609a99b98e76a4a49149dfc9c5d4d62b4d166c24fc3283a2f960a219712e645",
+          "s2s-v1:16c41a8ee26a5b33845f477c622bf855a046578ecad06ef2c4bf46484cfcafa0",
+          "s2s-v1:90572e44b20a359fe9eb28733e949451bf9e4c1e99ea70103600f5b1e7962b84",
+          "s2s-v1:23bfa7a3a0ea41f0d9d0fb71edcff791331e5112c020059b7522faeb3c670758",
+          "s2s-v1:9737ba3788297125248030dd63fcce1b4836b8f3278d49881f632b5726b949f1",
+          "s2s-v1:9ad29f4b40f90244844705e7021001a98ae38adc827bb9aa5bcd4fde4fad8bc5"
+        ]
+      }
+    ]
+  },
+  "scope": "real UF/HF classic cooked TCP to the plugin: verified TLS and default plaintext, compression and useACK matrix, receiver SIGKILL/resume, hec_metadata modes"
+}

@@ -19,13 +19,15 @@ def run(script,*args):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--stage',choices=('all','runtime','senders','tcp','config','install','metadata','assembly','inspection','metrics'),default='all',
+    parser.add_argument('--stage',choices=('all','runtime','senders','tcp','config','install','metadata','assembly','inspection','metrics','recovery'),default='all',
                         help='Run a targeted verification stage, or the full suite (default).')
     stage=parser.parse_args().stage
     owned=None
     try:
         if stage in ('all','metadata'):run('metadata_fields.py')
         if stage=='metadata':return 0
+        if stage in ('all','recovery'):run('recovery_qualification.py')
+        if stage=='recovery':return 0
         if stage in ('all','metrics'):run('metrics.py')
         if stage=='metrics':return 0
         if stage in ('all','inspection'):run('inspection_qualification.py')

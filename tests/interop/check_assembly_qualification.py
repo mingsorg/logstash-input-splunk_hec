@@ -131,7 +131,7 @@ def main():
                      'errors':int(root.get('errors')),'skipped':int(root.get('skipped')),
                      'cases':[case.get('name') for case in root.findall('testcase')]})
     inspection_suite='org.logstashplugins.hec.S2SAssemblyInspectorTest'
-    baseline_java=[s for s in java if s['suite']!=inspection_suite]
+    baseline_java=[s for s in java if s['suite'] not in (inspection_suite,'org.logstashplugins.hec.S2SAssemblyRecoveryTest')]
     checks['java_tests']=len(baseline_java)>=9 and sum(s['tests'] for s in baseline_java)>=143 and all(not(s['failures'] or s['errors'] or s['skipped']) for s in baseline_java)
     if any(s['suite']==inspection_suite for s in java):
         # Execute current Linux classes; names and counters from an old XML are not proof.

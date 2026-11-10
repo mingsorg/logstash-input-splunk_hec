@@ -1,0 +1,203 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.6.0-java.gem",
+    "sha256": "69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c"
+  },
+  "validators": "3f0f9d496db77a0a097dd363f3dc552797cc784bd42b98af2cbe12ad95a00f8c",
+  "run_id": "003d5b33fda54cbd9c5f12dca1fdbc40",
+  "runs": [
+    {
+      "lines": 500,
+      "append_bytes": 864914,
+      "max_transaction_bytes": 1734,
+      "p50_ns": 1454417,
+      "p99_ns": 5283334,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 8947334,
+      "physical_bytes": 1210217,
+      "heap_peak_observed_bytes": 60908336,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 323742083,
+      "concurrent_unrelated_sender_ns": 1683208,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 502,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 1000,
+      "append_bytes": 1732783,
+      "max_transaction_bytes": 1738,
+      "p50_ns": 1251500,
+      "p99_ns": 4346375,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 11941167,
+      "physical_bytes": 2415751,
+      "heap_peak_observed_bytes": 174378104,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 728742083,
+      "concurrent_unrelated_sender_ns": 1735125,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 1002,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 2000,
+      "append_bytes": 3470783,
+      "max_transaction_bytes": 1738,
+      "p50_ns": 1034084,
+      "p99_ns": 2837750,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 21076375,
+      "physical_bytes": 4830751,
+      "heap_peak_observed_bytes": 348917320,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 2425631501,
+      "concurrent_unrelated_sender_ns": 1416834,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 2002,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 4000,
+      "append_bytes": 6946783,
+      "max_transaction_bytes": 1738,
+      "p50_ns": 1027250,
+      "p99_ns": 2608584,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 41600500,
+      "physical_bytes": 9660751,
+      "heap_peak_observed_bytes": 359610792,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 9172993005,
+      "concurrent_unrelated_sender_ns": 1924083,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 4002,
+      "contribution_limit": 10000
+    },
+    {
+      "lines": 8000,
+      "append_bytes": 14157192,
+      "max_transaction_bytes": 1808,
+      "p50_ns": 1088458,
+      "p99_ns": 3275167,
+      "compactions": 0,
+      "compaction_ns": 0,
+      "finalization_ns": 114784500,
+      "physical_bytes": 19579864,
+      "heap_peak_observed_bytes": 359819704,
+      "memory_reserved_bytes": 1073741824,
+      "memory_released": true,
+      "unrelated_sender_progress": true,
+      "replay_ns": 38354282183,
+      "concurrent_unrelated_sender_ns": 1703000,
+      "progress_bound_ns": 5000000000,
+      "producer_contribution_cap": 32,
+      "producer_actual_contributions": 2,
+      "retained_contributions_after_progress": 8002,
+      "contribution_limit": 10000
+    }
+  ],
+  "status": "pass",
+  "long_state_compaction": {
+    "compacted_restart_ns": 74612583,
+    "physical_bytes": 10520544,
+    "complete_equivalence": true,
+    "long_compaction_ns": 1247799876,
+    "pending_contributions": 8002
+  },
+  "process_halt_publication": [
+    {
+      "boundary": "snapshot-write",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "snapshot-sync",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "journal-write",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "journal-sync",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "generation-directory",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-write",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-sync",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-move",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "pointer-directory",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "publication-durable",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    },
+    {
+      "boundary": "cleanup",
+      "exit_code": 73,
+      "reopened": true,
+      "scope": "Runtime.halt process crash; not power loss"
+    }
+  ],
+  "saturated_receipts": {
+    "capacity_ns": 339625,
+    "memory_released": true,
+    "checks": 1000,
+    "receipts": 4096,
+    "receipt_map_traversals": 0
+  }
+}

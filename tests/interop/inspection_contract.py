@@ -3,9 +3,10 @@
 No runtime dependency is added to the installed command. Unknown schema keywords
 fail here instead of silently making an assertion ineffective.
 """
+import re
 def validate(schema, value):
     supported = {'type', 'const', 'enum', 'minimum', 'minLength', 'properties', 'required',
-                 'additionalProperties', 'oneOf', 'anyOf', 'not', 'items'}
+                 'additionalProperties', 'oneOf', 'anyOf', 'not', 'items', 'pattern'}
     if set(schema)-supported:
         raise ValueError('unsupported schema vocabulary')
     def matches(child):
@@ -47,3 +48,5 @@ def validate(schema, value):
         raise ValueError('minimum mismatch')
     if isinstance(value, str) and len(value) < schema.get('minLength', 0):
         raise ValueError('minLength mismatch')
+    if isinstance(value, str) and 'pattern' in schema and re.search(schema['pattern'],value) is None:
+        raise ValueError('pattern mismatch')

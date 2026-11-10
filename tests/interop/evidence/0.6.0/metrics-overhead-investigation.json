@@ -1,0 +1,33 @@
+{
+  "artifact": {
+    "file": "logstash-input-splunk_hec-0.6.0-java.gem",
+    "sha256": "69baa09d931c67d05dec71a706168aecf1691e1e4d3970b7d78b85e35ee4d14c"
+  },
+  "validators": "3f0f9d496db77a0a097dd363f3dc552797cc784bd42b98af2cbe12ad95a00f8c",
+  "metrics_report_sha256": "394817bf9dfa23f42ec208295343cb4cd46cb5421a674952d92a2e63dcf98732",
+  "status": "complete",
+  "investigated_roles": ["minimum", "latest"],
+  "observations": {
+    "minimum": {
+      "enabled_median_ns": 11854396.0,
+      "disabled_median_ns": 11694313.0,
+      "median_overhead_percent": 1.3688961463576454,
+      "round_overhead_percent": [-0.2159545485271197, 2.6140569192108165, 0.026984750798852986]
+    },
+    "latest": {
+      "enabled_median_ns": 10833604.5,
+      "disabled_median_ns": 10795417.0,
+      "median_overhead_percent": 0.35373807236904753,
+      "round_overhead_percent": [-0.9477709870831741, 2.6786160879525456, 4.332624175948507]
+    }
+  },
+  "previous_run": {
+    "artifact_sha256": "adf3465cba6ec8fa29960a1bd25460f9e0eebe7c4c05e023e3b2ee95ccce8985",
+    "metrics_report_sha256": "ec285aa898a8c8abc4307a6056d1b584bb9bff6395ec83ff084a8f1135cb626f",
+    "minimum_median_overhead_percent": 5.114246611628626,
+    "minimum_round_overhead_percent": [15.770911034987755, -4.200032657456909, 5.86888123559568],
+    "latest_median_overhead_percent": -3.735805432164163
+  },
+  "analysis": "Reviewed all three randomized paired rounds (180 enabled and 180 disabled raw HTTP batches per runtime, 32 events each) for the corrected artifact. Aggregate medians are +1.369% on minimum and +0.354% on latest, with per-round results between -0.948% and +4.333%. The previous artifact's minimum result of +5.114% is retained above rather than discarded. These end-to-end Docker measurements include HTTP, scheduling, queues, file output and JVM effects; repeated runs show variation. Recovery changes offline processing, publication and startup validation, not the measured raw-request/handoff hot path. Current measurements do not reproduce the earlier greater-than-5% aggregate result, but neither establish causality nor a universal sub-5% guarantee. The investigation is bound to this exact report and artifact.",
+  "remaining_risk": "A controlled representative performance environment is needed to bound collector-only and assembly-path costs. No universal throughput or performance-equivalence claim is made."
+}

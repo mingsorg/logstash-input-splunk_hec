@@ -1,0 +1,54 @@
+#!/bin/sh
+# Installed-only offline launcher. Keep VM diagnostics behind the controlled bootstrap boundary.
+set -eu
+fail() {
+  printf '%s\n' '{"schema_version":1,"error":{"code":"runtime_unavailable","message":"Installed Logstash bundled Java/core/plugin jars could not be resolved."}}' >&2
+  exit 70
+}
+base=$( { CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P; } 2>/dev/null) || fail
+home=${LOGSTASH_HOME:-}
+if [ -z "$home" ]; then
+  candidate=$base
+  while [ "$candidate" != / ]; do
+    if [ -d "$candidate/logstash-core/lib/jars" ] && [ -x "$candidate/jdk/bin/java" ]; then
+      home=$candidate
+      break
+    fi
+    candidate=$(dirname -- "$candidate" 2>/dev/null) || fail
+  done
+fi
+[ -n "$home" ] && [ -x "$home/jdk/bin/java" ] && [ -d "$home/logstash-core/lib/jars" ] || fail
+[ -f "$base/VERSION" ] && [ -r "$base/VERSION" ] || fail
+{ IFS= read -r version < "$base/VERSION"; } 2>/dev/null || fail
+case "$version" in *[!0-9.]*|'') fail ;; esac
+jar=$base/vendor/jars/logstash-input-splunk_hec-$version.jar
+[ -f "$jar" ] && [ -r "$jar" ] || fail
+unset JAVA_TOOL_OPTIONS JDK_JAVA_OPTIONS _JAVA_OPTIONS CLASSPATH
+status=0
+child=''
+interrupted=0
+stop_child() {
+  trap '' TERM INT
+  if [ -n "$child" ]; then
+    kill -TERM "$child" 2>/dev/null || :
+    for attempt in 1 2 3 4 5; do
+      kill -0 "$child" 2>/dev/null || break
+      sleep 1
+    done
+    kill -KILL "$child" 2>/dev/null || :
+    wait "$child" 2>/dev/null || :
+  fi
+  printf '%s\n' '{"schema_version":1,"error":{"code":"interrupted","message":"Recovery was interrupted; inspect any destination before explicit reuse."}}' >&2
+  exit 70
+}
+trap 'interrupted=1; if [ -n "$child" ]; then stop_child; fi' TERM INT
+"$home/jdk/bin/java" -Xms32m -Xmx768m -XX:+ExitOnOutOfMemoryError \
+  --add-opens=java.base/sun.nio.fs=ALL-UNNAMED \
+  -cp "$jar:$home/logstash-core/lib/jars/*:$home/vendor/jruby/lib/jruby.jar" \
+  org.logstashplugins.hec.S2SRecoveryBootstrap "$@" <&0 3>&2 2>/dev/null &
+child=$!
+[ "$interrupted" -eq 0 ] || stop_child
+wait "$child" || status=$?
+child=''
+trap - TERM INT
+case "$status" in 0|2|3|4|5|64) exit "$status" ;; *) fail ;; esac

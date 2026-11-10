@@ -1,6 +1,11 @@
 # Logstash Splunk HEC input
 
-**0.5.0 (unreleased):** per-input live ingestion and assembly metrics through
+**0.6.0 (unreleased):** installed offline retained-assembly export and new-directory
+rebuild via `sh <installed-plugin>/lib/splunk-hec-recover`. See
+[recovery/export operations](docs/recovery-export-0.6.0.md) for lossless archives,
+prefix warnings and stopped-input adoption.
+
+Since **0.5.0**, per-input live ingestion and assembly metrics are available through
 Logstash Node Stats. See the [metrics reference](docs/ingestion-metrics-0.5.0.md)
 for the fixed schema, counting boundaries, reset semantics and qualification.
 
@@ -25,8 +30,8 @@ troubleshooting, is [docs/installation.md](docs/installation.md)):
 
 ```sh
 ./gradlew test gem
-bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.5.0-java.gem
-bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.5.0)
+bin/logstash-plugin install /absolute/path/logstash-input-splunk_hec-0.6.0-java.gem
+bin/logstash-plugin list --verbose splunk      # logstash-input-splunk_hec (0.6.0)
 ```
 
 Installation needs access to rubygems.org (Logstash resolves dependencies even for a local gem) and a Logstash of

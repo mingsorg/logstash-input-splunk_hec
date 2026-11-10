@@ -98,5 +98,116 @@ final class S2SSecureFiles {
             parents.verify();if(!same(expected,attributes(parents.directory(),name)))throw unsafe();return bytes;
         }catch(IOException|RuntimeException error){throw unsafe();}
     }
+    /** Only kernel-owned descriptor paths are used for operations absent from SecureDirectoryStream. */
+    private static Path descriptor(SecureDirectoryStream<Path> directory)throws IOException{
+        try{
+            if(!System.getProperty("os.name").equals("Linux")||!directory.getClass().getName().equals("sun.nio.fs.UnixSecureDirectoryStream"))throw unsafe();
+            Field field=directory.getClass().getDeclaredField("dfd");if(!field.trySetAccessible())throw unsafe();
+            return Path.of("/proc/self/fd/"+field.getInt(directory));
+        }catch(ReflectiveOperationException error){throw unsafe();}
+    }
+    static void privateDirectory(SecureDirectoryStream<Path> directory)throws IOException{
+        var attrs=directory.getFileAttributeView(PosixFileAttributeView.class).readAttributes();
+        if(attrs.fileKey()==null||!attrs.permissions().equals(PosixFilePermissions.fromString("rwx------")))throw unsafe();
+        descriptor(directory); // Refuse unsupported hosts before any output is claimed.
+    }
+    static void sync(SecureDirectoryStream<Path> directory)throws IOException{
+        try(var channel=FileChannel.open(descriptor(directory),StandardOpenOption.READ)){channel.force(true);}
+    }
+    /** CREATE_NEW is the claim: two operators can never own the same destination. */
+    static void writeNew(Directories parent,Path name,byte[] bytes,S2SAssemblyInspector.Faults faults,String boundary)throws IOException{
+        privateDirectory(parent.directory());parent.verify();
+        if(name.getNameCount()!=1||name.isAbsolute()||name.toString().equals(".")||name.toString().equals(".."))throw unsafe();
+        Object key=null;int fd=-1;Method close=null;
+        try{
+            faults.at(boundary+".create");
+            Class<?> dispatcher=Class.forName("sun.nio.fs.UnixNativeDispatcher");
+            Method open=dispatcher.getDeclaredMethod("openat",int.class,byte[].class,int.class,int.class);close=dispatcher.getDeclaredMethod("close",int.class);
+            Method stat=Class.forName("sun.nio.fs.UnixFileAttributes").getDeclaredMethod("get",int.class);
+            Field dfd=parent.directory().getClass().getDeclaredField("dfd");
+            if(!open.trySetAccessible()||!close.trySetAccessible()||!stat.trySetAccessible()||!dfd.trySetAccessible())throw unsafe();
+            // O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_CLOEXEC. Pin our own creation, not a later named replacement.
+            fd=(Integer)open.invoke(null,dfd.getInt(parent.directory()),name.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8),1|0x40|0x80|0x20000|0x80000,0600);
+            var created=(PosixFileAttributes)stat.invoke(null,fd);key=created.fileKey();if(key==null||!created.isRegularFile())throw unsafe();
+            faults.at(boundary+".after-create");
+            try(var channel=FileChannel.open(Path.of("/proc/self/fd/"+fd),StandardOpenOption.WRITE)){
+                var buffer=java.nio.ByteBuffer.wrap(bytes);
+                while(buffer.hasRemaining()){
+                    faults.at(boundary+".write");int limit=buffer.limit();buffer.limit(Math.min(limit,buffer.position()+8192));
+                    if(channel.write(buffer)<=0)throw unsafe();buffer.limit(limit);
+                }
+                faults.at(boundary+".sync");channel.force(true);
+                parent.verify();var attrs=attributes(parent.directory(),name);
+                if(!key.equals(attrs.fileKey())||!attrs.isRegularFile()||attrs.size()!=bytes.length||!attrs.permissions().equals(PosixFilePermissions.fromString("rw-------")))throw unsafe();
+            }
+            faults.at(boundary+".directory-sync");sync(parent.directory());parent.verify();
+        }catch(ReflectiveOperationException error){throw unsafe();}
+        catch(IOException|RuntimeException error){
+            // Never remove an existing destination or a replacement belonging to somebody else.
+            if(key!=null){
+                var attrs=attributes(parent.directory(),name);
+                if(key.equals(attrs.fileKey())){faults.at(boundary+".cleanup");parent.directory().deleteFile(name);sync(parent.directory());}
+            }
+            throw error;
+        }finally{
+            if(fd>=0&&close!=null)try{close.invoke(null,fd);}catch(ReflectiveOperationException error){throw unsafe();}
+        }
+    }
+    static final class Destination implements AutoCloseable {
+        final Directories parent,directory;
+        final Path name,claim;final Object key,claimKey;
+        Destination(Path supplied,S2SAssemblyInspector.Faults faults)throws IOException{
+            Path path=supplied.toAbsolutePath();name=path.getFileName();
+            if(name==null||name.toString().equals(".")||name.toString().equals(".."))throw unsafe();
+            claim=Path.of(".recovery-claim-"+TokenStore.fingerprint(name.toString()));
+            parent=new Directories(path.getParent());Directories opened=null;
+            Object ownedClaim=null;
+            try{
+                privateDirectory(parent.directory());parent.verify();
+                Path pinned=descriptor(parent.directory());
+                if(Files.exists(pinned.resolve(name),LinkOption.NOFOLLOW_LINKS))throw unsafe();
+                writeNew(parent,claim,new byte[0],faults,"destination.claim");ownedClaim=attributes(parent.directory(),claim).fileKey();claimKey=ownedClaim;
+                Path staging=Path.of(".recovery-stage-"+UUID.randomUUID());faults.at("destination.create");
+                Files.createDirectory(pinned.resolve(staging),PosixFilePermissions.asFileAttribute(PosixFilePermissions.fromString("rwx------")));
+                faults.at("destination.mkdir");
+                opened=new Directories(path.getParent().resolve(staging));privateDirectory(opened.directory());
+                key=opened.directory().getFileAttributeView(PosixFileAttributeView.class).readAttributes().fileKey();
+                writeNew(opened,Path.of("recovery-incomplete"),new byte[]{1},faults,"destination.recovery-incomplete");
+                sync(opened.directory());sync(parent.directory());opened.verify();opened.close();opened=null;
+                parent.verify();faults.at("destination.expose");
+                // The exclusive sibling claim serializes builders. Default move refuses every existing
+                // final entry (including empty directories); never request replacement or adoption.
+                Files.move(pinned.resolve(staging),pinned.resolve(name));faults.at("destination.exposed");
+                opened=new Directories(path);directory=opened;verify();sync(parent.directory());
+            }catch(IOException|RuntimeException error){
+                try{if(opened!=null)opened.close();}finally{
+                    try{if(ownedClaim!=null&&ownedClaim.equals(attributes(parent.directory(),claim).fileKey())){parent.directory().deleteFile(claim);sync(parent.directory());}}
+                    finally{parent.close();}
+                }
+                throw error;
+            }
+        }
+        void verify()throws IOException{
+            parent.verify();directory.verify();privateDirectory(directory.directory());
+            if(!Objects.equals(key,attributes(parent.directory(),name).fileKey()))throw unsafe();
+        }
+        void write(String name,byte[] bytes,S2SAssemblyInspector.Faults faults)throws IOException{
+            verify();writeNew(directory,Path.of(name),bytes,faults,"destination."+name);verify();
+        }
+        void finish(S2SAssemblyInspector.Faults faults)throws IOException{
+            verify();faults.at("destination.finish");directory.directory().deleteFile(Path.of("recovery-incomplete"));
+            try{faults.at("destination.finish-sync");sync(directory.directory());sync(parent.directory());verify();}
+            catch(IOException error){
+                // If storage also refuses guard restoration, a fully published outcome is ambiguous.
+                try{writeNew(directory,Path.of("recovery-incomplete"),new byte[]{1},faults,"destination.invalidate");}
+                catch(IOException restore){error.addSuppressed(restore);}
+                throw error;
+            }
+        }
+        @Override public void close()throws IOException{
+            try{directory.close();}
+            finally{try{parent.verify();if(!claimKey.equals(attributes(parent.directory(),claim).fileKey()))throw unsafe();parent.directory().deleteFile(claim);sync(parent.directory());}finally{parent.close();}}
+        }
+    }
     private S2SSecureFiles(){}
 }
